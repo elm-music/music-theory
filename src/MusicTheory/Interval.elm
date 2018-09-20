@@ -1,4 +1,4 @@
-module Tonal.Interval exposing
+module MusicTheory.Interval exposing
     ( Interval
     , IntervalNumber(..)
     , IntervalQuality(..)
@@ -111,10 +111,10 @@ all =
 
 
 semitones : Interval -> Int
-semitones (Interval quality number) =
+semitones (Interval intervalQuality intervalNumber) =
     let
         isPerfectIntervalNumber =
-            case number of
+            case intervalNumber of
                 Fourth ->
                     True
 
@@ -127,12 +127,12 @@ semitones (Interval quality number) =
                 _ ->
                     False
     in
-    intervalNumberSemitones number + intervalQualitySemitones isPerfectIntervalNumber quality
+    intervalNumberSemitones intervalNumber + intervalQualitySemitones isPerfectIntervalNumber intervalQuality
 
 
 complementary : Interval -> Interval
-complementary (Interval quality number) =
-    Interval (complementaryIntervalQuality quality) (complementaryIntervalNumber number)
+complementary (Interval intervalQuality intervalNumber) =
+    Interval (complementaryIntervalQuality intervalQuality) (complementaryIntervalNumber intervalNumber)
 
 
 
@@ -274,8 +274,8 @@ augmentedSeventh =
 
 
 intervalNumberSemitones : IntervalNumber -> Int
-intervalNumberSemitones number =
-    case number of
+intervalNumberSemitones intervalNumber =
+    case intervalNumber of
         Unison ->
             0
 
