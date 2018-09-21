@@ -12,6 +12,7 @@ cache:
     - tests/elm-stuff/packages        # cache files that haven't changed
     - sysconfcpus
     - $HOME/.npm # https://stackoverflow.com/a/42523517/1148249
+    - $HOME/.elm # Elm's installed packages cache
 
 before_install:
   - | # build time improvement see: https://git.io/vQcqz
@@ -34,7 +35,8 @@ install: # install specific versions of elm & elm-test
   # - mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
   # - printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
   # - chmod +x $(npm config get prefix)/bin/elm-make
-  - travis_retry elm package install --yes # install main project dependencies
+  # # DM: `elm package install` is now part of `elm make`
+  # - travis_retry elm package install --yes # install main project dependencies
 
 script:
   - ./ci-check-no-warnings.sh
