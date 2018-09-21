@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/battermann/Tonal.svg?branch=develop)](https://travis-ci.org/battermann/Tonal)
+[![Build Status](https://travis-ci.org/battermann/Tonal.svg?branch=develop)](https://travis-ci.org/elm-music/music-theory)
 
 # music-theory
 
