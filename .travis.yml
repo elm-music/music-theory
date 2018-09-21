@@ -2,7 +2,7 @@ language: node_js # elm is installed from npm (see install below)
 node_js: node     # use "latest" version of Node.js
 
 env:
-  - ELM_VERSION=0.18.0 ELM_TEST=0.18.12
+  - ELM_VERSION=0.19.0 ELM_TEST=0.19.0-beta8
 
 cache:
   directories: # so subsequent builds run faster
@@ -12,6 +12,7 @@ cache:
     - tests/elm-stuff/packages        # cache files that haven't changed
     - sysconfcpus
     - $HOME/.npm # https://stackoverflow.com/a/42523517/1148249
+    - $HOME/.elm # Elm's installed packages cache
 
 before_install:
   - | # build time improvement see: https://git.io/vQcqz
@@ -27,13 +28,17 @@ before_install:
 install: # install specific versions of elm & elm-test
   - npm install -g elm@$ELM_VERSION elm-test@$ELM_TEST
   - npm install -g elm-format
+  # # DM: Richard's scripts for improving CI performance are breaking the CI build.
+  # #     Commenting them out until I understand what happened with `usr/local/bin/elm-make`
+  # #     in Elm 0.19
   # the next 3 lines are courtesy of @rtfeldman https://git.io/vbj0j
-  - mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
-  - printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
-  - chmod +x $(npm config get prefix)/bin/elm-make
-  - travis_retry elm package install --yes # install main project dependencies
+  # - mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
+  # - printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
+  # - chmod +x $(npm config get prefix)/bin/elm-make
+  # # DM: `elm package install` is now part of `elm make`
+  # - travis_retry elm package install --yes # install main project dependencies
 
 script:
   - ./ci-check-no-warnings.sh
-  - elm-format --validate src --elm-version=0.18
+  - elm-format --validate src --elm-version=0.19
   - elm-test --verbose

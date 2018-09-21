@@ -1,6 +1,6 @@
-module Tonal.PitchClass exposing
+module MusicTheory.PitchClass exposing
     ( areEnharmonicEqual
-    , Accidental(..), Letter(A, B, C, D, E, F, G), PitchClass, all, asNaturalOrLoweredOnce, asNaturalOrRaisedOnce, exact, fromTuple, pitchClass, semitones, toString, transposeBySemitones, transposeDown, transposeUp
+    , Accidental(..), Letter(..), PitchClass, all, asNaturalOrLoweredOnce, asNaturalOrRaisedOnce, exact, fromTuple, pitchClass, semitones, toString, transposeBySemitones, transposeDown, transposeUp
     )
 
 {-| A pitch class is a set of all pitches that are a whole number of octaves apart. A pitch class is represented as a letter together with an accidental.
@@ -34,7 +34,7 @@ The internals of `PitchClass` are opaque. By using accessor functions the caller
 
 -}
 
-import Tonal.Interval as Interval exposing (Interval, IntervalNumber(..), IntervalQuality(..))
+import MusicTheory.Interval as Interval exposing (Interval, IntervalNumber(..), IntervalQuality(..))
 
 
 
@@ -87,8 +87,8 @@ type PitchClass
 
 -}
 pitchClass : Letter -> Accidental -> PitchClass
-pitchClass letter accidental =
-    PitchClass letter (accidentalToOffset accidental)
+pitchClass l acc =
+    PitchClass l (accidentalToOffset acc)
 
 
 {-| Create a pitch class from a tuple of a letter and an accidental.
@@ -97,8 +97,8 @@ pitchClass letter accidental =
 
 -}
 fromTuple : ( Letter, Accidental ) -> PitchClass
-fromTuple ( letter, accidental ) =
-    pitchClass letter accidental
+fromTuple ( l, acc ) =
+    pitchClass l acc
 
 
 
@@ -110,7 +110,7 @@ fromTuple ( letter, accidental ) =
 all : List PitchClass
 all =
     letters
-        |> List.concatMap (\letter -> accidentals |> List.map (pitchClass letter))
+        |> List.concatMap (\l -> accidentals |> List.map (pitchClass l))
 
 
 {-| Returns the letter and accidental of a pitch class if the letter is raised or lowered such that it can be expressed in terms of a valid accidental.
@@ -119,14 +119,14 @@ all =
 
 -}
 exact : PitchClass -> Maybe ( Letter, Accidental )
-exact (PitchClass letter offset) =
-    offsetToAccidental offset
-        |> Maybe.map ((,) letter)
+exact (PitchClass l o) =
+    offsetToAccidental o
+        |> Maybe.map (Tuple.pair l)
 
 
 letter : PitchClass -> Letter
-letter (PitchClass letter _) =
-    letter
+letter (PitchClass l _) =
+    l
 
 
 offset : PitchClass -> Int
@@ -145,12 +145,12 @@ offset (PitchClass _ (Offset n)) =
 -}
 semitones : PitchClass -> Int
 semitones pc =
-    exactSemitones pc % 12
+    modBy (exactSemitones pc) 12
 
 
 exactSemitones : PitchClass -> Int
-exactSemitones (PitchClass letter (Offset n)) =
-    letterSemitones letter + n
+exactSemitones (PitchClass l (Offset n)) =
+    letterSemitones l + n
 
 
 {-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or raised once
@@ -163,11 +163,11 @@ exactSemitones (PitchClass letter (Offset n)) =
 asNaturalOrRaisedOnce : PitchClass -> ( Letter, Accidental )
 asNaturalOrRaisedOnce pc =
     case pc |> semitones |> semitonesToNaturalOrAccidental of
-        Nat letter ->
-            ( letter, Natural )
+        Nat l ->
+            ( l, Natural )
 
-        SharpFlat letter _ ->
-            ( letter, Sharp )
+        SharpFlat l _ ->
+            ( l, Sharp )
 
 
 {-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or lowered once.
@@ -180,11 +180,11 @@ asNaturalOrRaisedOnce pc =
 asNaturalOrLoweredOnce : PitchClass -> ( Letter, Accidental )
 asNaturalOrLoweredOnce pc =
     case pc |> semitones |> semitonesToNaturalOrAccidental of
-        Nat letter ->
-            ( letter, Natural )
+        Nat l ->
+            ( l, Natural )
 
-        SharpFlat _ letter ->
-            ( letter, Flat )
+        SharpFlat _ l ->
+            ( l, Flat )
 
 
 {-| String representation of a letter and an accidental.
@@ -193,8 +193,8 @@ asNaturalOrLoweredOnce pc =
 
 -}
 toString : ( Letter, Accidental ) -> String
-toString ( letter, accidental ) =
-    accidentalToString accidental ++ letterToString letter
+toString ( l, acc ) =
+    accidentalToString acc ++ letterToString l
 
 
 
@@ -230,7 +230,7 @@ transposeDown : Interval -> PitchClass -> PitchClass
 transposeDown interval pc =
     interval
         |> Interval.complementary
-        |> flip transposeUp pc
+        |> (\i -> transposeUp i pc)
 
 
 {-| Moves a pitch class by a given number of semitones. The result will be ambiguous because while transposing by semitones alone it cannot be determined which enharmonic equivalent pitch class to choose as the result. An enharmonic equivalent representation can be retrieved by applying `asNaturalOrLoweredOnce` or `asNaturalOrRaisedOnce`.
@@ -241,8 +241,8 @@ transposeDown interval pc =
 
 -}
 transposeBySemitones : Int -> PitchClass -> PitchClass
-transposeBySemitones n (PitchClass letter (Offset offset)) =
-    PitchClass letter (Offset (offset + n))
+transposeBySemitones n (PitchClass l (Offset off)) =
+    PitchClass l (Offset (off + n))
 
 
 
@@ -261,8 +261,8 @@ areEnharmonicEqual lhs rhs =
 
 
 accidentalToOffset : Accidental -> Offset
-accidentalToOffset accidental =
-    case accidental of
+accidentalToOffset acc =
+    case acc of
         TripleFlat ->
             Offset -3
 
@@ -287,30 +287,29 @@ accidentalToOffset accidental =
 
 offsetToAccidental : Offset -> Maybe Accidental
 offsetToAccidental (Offset n) =
-    case n of
-        (-3) ->
-            Just TripleFlat
+    if n == -3 then
+        Just TripleFlat
 
-        (-2) ->
-            Just DoubleFlat
+    else if n == -2 then
+        Just DoubleFlat
 
-        (-1) ->
-            Just Flat
+    else if n == -1 then
+        Just Flat
 
-        0 ->
-            Just Natural
+    else if n == 0 then
+        Just Natural
 
-        1 ->
-            Just Sharp
+    else if n == 1 then
+        Just Sharp
 
-        2 ->
-            Just DoubleSharp
+    else if n == 2 then
+        Just DoubleSharp
 
-        3 ->
-            Just TripleSharp
+    else if n == 3 then
+        Just TripleSharp
 
-        _ ->
-            Nothing
+    else
+        Nothing
 
 
 letters : List Letter
@@ -324,8 +323,8 @@ accidentals =
 
 
 letterSemitones : Letter -> Int
-letterSemitones letter =
-    case letter of
+letterSemitones l =
+    case l of
         C ->
             0
 
@@ -354,68 +353,66 @@ type NaturalOrAccidental
 
 
 semitonesToNaturalOrAccidental : Int -> NaturalOrAccidental
-semitonesToNaturalOrAccidental offset =
-    case offset of
-        (-3) ->
-            Nat A
+semitonesToNaturalOrAccidental off =
+    if off == -3 then
+        Nat A
 
-        (-2) ->
-            SharpFlat A B
+    else if off == -2 then
+        SharpFlat A B
 
-        (-1) ->
-            Nat B
+    else if off == -1 then
+        Nat B
 
-        0 ->
-            Nat C
+    else if off == 0 then
+        Nat C
 
-        1 ->
-            SharpFlat C D
+    else if off == 1 then
+        SharpFlat C D
 
-        2 ->
-            Nat D
+    else if off == 2 then
+        Nat D
 
-        3 ->
-            SharpFlat D E
+    else if off == 3 then
+        SharpFlat D E
 
-        4 ->
-            Nat E
+    else if off == 4 then
+        Nat E
 
-        5 ->
-            Nat F
+    else if off == 5 then
+        Nat F
 
-        6 ->
-            SharpFlat F G
+    else if off == 6 then
+        SharpFlat F G
 
-        7 ->
-            Nat G
+    else if off == 7 then
+        Nat G
 
-        8 ->
-            SharpFlat G A
+    else if off == 8 then
+        SharpFlat G A
 
-        9 ->
-            Nat A
+    else if off == 9 then
+        Nat A
 
-        10 ->
-            SharpFlat A B
+    else if off == 10 then
+        SharpFlat A B
 
-        11 ->
-            Nat B
+    else if off == 11 then
+        Nat B
 
-        12 ->
-            Nat C
+    else if off == 12 then
+        Nat C
 
-        13 ->
-            SharpFlat C D
+    else if off == 13 then
+        SharpFlat C D
 
-        14 ->
-            Nat D
+    else if off == 14 then
+        Nat D
 
-        n ->
-            if n > 14 then
-                semitonesToNaturalOrAccidental (n - 12)
+    else if off > 14 then
+        semitonesToNaturalOrAccidental (off - 12)
 
-            else
-                semitonesToNaturalOrAccidental (n + 12)
+    else
+        semitonesToNaturalOrAccidental (off + 12)
 
 
 letterToString : Letter -> String
@@ -444,8 +441,8 @@ letterToString letterName =
 
 
 accidentalToString : Accidental -> String
-accidentalToString accidental =
-    case accidental of
+accidentalToString acc =
+    case acc of
         TripleFlat ->
             "♭𝄫"
 
@@ -469,8 +466,8 @@ accidentalToString accidental =
 
 
 letterIndex : Letter -> Int
-letterIndex letter =
-    case letter of
+letterIndex l =
+    case l of
         C ->
             0
 
