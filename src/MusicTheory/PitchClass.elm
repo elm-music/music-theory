@@ -145,7 +145,7 @@ offset (PitchClass _ (Offset n)) =
 -}
 semitones : PitchClass -> Int
 semitones pc =
-    modBy (exactSemitones pc) 12
+    exactSemitones pc |> modBy 12
 
 
 exactSemitones : PitchClass -> Int
