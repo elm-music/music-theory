@@ -5,6 +5,7 @@ import MusicTheory.PitchClass exposing (Accidental(..), Letter(..))
 import MusicTheory.Scale
     exposing
         ( Pattern
+        , Scale
         , degree
         , downTo
         , loweredDegree
@@ -26,7 +27,7 @@ type Msg
 
 {- Ideally, the signature of Scale.generateLine is:
 
-   generateLine : Pattern -> Octave -> List Pitch
+   generateLine : Scale -> Octave -> Pattern -> List Pitch
 
    and the call to it below in myLineWithPassingTones returns:
 
@@ -56,7 +57,7 @@ myLineWithPassingTones =
         scale =
             Scale.major <| C Natural
     in
-    Scale.generateLine myPattern startingOctave
+    Scale.generateLine scale startingOctave myPattern
 
 
 myPattern : Pattern
