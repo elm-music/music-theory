@@ -3,7 +3,7 @@ module MusicTheory.ScaleClass exposing
     , HexatonicScaleClassIntervals
     , OctatonicScaleClassIntervals
     , PentatonicScaleClassIntervals
-    , ScaleClass
+    , ScaleClass(..)
     , aeolian
     , diminishedHalfWhole
     , diminishedWholeHalf
