@@ -8,7 +8,6 @@ module MusicTheory.Scale exposing
     , Scale
     , aeolian
     , diatonicScale
-    , diatonicScaleClass
     , diatonicScaleDegrees
     , diminishedHalfWhole
     , diminishedWholeHalf
@@ -19,7 +18,6 @@ module MusicTheory.Scale exposing
     , minor
     , minorPentatonic
     , nonDiatonicScale
-    , nonDiatonicScaleClass
     , scale
     , toList
     , wholeTone
@@ -255,16 +253,6 @@ octatonicScale root intervals =
 type ScaleClass
     = DiatonicClass DiatonicScaleClass
     | NonDiatonicClass NonDiatonicScaleClass
-
-
-diatonicScaleClass : DiatonicScaleClass -> ScaleClass
-diatonicScaleClass theScaleClass =
-    DiatonicClass theScaleClass
-
-
-nonDiatonicScaleClass : NonDiatonicScaleClass -> ScaleClass
-nonDiatonicScaleClass theScaleClass =
-    NonDiatonicClass theScaleClass
 
 
 type DiatonicScaleClass

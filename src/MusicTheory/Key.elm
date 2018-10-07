@@ -8,15 +8,10 @@ module Key exposing
 
 import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 import MusicTheory.Scale as Scale
-    exposing
-        ( DiatonicScale
-        , HeptatonicScaleDegrees
-        , diatonicScale
-        )
 
 
 type Key
-    = Key Tonality DiatonicScale
+    = Key Tonality DiatonicScaleDegrees
 
 
 type Tonality
@@ -24,19 +19,29 @@ type Tonality
     | Minor
 
 
+type alias DiatonicScaleDegrees =
+    Scale.HeptatonicScaleDegrees
+
+
 major : PitchClass -> Key
 major root =
-    Key Major (diatonicScale root Scale.major)
+    Key Major
+        (Scale.diatonicScale root Scale.major
+            |> Scale.diatonicScaleDegrees
+        )
 
 
 minor : PitchClass -> Key
 minor root =
-    Key Minor (diatonicScale root Scale.minor)
+    Key Minor
+        (Scale.diatonicScale root Scale.minor
+            |> Scale.diatonicScaleDegrees
+        )
 
 
-scaleDegrees : Key -> HeptatonicScaleDegrees
-scaleDegrees (Key _ diatonicScale) =
-    Scale.diatonicScaleDegrees diatonicScale
+scaleDegrees : Key -> DiatonicScaleDegrees
+scaleDegrees (Key _ diatonicScaleDegrees) =
+    diatonicScaleDegrees
 
 
 tonic : Key -> PitchClass
