@@ -1,14 +1,23 @@
 module MusicTheory.Scale exposing
-    ( Scale
-    , ScaleClass
+    ( DiatonicScale
+    , HeptatonicScaleDegrees
+    , HexatonicScaleDegrees
+    , NonDiatonicScale
+    , OctatonicScaleDegrees
+    , PentatonicScaleDegrees
+    , Scale
     , aeolian
+    , diatonicScale
+    , diatonicScaleDegrees
     , diminishedHalfWhole
     , diminishedWholeHalf
     , ionian
+    , isDiatonic
     , major
     , majorPentatonic
     , minor
     , minorPentatonic
+    , nonDiatonicScale
     , scale
     , toList
     , wholeTone
@@ -22,7 +31,94 @@ import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 -- Scale
 
 
+scale : PitchClass -> ScaleClass -> Scale
+scale root scaleClass =
+    case scaleClass of
+        DiatonicClass theDiatonicScaleClass ->
+            Diatonic <| diatonicScale root theDiatonicScaleClass
+
+        NonDiatonicClass theNonDiatonicScaleClass ->
+            NonDiatonic <| nonDiatonicScale root theNonDiatonicScaleClass
+
+
+isDiatonic : Scale -> Bool
+isDiatonic theScale =
+    case theScale of
+        Diatonic _ ->
+            True
+
+        NonDiatonic _ ->
+            False
+
+
+diatonicScaleDegrees : DiatonicScale -> HeptatonicScaleDegrees
+diatonicScaleDegrees (DiatonicScale scaleDegrees) =
+    scaleDegrees
+
+
+toList : Scale -> List PitchClass
+toList theScale =
+    case theScale of
+        Diatonic (DiatonicScale scaleDegrees) ->
+            [ scaleDegrees.root
+            , scaleDegrees.secondDegree
+            , scaleDegrees.thirdDegree
+            , scaleDegrees.fourthDegree
+            , scaleDegrees.fifthDegree
+            , scaleDegrees.sixthDegree
+            , scaleDegrees.seventhDegree
+            ]
+
+        NonDiatonic nonDiatonic ->
+            case nonDiatonic of
+                PentatonicScale scaleDegrees ->
+                    [ scaleDegrees.root
+                    , scaleDegrees.secondDegree
+                    , scaleDegrees.thirdDegree
+                    , scaleDegrees.fourthDegree
+                    , scaleDegrees.fifthDegree
+                    ]
+
+                HexatonicScale scaleDegrees ->
+                    [ scaleDegrees.root
+                    , scaleDegrees.secondDegree
+                    , scaleDegrees.thirdDegree
+                    , scaleDegrees.fourthDegree
+                    , scaleDegrees.fifthDegree
+                    , scaleDegrees.sixthDegree
+                    ]
+
+                HeptatonicScale scaleDegrees ->
+                    [ scaleDegrees.root
+                    , scaleDegrees.secondDegree
+                    , scaleDegrees.thirdDegree
+                    , scaleDegrees.fourthDegree
+                    , scaleDegrees.fifthDegree
+                    , scaleDegrees.sixthDegree
+                    , scaleDegrees.seventhDegree
+                    ]
+
+                OctatonicScale scaleDegrees ->
+                    [ scaleDegrees.root
+                    , scaleDegrees.secondDegree
+                    , scaleDegrees.thirdDegree
+                    , scaleDegrees.fourthDegree
+                    , scaleDegrees.fifthDegree
+                    , scaleDegrees.sixthDegree
+                    , scaleDegrees.eighthDegree
+                    ]
+
+
 type Scale
+    = Diatonic DiatonicScale
+    | NonDiatonic NonDiatonicScale
+
+
+type DiatonicScale
+    = DiatonicScale HeptatonicScaleDegrees
+
+
+type NonDiatonicScale
     = PentatonicScale PentatonicScaleDegrees
     | HexatonicScale HexatonicScaleDegrees
     | HeptatonicScale HeptatonicScaleDegrees
@@ -71,8 +167,21 @@ type alias OctatonicScaleDegrees =
     }
 
 
-scale : PitchClass -> ScaleClass -> Scale
-scale root scaleClass =
+diatonicScale : PitchClass -> DiatonicScaleClass -> DiatonicScale
+diatonicScale root (DiatonicScaleClass intervals) =
+    DiatonicScale
+        { root = root
+        , secondDegree = PitchClass.transposeUp intervals.secondDegree root
+        , thirdDegree = PitchClass.transposeUp intervals.thirdDegree root
+        , fourthDegree = PitchClass.transposeUp intervals.fourthDegree root
+        , fifthDegree = PitchClass.transposeUp intervals.fifthDegree root
+        , sixthDegree = PitchClass.transposeUp intervals.sixthDegree root
+        , seventhDegree = PitchClass.transposeUp intervals.seventhDegree root
+        }
+
+
+nonDiatonicScale : PitchClass -> NonDiatonicScaleClass -> NonDiatonicScale
+nonDiatonicScale root scaleClass =
     case scaleClass of
         PentatonicScaleClass pentatonicScaleClassIntervals ->
             pentatonicScale root pentatonicScaleClassIntervals
@@ -87,48 +196,7 @@ scale root scaleClass =
             octatonicScale root octatonicScaleClassIntervals
 
 
-toList : Scale -> List PitchClass
-toList theScale =
-    case theScale of
-        PentatonicScale scaleDegrees ->
-            [ scaleDegrees.root
-            , scaleDegrees.secondDegree
-            , scaleDegrees.thirdDegree
-            , scaleDegrees.fourthDegree
-            , scaleDegrees.fifthDegree
-            ]
-
-        HexatonicScale scaleDegrees ->
-            [ scaleDegrees.root
-            , scaleDegrees.secondDegree
-            , scaleDegrees.thirdDegree
-            , scaleDegrees.fourthDegree
-            , scaleDegrees.fifthDegree
-            , scaleDegrees.sixthDegree
-            ]
-
-        HeptatonicScale scaleDegrees ->
-            [ scaleDegrees.root
-            , scaleDegrees.secondDegree
-            , scaleDegrees.thirdDegree
-            , scaleDegrees.fourthDegree
-            , scaleDegrees.fifthDegree
-            , scaleDegrees.sixthDegree
-            , scaleDegrees.seventhDegree
-            ]
-
-        OctatonicScale scaleDegrees ->
-            [ scaleDegrees.root
-            , scaleDegrees.secondDegree
-            , scaleDegrees.thirdDegree
-            , scaleDegrees.fourthDegree
-            , scaleDegrees.fifthDegree
-            , scaleDegrees.sixthDegree
-            , scaleDegrees.eighthDegree
-            ]
-
-
-pentatonicScale : PitchClass -> PentatonicScaleClassIntervals -> Scale
+pentatonicScale : PitchClass -> PentatonicScaleClassIntervals -> NonDiatonicScale
 pentatonicScale root intervals =
     PentatonicScale
         { root = root
@@ -139,7 +207,7 @@ pentatonicScale root intervals =
         }
 
 
-hexatonicScale : PitchClass -> HexatonicScaleClassIntervals -> Scale
+hexatonicScale : PitchClass -> HexatonicScaleClassIntervals -> NonDiatonicScale
 hexatonicScale root intervals =
     HexatonicScale
         { root = root
@@ -151,7 +219,7 @@ hexatonicScale root intervals =
         }
 
 
-heptatonicScale : PitchClass -> HeptatonicScaleClassIntervals -> Scale
+heptatonicScale : PitchClass -> HeptatonicScaleClassIntervals -> NonDiatonicScale
 heptatonicScale root intervals =
     HeptatonicScale
         { root = root
@@ -164,7 +232,7 @@ heptatonicScale root intervals =
         }
 
 
-octatonicScale : PitchClass -> OctatonicScaleClassIntervals -> Scale
+octatonicScale : PitchClass -> OctatonicScaleClassIntervals -> NonDiatonicScale
 octatonicScale root intervals =
     OctatonicScale
         { root = root
@@ -183,6 +251,15 @@ octatonicScale root intervals =
 
 
 type ScaleClass
+    = DiatonicClass DiatonicScaleClass
+    | NonDiatonicClass NonDiatonicScaleClass
+
+
+type DiatonicScaleClass
+    = DiatonicScaleClass HeptatonicScaleClassIntervals
+
+
+type NonDiatonicScaleClass
     = PentatonicScaleClass PentatonicScaleClassIntervals
     | HexatonicScaleClass HexatonicScaleClassIntervals
     | HeptatonicScaleClass HeptatonicScaleClassIntervals
@@ -227,19 +304,19 @@ type alias OctatonicScaleClassIntervals =
     }
 
 
-major : ScaleClass
+major : DiatonicScaleClass
 major =
     ionian
 
 
-minor : ScaleClass
+minor : DiatonicScaleClass
 minor =
     aeolian
 
 
-ionian : ScaleClass
+ionian : DiatonicScaleClass
 ionian =
-    HeptatonicScaleClass
+    DiatonicScaleClass
         { secondDegree = Interval.majorSecond
         , thirdDegree = Interval.majorThird
         , fourthDegree = Interval.perfectFourth
@@ -249,9 +326,9 @@ ionian =
         }
 
 
-aeolian : ScaleClass
+aeolian : DiatonicScaleClass
 aeolian =
-    HeptatonicScaleClass
+    DiatonicScaleClass
         { secondDegree = Interval.majorSecond
         , thirdDegree = Interval.minorThird
         , fourthDegree = Interval.perfectFourth
@@ -261,7 +338,7 @@ aeolian =
         }
 
 
-diminishedHalfWhole : ScaleClass
+diminishedHalfWhole : NonDiatonicScaleClass
 diminishedHalfWhole =
     OctatonicScaleClass
         { secondDegree = Interval.minorSecond
@@ -274,7 +351,7 @@ diminishedHalfWhole =
         }
 
 
-diminishedWholeHalf : ScaleClass
+diminishedWholeHalf : NonDiatonicScaleClass
 diminishedWholeHalf =
     OctatonicScaleClass
         { secondDegree = Interval.majorSecond
@@ -287,7 +364,7 @@ diminishedWholeHalf =
         }
 
 
-wholeTone : ScaleClass
+wholeTone : NonDiatonicScaleClass
 wholeTone =
     HexatonicScaleClass
         { secondDegree = Interval.majorSecond
@@ -298,7 +375,7 @@ wholeTone =
         }
 
 
-majorPentatonic : ScaleClass
+majorPentatonic : NonDiatonicScaleClass
 majorPentatonic =
     PentatonicScaleClass
         { secondDegree = Interval.majorSecond
@@ -308,7 +385,7 @@ majorPentatonic =
         }
 
 
-minorPentatonic : ScaleClass
+minorPentatonic : NonDiatonicScaleClass
 minorPentatonic =
     PentatonicScaleClass
         { secondDegree = Interval.minorThird

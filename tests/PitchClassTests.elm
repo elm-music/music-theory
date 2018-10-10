@@ -105,7 +105,9 @@ isNaturalOrSharp ( letter, accidental ) =
 all : Test
 all =
     describe "Pitch Class Tests"
-        [ fuzz pitchClassFuzzer "a pitch classes semitones should be within -1 and 12" <|
+        [ test "C natural transposed up a major third should be E natural" <|
+            \_ -> pitchClass C Natural |> transposeUp Interval.majorThird |> Expect.equal (pitchClass E Natural)
+        , fuzz pitchClassFuzzer "a pitch classes semitones should be within -1 and 12" <|
             \pc ->
                 semitones pc
                     |> Expect.all [ Expect.atLeast -3, Expect.atMost 14 ]
