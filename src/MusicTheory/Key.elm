@@ -1,4 +1,4 @@
-module Key exposing
+module MusicTheory.Key exposing
     ( Key
     , Tonality(..)
     , major
