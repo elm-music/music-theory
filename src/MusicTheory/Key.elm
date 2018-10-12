@@ -4,6 +4,7 @@ module MusicTheory.Key exposing
     , major
     , minor
     , scale
+    , tonic
     )
 
 import MusicTheory.PitchClass exposing (Accidental(..), Letter(..), PitchClass, pitchClass)
