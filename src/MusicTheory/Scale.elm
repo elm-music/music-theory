@@ -141,6 +141,7 @@ toList theScale =
             , scaleDegrees.fourthDegree
             , scaleDegrees.fifthDegree
             , scaleDegrees.sixthDegree
+            , scaleDegrees.seventhDegree
             , scaleDegrees.eighthDegree
             ]
 
