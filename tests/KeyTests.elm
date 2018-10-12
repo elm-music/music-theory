@@ -5,6 +5,7 @@ import Fuzz exposing (Fuzzer)
 import MusicTheory.Key as Key
 import MusicTheory.PitchClass exposing (Accidental(..), Letter(..), pitchClass)
 import MusicTheory.Scale as Scale
+import MusicTheory.ScaleClass as ScaleClass
 import Test exposing (..)
 
 
@@ -15,7 +16,7 @@ all =
             \_ ->
                 let
                     cMajorScale =
-                        Scale.scale (pitchClass C Natural) Scale.major
+                        Scale.scale (pitchClass C Natural) ScaleClass.major
                 in
                 Key.major (pitchClass C Natural)
                     |> Key.scale

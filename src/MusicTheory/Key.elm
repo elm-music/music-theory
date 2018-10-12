@@ -9,6 +9,7 @@ module MusicTheory.Key exposing
 
 import MusicTheory.PitchClass exposing (Accidental(..), Letter(..), PitchClass, pitchClass)
 import MusicTheory.Scale as Scale exposing (Scale)
+import MusicTheory.ScaleClass as ScaleClass
 
 
 type Key
@@ -22,12 +23,12 @@ type MajorOrMinor
 
 major : PitchClass -> Key
 major root =
-    Key Major <| Scale.scale root Scale.major
+    Key Major <| Scale.scale root ScaleClass.major
 
 
 minor : PitchClass -> Key
 minor root =
-    Key Minor <| Scale.scale root Scale.minor
+    Key Minor <| Scale.scale root ScaleClass.minor
 
 
 scale : Key -> Scale

@@ -4,6 +4,7 @@ import Expect
 import Fuzz exposing (Fuzzer)
 import MusicTheory.PitchClass exposing (Accidental(..), Letter(..), pitchClass)
 import MusicTheory.Scale as Scale
+import MusicTheory.ScaleClass as ScaleClass
 import Test exposing (..)
 
 
@@ -12,7 +13,7 @@ all =
     describe "Key Tests"
         [ test "C major scale should have C root" <|
             \_ ->
-                Scale.scale (pitchClass C Natural) Scale.major
+                Scale.scale (pitchClass C Natural) ScaleClass.major
                     |> Scale.root
                     |> Expect.equal (pitchClass C Natural)
         , test "C major" <|
@@ -28,7 +29,7 @@ all =
                         , pitchClass B Natural
                         ]
                 in
-                Scale.scale (pitchClass C Natural) Scale.major
+                Scale.scale (pitchClass C Natural) ScaleClass.major
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCMajor
         , test "A minor" <|
@@ -44,7 +45,7 @@ all =
                         , pitchClass G Natural
                         ]
                 in
-                Scale.scale (pitchClass A Natural) Scale.minor
+                Scale.scale (pitchClass A Natural) ScaleClass.minor
                     |> Scale.toList
                     |> Expect.equal pitchClassesInAMinor
         , test "C major pentatonic" <|
@@ -58,7 +59,7 @@ all =
                         , pitchClass A Natural
                         ]
                 in
-                Scale.scale (pitchClass C Natural) Scale.majorPentatonic
+                Scale.scale (pitchClass C Natural) ScaleClass.majorPentatonic
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCMajorPentatonic
         , test "A minor pentatonic" <|
@@ -72,7 +73,7 @@ all =
                         , pitchClass G Natural
                         ]
                 in
-                Scale.scale (pitchClass A Natural) Scale.minorPentatonic
+                Scale.scale (pitchClass A Natural) ScaleClass.minorPentatonic
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCMinorPentatonic
         , test "C whole tone" <|
@@ -87,7 +88,7 @@ all =
                         , pitchClass A Sharp
                         ]
                 in
-                Scale.scale (pitchClass C Natural) Scale.wholeTone
+                Scale.scale (pitchClass C Natural) ScaleClass.wholeTone
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCWholeTone
         , test "C diminished half-whole" <|
@@ -104,7 +105,7 @@ all =
                         , pitchClass C DoubleFlat
                         ]
                 in
-                Scale.scale (pitchClass C Natural) Scale.diminishedHalfWhole
+                Scale.scale (pitchClass C Natural) ScaleClass.diminishedHalfWhole
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCDiminishedHalfWhole
         , test "C diminished whole-half" <|
@@ -121,7 +122,7 @@ all =
                         , pitchClass C Flat
                         ]
                 in
-                Scale.scale (pitchClass C Natural) Scale.diminishedWholeHalf
+                Scale.scale (pitchClass C Natural) ScaleClass.diminishedWholeHalf
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCDiminishedWholeHalf
         ]
