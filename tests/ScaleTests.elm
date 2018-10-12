@@ -96,12 +96,12 @@ all =
                     pitchClassesInCDiminishedHalfWhole =
                         [ pitchClass C Natural
                         , pitchClass D Flat
-                        , pitchClass D Sharp
-                        , pitchClass E Natural
-                        , pitchClass F Sharp
-                        , pitchClass G Natural
-                        , pitchClass A Natural
-                        , pitchClass B Flat
+                        , pitchClass E Flat
+                        , pitchClass F Flat
+                        , pitchClass G Flat
+                        , pitchClass A DoubleFlat
+                        , pitchClass B DoubleFlat
+                        , pitchClass C DoubleFlat
                         ]
                 in
                 Scale.scale (pitchClass C Natural) Scale.diminishedHalfWhole
@@ -115,10 +115,10 @@ all =
                         , pitchClass D Natural
                         , pitchClass E Flat
                         , pitchClass F Natural
-                        , pitchClass F Sharp
-                        , pitchClass G Sharp
-                        , pitchClass A Natural
-                        , pitchClass B Natural
+                        , pitchClass G Flat
+                        , pitchClass A Flat
+                        , pitchClass B DoubleFlat
+                        , pitchClass C Flat
                         ]
                 in
                 Scale.scale (pitchClass C Natural) Scale.diminishedWholeHalf
