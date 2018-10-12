@@ -150,16 +150,16 @@ pentatonicScale : PitchClass -> PentatonicScaleClassIntervals -> Scale
 pentatonicScale scaleRoot intervals =
     let
         secondDegree =
-            PitchClass.transposeUp intervals.secondInterval scaleRoot
+            PitchClass.transposeUp intervals.firstInterval scaleRoot
 
         thirdDegree =
-            PitchClass.transposeUp intervals.thirdInterval secondDegree
+            PitchClass.transposeUp intervals.secondInterval secondDegree
 
         fourthDegree =
-            PitchClass.transposeUp intervals.fourthInterval thirdDegree
+            PitchClass.transposeUp intervals.thirdInterval thirdDegree
 
         fifthDegree =
-            PitchClass.transposeUp intervals.fifthInterval fourthDegree
+            PitchClass.transposeUp intervals.fourthInterval fourthDegree
     in
     PentatonicScale
         { root = scaleRoot
@@ -174,19 +174,19 @@ hexatonicScale : PitchClass -> HexatonicScaleClassIntervals -> Scale
 hexatonicScale scaleRoot intervals =
     let
         secondDegree =
-            PitchClass.transposeUp intervals.secondInterval scaleRoot
+            PitchClass.transposeUp intervals.firstInterval scaleRoot
 
         thirdDegree =
-            PitchClass.transposeUp intervals.thirdInterval secondDegree
+            PitchClass.transposeUp intervals.secondInterval secondDegree
 
         fourthDegree =
-            PitchClass.transposeUp intervals.fourthInterval thirdDegree
+            PitchClass.transposeUp intervals.thirdInterval thirdDegree
 
         fifthDegree =
-            PitchClass.transposeUp intervals.fifthInterval fourthDegree
+            PitchClass.transposeUp intervals.fourthInterval fourthDegree
 
         sixthDegree =
-            PitchClass.transposeUp intervals.sixthInterval fifthDegree
+            PitchClass.transposeUp intervals.fifthInterval fifthDegree
     in
     HexatonicScale
         { root = scaleRoot
@@ -202,22 +202,22 @@ heptatonicScale : PitchClass -> HeptatonicScaleClassIntervals -> Scale
 heptatonicScale scaleRoot intervals =
     let
         secondDegree =
-            PitchClass.transposeUp intervals.secondInterval scaleRoot
+            PitchClass.transposeUp intervals.firstInterval scaleRoot
 
         thirdDegree =
-            PitchClass.transposeUp intervals.thirdInterval secondDegree
+            PitchClass.transposeUp intervals.secondInterval secondDegree
 
         fourthDegree =
-            PitchClass.transposeUp intervals.fourthInterval thirdDegree
+            PitchClass.transposeUp intervals.thirdInterval thirdDegree
 
         fifthDegree =
-            PitchClass.transposeUp intervals.fifthInterval fourthDegree
+            PitchClass.transposeUp intervals.fourthInterval fourthDegree
 
         sixthDegree =
-            PitchClass.transposeUp intervals.sixthInterval fifthDegree
+            PitchClass.transposeUp intervals.fifthInterval fifthDegree
 
         seventhDegree =
-            PitchClass.transposeUp intervals.seventhInterval sixthDegree
+            PitchClass.transposeUp intervals.sixthInterval sixthDegree
     in
     HeptatonicScale
         { root = scaleRoot
@@ -234,25 +234,25 @@ octatonicScale : PitchClass -> OctatonicScaleClassIntervals -> Scale
 octatonicScale scaleRoot intervals =
     let
         secondDegree =
-            PitchClass.transposeUp intervals.secondInterval scaleRoot
+            PitchClass.transposeUp intervals.firstInterval scaleRoot
 
         thirdDegree =
-            PitchClass.transposeUp intervals.thirdInterval secondDegree
+            PitchClass.transposeUp intervals.secondInterval secondDegree
 
         fourthDegree =
-            PitchClass.transposeUp intervals.fourthInterval thirdDegree
+            PitchClass.transposeUp intervals.thirdInterval thirdDegree
 
         fifthDegree =
-            PitchClass.transposeUp intervals.fifthInterval fourthDegree
+            PitchClass.transposeUp intervals.fourthInterval fourthDegree
 
         sixthDegree =
-            PitchClass.transposeUp intervals.sixthInterval fifthDegree
+            PitchClass.transposeUp intervals.fifthInterval fifthDegree
 
         seventhDegree =
-            PitchClass.transposeUp intervals.seventhInterval sixthDegree
+            PitchClass.transposeUp intervals.sixthInterval sixthDegree
 
         eighthDegree =
-            PitchClass.transposeUp intervals.eighthInterval seventhDegree
+            PitchClass.transposeUp intervals.seventhInterval seventhDegree
     in
     OctatonicScale
         { root = scaleRoot
@@ -278,40 +278,40 @@ type ScaleClass
 
 
 type alias PentatonicScaleClassIntervals =
-    { secondInterval : Interval
+    { firstInterval : Interval
+    , secondInterval : Interval
     , thirdInterval : Interval
     , fourthInterval : Interval
-    , fifthInterval : Interval
     }
 
 
 type alias HexatonicScaleClassIntervals =
-    { secondInterval : Interval
+    { firstInterval : Interval
+    , secondInterval : Interval
     , thirdInterval : Interval
     , fourthInterval : Interval
     , fifthInterval : Interval
-    , sixthInterval : Interval
     }
 
 
 type alias HeptatonicScaleClassIntervals =
-    { secondInterval : Interval
+    { firstInterval : Interval
+    , secondInterval : Interval
     , thirdInterval : Interval
     , fourthInterval : Interval
     , fifthInterval : Interval
     , sixthInterval : Interval
-    , seventhInterval : Interval
     }
 
 
 type alias OctatonicScaleClassIntervals =
-    { secondInterval : Interval
+    { firstInterval : Interval
+    , secondInterval : Interval
     , thirdInterval : Interval
     , fourthInterval : Interval
     , fifthInterval : Interval
     , sixthInterval : Interval
     , seventhInterval : Interval
-    , eighthInterval : Interval
     }
 
 
@@ -328,79 +328,79 @@ minor =
 ionian : ScaleClass
 ionian =
     HeptatonicScaleClass
-        { secondInterval = Interval.majorSecond
-        , thirdInterval = Interval.majorSecond
-        , fourthInterval = Interval.minorSecond
+        { firstInterval = Interval.majorSecond
+        , secondInterval = Interval.majorSecond
+        , thirdInterval = Interval.minorSecond
+        , fourthInterval = Interval.majorSecond
         , fifthInterval = Interval.majorSecond
         , sixthInterval = Interval.majorSecond
-        , seventhInterval = Interval.majorSecond
         }
 
 
 aeolian : ScaleClass
 aeolian =
     HeptatonicScaleClass
-        { secondInterval = Interval.majorSecond
-        , thirdInterval = Interval.minorSecond
+        { firstInterval = Interval.majorSecond
+        , secondInterval = Interval.minorSecond
+        , thirdInterval = Interval.majorSecond
         , fourthInterval = Interval.majorSecond
-        , fifthInterval = Interval.majorSecond
-        , sixthInterval = Interval.minorSecond
-        , seventhInterval = Interval.majorSecond
+        , fifthInterval = Interval.minorSecond
+        , sixthInterval = Interval.majorSecond
         }
 
 
 diminishedHalfWhole : ScaleClass
 diminishedHalfWhole =
     OctatonicScaleClass
-        { secondInterval = Interval.minorSecond
-        , thirdInterval = Interval.majorSecond
-        , fourthInterval = Interval.minorSecond
-        , fifthInterval = Interval.majorSecond
-        , sixthInterval = Interval.minorSecond
-        , seventhInterval = Interval.majorSecond
-        , eighthInterval = Interval.minorSecond
+        { firstInterval = Interval.minorSecond
+        , secondInterval = Interval.majorSecond
+        , thirdInterval = Interval.minorSecond
+        , fourthInterval = Interval.majorSecond
+        , fifthInterval = Interval.minorSecond
+        , sixthInterval = Interval.majorSecond
+        , seventhInterval = Interval.minorSecond
         }
 
 
 diminishedWholeHalf : ScaleClass
 diminishedWholeHalf =
     OctatonicScaleClass
-        { secondInterval = Interval.majorSecond
-        , thirdInterval = Interval.minorSecond
-        , fourthInterval = Interval.majorSecond
-        , fifthInterval = Interval.minorSecond
-        , sixthInterval = Interval.majorSecond
-        , seventhInterval = Interval.minorSecond
-        , eighthInterval = Interval.majorSecond
+        { firstInterval = Interval.majorSecond
+        , secondInterval = Interval.minorSecond
+        , thirdInterval = Interval.majorSecond
+        , fourthInterval = Interval.minorSecond
+        , fifthInterval = Interval.majorSecond
+        , sixthInterval = Interval.minorSecond
+        , seventhInterval = Interval.majorSecond
         }
 
 
 wholeTone : ScaleClass
 wholeTone =
     HexatonicScaleClass
-        { secondInterval = Interval.majorSecond
+        { firstInterval = Interval.majorSecond
+        , secondInterval = Interval.majorSecond
         , thirdInterval = Interval.majorSecond
         , fourthInterval = Interval.majorSecond
         , fifthInterval = Interval.majorSecond
-        , sixthInterval = Interval.majorSecond
         }
 
 
 majorPentatonic : ScaleClass
 majorPentatonic =
     PentatonicScaleClass
-        { secondInterval = Interval.majorSecond
-        , thirdInterval = Interval.majorSecond
-        , fourthInterval = Interval.minorThird
-        , fifthInterval = Interval.majorSecond
+        { firstInterval = Interval.majorSecond
+        , secondInterval = Interval.majorSecond
+        , thirdInterval = Interval.minorThird
+        , fourthInterval = Interval.majorSecond
         }
 
 
 minorPentatonic : ScaleClass
 minorPentatonic =
     PentatonicScaleClass
-        { secondInterval = Interval.minorThird
+        { firstInterval = Interval.minorThird
+        , secondInterval = Interval.majorSecond
         , thirdInterval = Interval.majorSecond
-        , fourthInterval = Interval.majorSecond
-        , fifthInterval = Interval.minorThird
+        , fourthInterval = Interval.minorThird
         }
