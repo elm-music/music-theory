@@ -16,51 +16,51 @@ import MusicTheory.ScaleClass as ScaleClass exposing (ScaleClass)
 
 
 type Scale
-    = Pentatonic PentatonicScaleDegrees
-    | Hexatonic HexatonicScaleDegrees
-    | Heptatonic HeptatonicScaleDegrees
-    | Octatonic OctatonicScaleDegrees
+    = Pentatonic PentatonicDegrees
+    | Hexatonic HexatonicDegrees
+    | Heptatonic HeptatonicDegrees
+    | Octatonic OctatonicDegrees
 
 
-type alias PentatonicScaleDegrees =
+type alias PentatonicDegrees =
     { root : PitchClass
-    , secondDegree : PitchClass
-    , thirdDegree : PitchClass
-    , fourthDegree : PitchClass
-    , fifthDegree : PitchClass
+    , second : PitchClass
+    , third : PitchClass
+    , fourth : PitchClass
+    , fifth : PitchClass
     }
 
 
-type alias HexatonicScaleDegrees =
+type alias HexatonicDegrees =
     { root : PitchClass
-    , secondDegree : PitchClass
-    , thirdDegree : PitchClass
-    , fourthDegree : PitchClass
-    , fifthDegree : PitchClass
-    , sixthDegree : PitchClass
+    , second : PitchClass
+    , third : PitchClass
+    , fourth : PitchClass
+    , fifth : PitchClass
+    , sixth : PitchClass
     }
 
 
-type alias HeptatonicScaleDegrees =
+type alias HeptatonicDegrees =
     { root : PitchClass
-    , secondDegree : PitchClass
-    , thirdDegree : PitchClass
-    , fourthDegree : PitchClass
-    , fifthDegree : PitchClass
-    , sixthDegree : PitchClass
-    , seventhDegree : PitchClass
+    , second : PitchClass
+    , third : PitchClass
+    , fourth : PitchClass
+    , fifth : PitchClass
+    , sixth : PitchClass
+    , seventh : PitchClass
     }
 
 
-type alias OctatonicScaleDegrees =
+type alias OctatonicDegrees =
     { root : PitchClass
-    , secondDegree : PitchClass
-    , thirdDegree : PitchClass
-    , fourthDegree : PitchClass
-    , fifthDegree : PitchClass
-    , sixthDegree : PitchClass
-    , seventhDegree : PitchClass
-    , eighthDegree : PitchClass
+    , second : PitchClass
+    , third : PitchClass
+    , fourth : PitchClass
+    , fifth : PitchClass
+    , sixth : PitchClass
+    , seventh : PitchClass
+    , eighth : PitchClass
     }
 
 
@@ -101,158 +101,158 @@ toList theScale =
     case theScale of
         Pentatonic scaleDegrees ->
             [ scaleDegrees.root
-            , scaleDegrees.secondDegree
-            , scaleDegrees.thirdDegree
-            , scaleDegrees.fourthDegree
-            , scaleDegrees.fifthDegree
+            , scaleDegrees.second
+            , scaleDegrees.third
+            , scaleDegrees.fourth
+            , scaleDegrees.fifth
             ]
 
         Hexatonic scaleDegrees ->
             [ scaleDegrees.root
-            , scaleDegrees.secondDegree
-            , scaleDegrees.thirdDegree
-            , scaleDegrees.fourthDegree
-            , scaleDegrees.fifthDegree
-            , scaleDegrees.sixthDegree
+            , scaleDegrees.second
+            , scaleDegrees.third
+            , scaleDegrees.fourth
+            , scaleDegrees.fifth
+            , scaleDegrees.sixth
             ]
 
         Heptatonic scaleDegrees ->
             [ scaleDegrees.root
-            , scaleDegrees.secondDegree
-            , scaleDegrees.thirdDegree
-            , scaleDegrees.fourthDegree
-            , scaleDegrees.fifthDegree
-            , scaleDegrees.sixthDegree
-            , scaleDegrees.seventhDegree
+            , scaleDegrees.second
+            , scaleDegrees.third
+            , scaleDegrees.fourth
+            , scaleDegrees.fifth
+            , scaleDegrees.sixth
+            , scaleDegrees.seventh
             ]
 
         Octatonic scaleDegrees ->
             [ scaleDegrees.root
-            , scaleDegrees.secondDegree
-            , scaleDegrees.thirdDegree
-            , scaleDegrees.fourthDegree
-            , scaleDegrees.fifthDegree
-            , scaleDegrees.sixthDegree
-            , scaleDegrees.seventhDegree
-            , scaleDegrees.eighthDegree
+            , scaleDegrees.second
+            , scaleDegrees.third
+            , scaleDegrees.fourth
+            , scaleDegrees.fifth
+            , scaleDegrees.sixth
+            , scaleDegrees.seventh
+            , scaleDegrees.eighth
             ]
 
 
-pentatonicScale : PitchClass -> Internal.PentatonicScaleClassIntervals -> Scale
+pentatonicScale : PitchClass -> Internal.PentatonicIntervals -> Scale
 pentatonicScale scaleRoot intervals =
     let
         secondDegree =
-            PitchClass.transposeUp intervals.firstInterval scaleRoot
+            PitchClass.transposeUp intervals.first scaleRoot
 
         thirdDegree =
-            PitchClass.transposeUp intervals.secondInterval secondDegree
+            PitchClass.transposeUp intervals.second secondDegree
 
         fourthDegree =
-            PitchClass.transposeUp intervals.thirdInterval thirdDegree
+            PitchClass.transposeUp intervals.third thirdDegree
 
         fifthDegree =
-            PitchClass.transposeUp intervals.fourthInterval fourthDegree
+            PitchClass.transposeUp intervals.fourth fourthDegree
     in
     Pentatonic
         { root = scaleRoot
-        , secondDegree = secondDegree
-        , thirdDegree = thirdDegree
-        , fourthDegree = fourthDegree
-        , fifthDegree = fifthDegree
+        , second = secondDegree
+        , third = thirdDegree
+        , fourth = fourthDegree
+        , fifth = fifthDegree
         }
 
 
-hexatonicScale : PitchClass -> Internal.HexatonicScaleClassIntervals -> Scale
+hexatonicScale : PitchClass -> Internal.HexatonicIntervals -> Scale
 hexatonicScale scaleRoot intervals =
     let
         secondDegree =
-            PitchClass.transposeUp intervals.firstInterval scaleRoot
+            PitchClass.transposeUp intervals.first scaleRoot
 
         thirdDegree =
-            PitchClass.transposeUp intervals.secondInterval secondDegree
+            PitchClass.transposeUp intervals.second secondDegree
 
         fourthDegree =
-            PitchClass.transposeUp intervals.thirdInterval thirdDegree
+            PitchClass.transposeUp intervals.third thirdDegree
 
         fifthDegree =
-            PitchClass.transposeUp intervals.fourthInterval fourthDegree
+            PitchClass.transposeUp intervals.fourth fourthDegree
 
         sixthDegree =
-            PitchClass.transposeUp intervals.fifthInterval fifthDegree
+            PitchClass.transposeUp intervals.fifth fifthDegree
     in
     Hexatonic
         { root = scaleRoot
-        , secondDegree = secondDegree
-        , thirdDegree = thirdDegree
-        , fourthDegree = fourthDegree
-        , fifthDegree = fifthDegree
-        , sixthDegree = sixthDegree
+        , second = secondDegree
+        , third = thirdDegree
+        , fourth = fourthDegree
+        , fifth = fifthDegree
+        , sixth = sixthDegree
         }
 
 
-heptatonicScale : PitchClass -> Internal.HeptatonicScaleClassIntervals -> Scale
+heptatonicScale : PitchClass -> Internal.HeptatonicIntervals -> Scale
 heptatonicScale scaleRoot intervals =
     let
         secondDegree =
-            PitchClass.transposeUp intervals.firstInterval scaleRoot
+            PitchClass.transposeUp intervals.first scaleRoot
 
         thirdDegree =
-            PitchClass.transposeUp intervals.secondInterval secondDegree
+            PitchClass.transposeUp intervals.second secondDegree
 
         fourthDegree =
-            PitchClass.transposeUp intervals.thirdInterval thirdDegree
+            PitchClass.transposeUp intervals.third thirdDegree
 
         fifthDegree =
-            PitchClass.transposeUp intervals.fourthInterval fourthDegree
+            PitchClass.transposeUp intervals.fourth fourthDegree
 
         sixthDegree =
-            PitchClass.transposeUp intervals.fifthInterval fifthDegree
+            PitchClass.transposeUp intervals.fifth fifthDegree
 
         seventhDegree =
-            PitchClass.transposeUp intervals.sixthInterval sixthDegree
+            PitchClass.transposeUp intervals.sixth sixthDegree
     in
     Heptatonic
         { root = scaleRoot
-        , secondDegree = secondDegree
-        , thirdDegree = thirdDegree
-        , fourthDegree = fourthDegree
-        , fifthDegree = fifthDegree
-        , sixthDegree = sixthDegree
-        , seventhDegree = seventhDegree
+        , second = secondDegree
+        , third = thirdDegree
+        , fourth = fourthDegree
+        , fifth = fifthDegree
+        , sixth = sixthDegree
+        , seventh = seventhDegree
         }
 
 
-octatonicScale : PitchClass -> Internal.OctatonicScaleClassIntervals -> Scale
+octatonicScale : PitchClass -> Internal.OctatonicIntervals -> Scale
 octatonicScale scaleRoot intervals =
     let
         secondDegree =
-            PitchClass.transposeUp intervals.firstInterval scaleRoot
+            PitchClass.transposeUp intervals.first scaleRoot
 
         thirdDegree =
-            PitchClass.transposeUp intervals.secondInterval secondDegree
+            PitchClass.transposeUp intervals.second secondDegree
 
         fourthDegree =
-            PitchClass.transposeUp intervals.thirdInterval thirdDegree
+            PitchClass.transposeUp intervals.third thirdDegree
 
         fifthDegree =
-            PitchClass.transposeUp intervals.fourthInterval fourthDegree
+            PitchClass.transposeUp intervals.fourth fourthDegree
 
         sixthDegree =
-            PitchClass.transposeUp intervals.fifthInterval fifthDegree
+            PitchClass.transposeUp intervals.fifth fifthDegree
 
         seventhDegree =
-            PitchClass.transposeUp intervals.sixthInterval sixthDegree
+            PitchClass.transposeUp intervals.sixth sixthDegree
 
         eighthDegree =
-            PitchClass.transposeUp intervals.seventhInterval seventhDegree
+            PitchClass.transposeUp intervals.seventh seventhDegree
     in
     Octatonic
         { root = scaleRoot
-        , secondDegree = secondDegree
-        , thirdDegree = thirdDegree
-        , fourthDegree = fourthDegree
-        , fifthDegree = fifthDegree
-        , sixthDegree = sixthDegree
-        , seventhDegree = seventhDegree
-        , eighthDegree = eighthDegree
+        , second = secondDegree
+        , third = thirdDegree
+        , fourth = fourthDegree
+        , fifth = fifthDegree
+        , sixth = sixthDegree
+        , seventh = seventhDegree
+        , eighth = eighthDegree
         }

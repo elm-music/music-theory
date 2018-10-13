@@ -1,8 +1,8 @@
 module MusicTheory.Internals.ScaleClass exposing
-    ( HeptatonicScaleClassIntervals
-    , HexatonicScaleClassIntervals
-    , OctatonicScaleClassIntervals
-    , PentatonicScaleClassIntervals
+    ( HeptatonicIntervals
+    , HexatonicIntervals
+    , OctatonicIntervals
+    , PentatonicIntervals
     , ScaleClass(..)
     )
 
@@ -11,45 +11,45 @@ import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 
 
 type ScaleClass
-    = Pentatonic PentatonicScaleClassIntervals
-    | Hexatonic HexatonicScaleClassIntervals
-    | Heptatonic HeptatonicScaleClassIntervals
-    | Octatonic OctatonicScaleClassIntervals
+    = Pentatonic PentatonicIntervals
+    | Hexatonic HexatonicIntervals
+    | Heptatonic HeptatonicIntervals
+    | Octatonic OctatonicIntervals
 
 
-type alias PentatonicScaleClassIntervals =
-    { firstInterval : Interval
-    , secondInterval : Interval
-    , thirdInterval : Interval
-    , fourthInterval : Interval
+type alias PentatonicIntervals =
+    { first : Interval
+    , second : Interval
+    , third : Interval
+    , fourth : Interval
     }
 
 
-type alias HexatonicScaleClassIntervals =
-    { firstInterval : Interval
-    , secondInterval : Interval
-    , thirdInterval : Interval
-    , fourthInterval : Interval
-    , fifthInterval : Interval
+type alias HexatonicIntervals =
+    { first : Interval
+    , second : Interval
+    , third : Interval
+    , fourth : Interval
+    , fifth : Interval
     }
 
 
-type alias HeptatonicScaleClassIntervals =
-    { firstInterval : Interval
-    , secondInterval : Interval
-    , thirdInterval : Interval
-    , fourthInterval : Interval
-    , fifthInterval : Interval
-    , sixthInterval : Interval
+type alias HeptatonicIntervals =
+    { first : Interval
+    , second : Interval
+    , third : Interval
+    , fourth : Interval
+    , fifth : Interval
+    , sixth : Interval
     }
 
 
-type alias OctatonicScaleClassIntervals =
-    { firstInterval : Interval
-    , secondInterval : Interval
-    , thirdInterval : Interval
-    , fourthInterval : Interval
-    , fifthInterval : Interval
-    , sixthInterval : Interval
-    , seventhInterval : Interval
+type alias OctatonicIntervals =
+    { first : Interval
+    , second : Interval
+    , third : Interval
+    , fourth : Interval
+    , fifth : Interval
+    , sixth : Interval
+    , seventh : Interval
     }

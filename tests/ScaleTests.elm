@@ -105,7 +105,7 @@ all =
                         , pitchClass C DoubleFlat
                         ]
                 in
-                Scale.scale (pitchClass C Natural) ScaleClass.diminishedHalfWhole
+                Scale.scale (pitchClass C Natural) ScaleClass.diminishedHalftoneWholetone
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCDiminishedHalfWhole
         , test "C diminished whole-half" <|
@@ -122,7 +122,7 @@ all =
                         , pitchClass C Flat
                         ]
                 in
-                Scale.scale (pitchClass C Natural) ScaleClass.diminishedWholeHalf
+                Scale.scale (pitchClass C Natural) ScaleClass.diminishedWholetoneHalftone
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCDiminishedWholeHalf
         ]
