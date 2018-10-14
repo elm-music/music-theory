@@ -2,56 +2,50 @@ module MusicTheory.ScaleClass exposing
     ( ScaleClass
     , aeolian
     , altered
-    , alteredBb7
+    , alteredDoubleFlat7
     , arabian
     , augmented
-    , augmentedIonian
-    , augmentedLydian
     , balinese
     , blues
     , byzantine
     , chinese
-    , diminishedHalftoneWholetone
-    , diminishedLydian
-    , diminishedWholetoneHalftone
+    , diminishedHalfToneWholeTone
+    , diminishedWholeToneHalfTone
     , dorian
-    , dorianB2
-    , dorianSharp4
-    , doubleHarmonic
+    , dorianFlat9
+    , dorianSharp11
+    , doubleHarmonicMinor
     , egyptian
     , eightToneSpanish
     , enigmatic
     , harmonicMinor
-    , hindu
     , hirajoshi
     , hungarianMajor
-    , hungarianMinorGipsy
     , ichikosucho
     , ionian
+    , ionianSharp5
     , kumoi
     , leadingWholeTone
     , locrian
-    , locrian2
-    , locrian6
+    , locrianNatural13
+    , locrianNatural9
     , lydian
-    , lydianB7
+    , lydianAugmented
+    , lydianDiminished
+    , lydianDominant
+    , lydianMinor
     , lydianSharp9
     , major
     , majorPentatonic
-    , majorPhrygian
     , melodicMinor
     , minor
-    , minorLydian
     , minorPentatonic
     , mixolydian
-    , mixolydianB6
-    , mohammedan
-    , mongolian
-    , naturalMinor
-    , neopolitan
-    , neopolitanMajor
-    , neopolitanMinor
-    , overtone
+    , mixolydianFlat13
+    , mixolydianFlat9Flat13
+    , neapolitan
+    , neapolitanMajor
+    , neapolitanMinor
     , pelog
     , persian
     , phrygian
@@ -72,6 +66,10 @@ type alias ScaleClass =
     Internal.ScaleClass
 
 
+
+-- Modes of major
+
+
 major : ScaleClass
 major =
     ionian
@@ -80,18 +78,6 @@ major =
 minor : ScaleClass
 minor =
     aeolian
-
-
-melodicMinor : ScaleClass
-melodicMinor =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.minorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.majorSecond
-        }
 
 
 ionian : ScaleClass
@@ -118,27 +104,15 @@ dorian =
         }
 
 
-naturalMinor : ScaleClass
-naturalMinor =
+phrygian : ScaleClass
+phrygian =
     Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.minorSecond
+        { first = Interval.minorSecond
+        , second = Interval.majorSecond
         , third = Interval.majorSecond
         , fourth = Interval.majorSecond
         , fifth = Interval.minorSecond
         , sixth = Interval.majorSecond
-        }
-
-
-harmonicMinor : ScaleClass
-harmonicMinor =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.minorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.minorThird
         }
 
 
@@ -154,23 +128,23 @@ lydian =
         }
 
 
+mixolydian : ScaleClass
+mixolydian =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.minorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.minorSecond
+        }
+
+
 aeolian : ScaleClass
 aeolian =
     Internal.Heptatonic
         { first = Interval.majorSecond
         , second = Interval.minorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.majorSecond
-        }
-
-
-phrygian : ScaleClass
-phrygian =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.majorSecond
         , third = Interval.majorSecond
         , fourth = Interval.majorSecond
         , fifth = Interval.minorSecond
@@ -190,141 +164,79 @@ locrian =
         }
 
 
-blues : ScaleClass
-blues =
-    Internal.Hexatonic
-        { first = Interval.minorThird
-        , second = Interval.majorSecond
-        , third = Interval.minorSecond
-        , fourth = Interval.minorSecond
-        , fifth = Interval.minorThird
+
+-- Modes of melodic minor
+
+
+melodicMinor : ScaleClass
+melodicMinor =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.minorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.majorSecond
         }
 
 
-mixolydian : ScaleClass
-mixolydian =
+dorianFlat9 : ScaleClass
+dorianFlat9 =
     Internal.Heptatonic
-        { first = Interval.majorSecond
+        { first = Interval.minorSecond
         , second = Interval.majorSecond
-        , third = Interval.minorSecond
-        , fourth = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.minorSecond
         , fifth = Interval.majorSecond
         , sixth = Interval.minorSecond
         }
 
 
-diminishedHalftoneWholetone : ScaleClass
-diminishedHalftoneWholetone =
-    Internal.Octatonic
-        { first = Interval.minorSecond
+lydianAugmented : ScaleClass
+lydianAugmented =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.minorSecond
+        , sixth = Interval.majorSecond
+        }
+
+
+lydianDominant : ScaleClass
+lydianDominant =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.minorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.minorSecond
+        }
+
+
+mixolydianFlat13 : ScaleClass
+mixolydianFlat13 =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
         , second = Interval.majorSecond
         , third = Interval.minorSecond
         , fourth = Interval.majorSecond
         , fifth = Interval.minorSecond
         , sixth = Interval.majorSecond
-        , seventh = Interval.minorSecond
         }
 
 
-minorPentatonic : ScaleClass
-minorPentatonic =
-    Internal.Pentatonic
-        { first = Interval.minorThird
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.minorThird
-        }
-
-
-augmented : ScaleClass
-augmented =
-    Internal.Hexatonic
-        { first = Interval.minorThird
-        , second = Interval.minorSecond
-        , third = Interval.minorThird
-        , fourth = Interval.minorSecond
-        , fifth = Interval.minorThird
-        }
-
-
-diminishedWholetoneHalftone : ScaleClass
-diminishedWholetoneHalftone =
-    Internal.Octatonic
+locrianNatural9 : ScaleClass
+locrianNatural9 =
+    Internal.Heptatonic
         { first = Interval.majorSecond
         , second = Interval.minorSecond
         , third = Interval.majorSecond
         , fourth = Interval.minorSecond
         , fifth = Interval.majorSecond
-        , sixth = Interval.minorSecond
-        , seventh = Interval.majorSecond
-        }
-
-
-majorPentatonic : ScaleClass
-majorPentatonic =
-    Internal.Pentatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.minorThird
-        , fourth = Interval.majorSecond
-        }
-
-
-wholeTone : ScaleClass
-wholeTone =
-    Internal.Hexatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.majorSecond
-        }
-
-
-leadingWholeTone : ScaleClass
-leadingWholeTone =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.minorSecond
-        }
-
-
-doubleHarmonic : ScaleClass
-doubleHarmonic =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.minorThird
-        , third = Interval.minorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.minorThird
-        }
-
-
-overtone : ScaleClass
-overtone =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.minorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.minorSecond
-        }
-
-
-sixToneSymmetrical : ScaleClass
-sixToneSymmetrical =
-    Internal.Hexatonic
-        { first = Interval.minorSecond
-        , second = Interval.minorThird
-        , third = Interval.minorSecond
-        , fourth = Interval.minorThird
-        , fifth = Interval.minorSecond
+        , sixth = Interval.majorSecond
         }
 
 
@@ -340,116 +252,25 @@ altered =
         }
 
 
-alteredBb7 : ScaleClass
-alteredBb7 =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.majorSecond
-        , third = Interval.minorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.minorSecond
-        }
+
+-- Modes of harmonic minor
+-- (NOTE: add Superlocrian)
 
 
-dorianB2 : ScaleClass
-dorianB2 =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.minorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.minorSecond
-        }
-
-
-augmentedLydian : ScaleClass
-augmentedLydian =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.majorSecond
-        }
-
-
-enigmatic : ScaleClass
-enigmatic =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.minorThird
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.minorSecond
-        }
-
-
-lydianB7 : ScaleClass
-lydianB7 =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.minorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.minorSecond
-        }
-
-
-mixolydianB6 : ScaleClass
-mixolydianB6 =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.minorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.majorSecond
-        }
-
-
-locrian2 : ScaleClass
-locrian2 =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.minorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.minorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.majorSecond
-        }
-
-
-dorianSharp4 : ScaleClass
-dorianSharp4 =
+harmonicMinor : ScaleClass
+harmonicMinor =
     Internal.Heptatonic
         { first = Interval.majorSecond
         , second = Interval.minorSecond
         , third = Interval.majorSecond
         , fourth = Interval.majorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.minorSecond
-        }
-
-
-augmentedIonian : ScaleClass
-augmentedIonian =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.minorSecond
-        , fourth = Interval.minorThird
         , fifth = Interval.minorSecond
-        , sixth = Interval.majorSecond
+        , sixth = Interval.minorThird
         }
 
 
-locrian6 : ScaleClass
-locrian6 =
+locrianNatural13 : ScaleClass
+locrianNatural13 =
     Internal.Heptatonic
         { first = Interval.minorSecond
         , second = Interval.majorSecond
@@ -460,8 +281,32 @@ locrian6 =
         }
 
 
-majorPhrygian : ScaleClass
-majorPhrygian =
+ionianSharp5 : ScaleClass
+ionianSharp5 =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.minorSecond
+        , fourth = Interval.minorThird
+        , fifth = Interval.minorSecond
+        , sixth = Interval.majorSecond
+        }
+
+
+dorianSharp11 : ScaleClass
+dorianSharp11 =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.minorSecond
+        , third = Interval.minorThird
+        , fourth = Interval.minorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.minorSecond
+        }
+
+
+mixolydianFlat9Flat13 : ScaleClass
+mixolydianFlat9Flat13 =
     Internal.Heptatonic
         { first = Interval.minorSecond
         , second = Interval.minorThird
@@ -484,16 +329,156 @@ lydianSharp9 =
         }
 
 
-diminishedLydian : ScaleClass
-diminishedLydian =
-    Internal.Heptatonic
+
+-- Other dominant scales
+
+
+blues : ScaleClass
+blues =
+    Internal.Hexatonic
+        { first = Interval.minorThird
+        , second = Interval.majorSecond
+        , third = Interval.minorSecond
+        , fourth = Interval.minorSecond
+        , fifth = Interval.minorThird
+        }
+
+
+diminishedWholeToneHalfTone : ScaleClass
+diminishedWholeToneHalfTone =
+    Internal.Octatonic
         { first = Interval.majorSecond
+        , second = Interval.minorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.minorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.minorSecond
+        , seventh = Interval.majorSecond
+        }
+
+
+diminishedHalfToneWholeTone : ScaleClass
+diminishedHalfToneWholeTone =
+    Internal.Octatonic
+        { first = Interval.minorSecond
+        , second = Interval.majorSecond
+        , third = Interval.minorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.minorSecond
+        , sixth = Interval.majorSecond
+        , seventh = Interval.minorSecond
+        }
+
+
+wholeTone : ScaleClass
+wholeTone =
+    Internal.Hexatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.majorSecond
+        }
+
+
+
+-- Western pentatonic scales
+
+
+majorPentatonic : ScaleClass
+majorPentatonic =
+    Internal.Pentatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.minorThird
+        , fourth = Interval.majorSecond
+        }
+
+
+minorPentatonic : ScaleClass
+minorPentatonic =
+    Internal.Pentatonic
+        { first = Interval.minorThird
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.minorThird
+        }
+
+
+
+-- Synthetic scales
+
+
+augmented : ScaleClass
+augmented =
+    Internal.Hexatonic
+        { first = Interval.minorThird
         , second = Interval.minorSecond
         , third = Interval.minorThird
         , fourth = Interval.minorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.majorSecond
+        , fifth = Interval.minorThird
         }
+
+
+leadingWholeTone : ScaleClass
+leadingWholeTone =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.minorSecond
+        }
+
+
+enigmatic : ScaleClass
+enigmatic =
+    Internal.Heptatonic
+        { first = Interval.minorSecond
+        , second = Interval.minorThird
+        , third = Interval.majorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.minorSecond
+        }
+
+
+sixToneSymmetrical : ScaleClass
+sixToneSymmetrical =
+    Internal.Hexatonic
+        { first = Interval.minorSecond
+        , second = Interval.minorThird
+        , third = Interval.minorSecond
+        , fourth = Interval.minorThird
+        , fifth = Interval.minorSecond
+        }
+
+
+prometheus : ScaleClass
+prometheus =
+    Internal.Hexatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.minorThird
+        , fifth = Interval.minorSecond
+        }
+
+
+prometheusNeopolitan : ScaleClass
+prometheusNeopolitan =
+    Internal.Hexatonic
+        { first = Interval.minorSecond
+        , second = Interval.minorThird
+        , third = Interval.majorSecond
+        , fourth = Interval.minorThird
+        , fifth = Interval.minorSecond
+        }
+
+
+
+-- Non-Western scales
 
 
 arabian : ScaleClass
@@ -504,18 +489,6 @@ arabian =
         , third = Interval.minorSecond
         , fourth = Interval.minorSecond
         , fifth = Interval.majorSecond
-        , sixth = Interval.majorSecond
-        }
-
-
-minorLydian : ScaleClass
-minorLydian =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.minorSecond
-        , fifth = Interval.minorSecond
         , sixth = Interval.majorSecond
         }
 
@@ -552,28 +525,6 @@ chinese =
         }
 
 
-mongolian : ScaleClass
-mongolian =
-    Internal.Pentatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.minorThird
-        , fourth = Interval.majorSecond
-        }
-
-
-hindu : ScaleClass
-hindu =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.minorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.majorSecond
-        }
-
-
 egyptian : ScaleClass
 egyptian =
     Internal.Pentatonic
@@ -581,16 +532,6 @@ egyptian =
         , second = Interval.minorThird
         , third = Interval.majorSecond
         , fourth = Interval.minorThird
-        }
-
-
-hirajoshi : ScaleClass
-hirajoshi =
-    Internal.Pentatonic
-        { first = Interval.majorSecond
-        , second = Interval.minorSecond
-        , third = Interval.majorThird
-        , fourth = Interval.minorSecond
         }
 
 
@@ -607,6 +548,16 @@ eightToneSpanish =
         }
 
 
+hirajoshi : ScaleClass
+hirajoshi =
+    Internal.Pentatonic
+        { first = Interval.majorSecond
+        , second = Interval.minorSecond
+        , third = Interval.majorThird
+        , fourth = Interval.minorSecond
+        }
+
+
 hungarianMajor : ScaleClass
 hungarianMajor =
     Internal.Heptatonic
@@ -616,18 +567,6 @@ hungarianMajor =
         , fourth = Interval.minorSecond
         , fifth = Interval.majorSecond
         , sixth = Interval.minorSecond
-        }
-
-
-hungarianMinorGipsy : ScaleClass
-hungarianMinorGipsy =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.minorSecond
-        , third = Interval.minorThird
-        , fourth = Interval.minorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.minorThird
         }
 
 
@@ -644,30 +583,6 @@ ichikosucho =
         }
 
 
-mohammedan : ScaleClass
-mohammedan =
-    Internal.Heptatonic
-        { first = Interval.majorSecond
-        , second = Interval.minorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.minorThird
-        }
-
-
-neopolitan : ScaleClass
-neopolitan =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.minorThird
-        }
-
-
 kumoi : ScaleClass
 kumoi =
     Internal.Pentatonic
@@ -678,42 +593,6 @@ kumoi =
         }
 
 
-neopolitanMajor : ScaleClass
-neopolitanMajor =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.majorSecond
-        , sixth = Interval.majorSecond
-        }
-
-
-neopolitanMinor : ScaleClass
-neopolitanMinor =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.majorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.majorSecond
-        }
-
-
-todiTheta : ScaleClass
-todiTheta =
-    Internal.Heptatonic
-        { first = Interval.minorSecond
-        , second = Interval.majorSecond
-        , third = Interval.minorThird
-        , fourth = Interval.minorSecond
-        , fifth = Interval.minorSecond
-        , sixth = Interval.minorThird
-        }
-
-
 pelog : ScaleClass
 pelog =
     Internal.Pentatonic
@@ -721,28 +600,6 @@ pelog =
         , second = Interval.majorSecond
         , third = Interval.majorThird
         , fourth = Interval.minorSecond
-        }
-
-
-prometheus : ScaleClass
-prometheus =
-    Internal.Hexatonic
-        { first = Interval.majorSecond
-        , second = Interval.majorSecond
-        , third = Interval.majorSecond
-        , fourth = Interval.minorThird
-        , fifth = Interval.minorSecond
-        }
-
-
-prometheusNeopolitan : ScaleClass
-prometheusNeopolitan =
-    Internal.Hexatonic
-        { first = Interval.minorSecond
-        , second = Interval.minorThird
-        , third = Interval.majorSecond
-        , fourth = Interval.minorThird
-        , fifth = Interval.minorSecond
         }
 
 
@@ -767,4 +624,105 @@ purviTheta =
         , fourth = Interval.minorSecond
         , fifth = Interval.minorSecond
         , sixth = Interval.minorThird
+        }
+
+
+todiTheta : ScaleClass
+todiTheta =
+    Internal.Heptatonic
+        { first = Interval.minorSecond
+        , second = Interval.majorSecond
+        , third = Interval.minorThird
+        , fourth = Interval.minorSecond
+        , fifth = Interval.minorSecond
+        , sixth = Interval.minorThird
+        }
+
+
+
+-- Others
+-- NOTE: categorize
+
+
+alteredDoubleFlat7 : ScaleClass
+alteredDoubleFlat7 =
+    Internal.Heptatonic
+        { first = Interval.minorSecond
+        , second = Interval.majorSecond
+        , third = Interval.minorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.minorSecond
+        }
+
+
+lydianDiminished : ScaleClass
+lydianDiminished =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.minorSecond
+        , third = Interval.minorThird
+        , fourth = Interval.minorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.majorSecond
+        }
+
+
+lydianMinor : ScaleClass
+lydianMinor =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.minorSecond
+        , fifth = Interval.minorSecond
+        , sixth = Interval.majorSecond
+        }
+
+
+doubleHarmonicMinor : ScaleClass
+doubleHarmonicMinor =
+    Internal.Heptatonic
+        { first = Interval.majorSecond
+        , second = Interval.minorSecond
+        , third = Interval.minorThird
+        , fourth = Interval.minorSecond
+        , fifth = Interval.minorSecond
+        , sixth = Interval.minorThird
+        }
+
+
+neapolitan : ScaleClass
+neapolitan =
+    Internal.Heptatonic
+        { first = Interval.minorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.minorSecond
+        , sixth = Interval.minorThird
+        }
+
+
+neapolitanMajor : ScaleClass
+neapolitanMajor =
+    Internal.Heptatonic
+        { first = Interval.minorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.majorSecond
+        , sixth = Interval.majorSecond
+        }
+
+
+neapolitanMinor : ScaleClass
+neapolitanMinor =
+    Internal.Heptatonic
+        { first = Interval.minorSecond
+        , second = Interval.majorSecond
+        , third = Interval.majorSecond
+        , fourth = Interval.majorSecond
+        , fifth = Interval.minorSecond
+        , sixth = Interval.majorSecond
         }
