@@ -6,7 +6,10 @@
     "version": "1.0.0",
     "exposed-modules": [
         "MusicTheory.PitchClass",
-        "MusicTheory.Interval"
+        "MusicTheory.Interval",
+        "MusicTheory.ScaleClass",
+        "MusicTheory.Scale",
+        "MusicTheory.Key"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
