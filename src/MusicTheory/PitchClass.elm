@@ -1,6 +1,8 @@
 module MusicTheory.PitchClass exposing
-    ( areEnharmonicEqual
-    , Accidental(..), Letter(..), PitchClass, all, asNaturalOrLoweredOnce, asNaturalOrRaisedOnce, exact, fromTuple, pitchClass, semitones, toString, transposeBySemitones, transposeDown, transposeUp
+    ( PitchClass
+    , all
+    , areEnharmonicEqual
+    , fromTuple, pitchClass, semitones, transposeBySemitones, transposeDown, transposeUp
     )
 
 {-| A pitch class is a set of all pitches that are a whole number of octaves apart. A pitch class is represented as a letter together with an accidental.
@@ -10,7 +12,7 @@ The internals of `PitchClass` are opaque. By using accessor functions the caller
 
 # Definition
 
-@docs Letter Accidental PitchClass
+@docs PitchClass
 
 
 # Constructors
@@ -20,12 +22,12 @@ The internals of `PitchClass` are opaque. By using accessor functions the caller
 
 # Accessors
 
-@docs exact all
+@docs all
 
 
 # Transform
 
-@docs transposeUp transposeDown transposeBySemitones equivalentAsNaturalOrFlat equivalentAsNaturalOrSharp semitones toString
+@docs transposeUp transposeDown transposeBySemitones semitones
 
 
 # Comparison
@@ -34,47 +36,26 @@ The internals of `PitchClass` are opaque. By using accessor functions the caller
 
 -}
 
+import MusicTheory.Accidental exposing (Accidental(..))
+import MusicTheory.Internals.PitchClass as Internal
 import MusicTheory.Interval as Interval exposing (Interval, IntervalNumber(..), IntervalQuality(..))
+import MusicTheory.Letter exposing (Letter(..))
 
 
 
 -- DEFINITION
 
 
-{-| A letter represents a note from the diatonic C major scale.
--}
-type Letter
-    = C
-    | D
-    | E
-    | F
-    | G
-    | A
-    | B
-
-
-{-| An accidental describes by how many semitones a letter is raised or lowered.
--}
-type Accidental
-    = TripleFlat
-    | DoubleFlat
-    | Flat
-    | Natural
-    | Sharp
-    | DoubleSharp
-    | TripleSharp
-
-
 {-| Internal representation of an unlimited raised or lowered letter. E.g. four flats are represented as as `Offset -4`.
 -}
-type Offset
-    = Offset Int
+type alias Offset =
+    Internal.Offset
 
 
 {-| Opaque type that represents a pitch class.
 -}
-type PitchClass
-    = PitchClass Letter Offset
+type alias PitchClass =
+    Internal.PitchClass
 
 
 
@@ -88,7 +69,7 @@ type PitchClass
 -}
 pitchClass : Letter -> Accidental -> PitchClass
 pitchClass l acc =
-    PitchClass l (accidentalToOffset acc)
+    Internal.PitchClass l (accidentalToOffset acc)
 
 
 {-| Create a pitch class from a tuple of a letter and an accidental.
@@ -113,24 +94,13 @@ all =
         |> List.concatMap (\l -> accidentals |> List.map (pitchClass l))
 
 
-{-| Returns the letter and accidental of a pitch class if the letter is raised or lowered such that it can be expressed in terms of a valid accidental.
-
-    (pitchClass F Sharp |> exact) == Just ( F, Sharp )
-
--}
-exact : PitchClass -> Maybe ( Letter, Accidental )
-exact (PitchClass l o) =
-    offsetToAccidental o
-        |> Maybe.map (Tuple.pair l)
-
-
 letter : PitchClass -> Letter
-letter (PitchClass l _) =
+letter (Internal.PitchClass l _) =
     l
 
 
 offset : PitchClass -> Int
-offset (PitchClass _ (Offset n)) =
+offset (Internal.PitchClass _ (Internal.Offset n)) =
     n
 
 
@@ -146,55 +116,6 @@ offset (PitchClass _ (Offset n)) =
 semitones : PitchClass -> Int
 semitones pc =
     exactSemitones pc |> modBy 12
-
-
-exactSemitones : PitchClass -> Int
-exactSemitones (PitchClass l (Offset n)) =
-    letterSemitones l + n
-
-
-{-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or raised once
-
-    asNaturalOrRaisedOnce (pitchClass F DoubleSharp) == ( G, Natural )
-
-    asNaturalOrRaisedOnce (pitchClass C TripleSharp) == ( D, Sharp )
-
--}
-asNaturalOrRaisedOnce : PitchClass -> ( Letter, Accidental )
-asNaturalOrRaisedOnce pc =
-    case pc |> semitones |> semitonesToNaturalOrAccidental of
-        Nat l ->
-            ( l, Natural )
-
-        SharpFlat l _ ->
-            ( l, Sharp )
-
-
-{-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or lowered once.
-
-    asNaturalOrLoweredOnce (pitchClass F DoubleSharp) == ( G, Natural )
-
-    asNaturalOrLoweredOnce (pitchClass C TripleSharp) == ( E, Flat )
-
--}
-asNaturalOrLoweredOnce : PitchClass -> ( Letter, Accidental )
-asNaturalOrLoweredOnce pc =
-    case pc |> semitones |> semitonesToNaturalOrAccidental of
-        Nat l ->
-            ( l, Natural )
-
-        SharpFlat _ l ->
-            ( l, Flat )
-
-
-{-| String representation of a letter and an accidental.
-
-    toString ( D, Sharp ) == "D♯"
-
--}
-toString : ( Letter, Accidental ) -> String
-toString ( l, acc ) =
-    accidentalToString acc ++ letterToString l
 
 
 
@@ -218,7 +139,7 @@ transposeUp interval pc =
         ( targetLetter, letterToLetterDistance ) =
             targetLetterWithSemitoneDistance (letterIndex (letter pc)) (intervalNumberIndex (Interval.number interval)) ( letter pc, 0 )
     in
-    PitchClass targetLetter (Offset (Interval.semitones interval - letterToLetterDistance + offset pc))
+    Internal.PitchClass targetLetter (Internal.Offset (Interval.semitones interval - letterToLetterDistance + offset pc))
 
 
 {-| Moves a pitch class down by a given interval while taking the correct number off staff positions between root and target pitch class into account.
@@ -241,8 +162,8 @@ transposeDown interval pc =
 
 -}
 transposeBySemitones : Int -> PitchClass -> PitchClass
-transposeBySemitones n (PitchClass l (Offset off)) =
-    PitchClass l (Offset (off + n))
+transposeBySemitones n (Internal.PitchClass l (Internal.Offset off)) =
+    Internal.PitchClass l (Internal.Offset (off + n))
 
 
 
@@ -260,56 +181,34 @@ areEnharmonicEqual lhs rhs =
 -- INTERNALS
 
 
+exactSemitones : PitchClass -> Int
+exactSemitones (Internal.PitchClass l (Internal.Offset n)) =
+    letterSemitones l + n
+
+
 accidentalToOffset : Accidental -> Offset
 accidentalToOffset acc =
     case acc of
         TripleFlat ->
-            Offset -3
+            Internal.Offset -3
 
         DoubleFlat ->
-            Offset -2
+            Internal.Offset -2
 
         Flat ->
-            Offset -1
+            Internal.Offset -1
 
         Natural ->
-            Offset 0
+            Internal.Offset 0
 
         Sharp ->
-            Offset 1
+            Internal.Offset 1
 
         DoubleSharp ->
-            Offset 2
+            Internal.Offset 2
 
         TripleSharp ->
-            Offset 3
-
-
-offsetToAccidental : Offset -> Maybe Accidental
-offsetToAccidental (Offset n) =
-    if n == -3 then
-        Just TripleFlat
-
-    else if n == -2 then
-        Just DoubleFlat
-
-    else if n == -1 then
-        Just Flat
-
-    else if n == 0 then
-        Just Natural
-
-    else if n == 1 then
-        Just Sharp
-
-    else if n == 2 then
-        Just DoubleSharp
-
-    else if n == 3 then
-        Just TripleSharp
-
-    else
-        Nothing
+            Internal.Offset 3
 
 
 letters : List Letter
@@ -345,124 +244,6 @@ letterSemitones l =
 
         B ->
             11
-
-
-type NaturalOrAccidental
-    = Nat Letter
-    | SharpFlat Letter Letter
-
-
-semitonesToNaturalOrAccidental : Int -> NaturalOrAccidental
-semitonesToNaturalOrAccidental off =
-    if off == -3 then
-        Nat A
-
-    else if off == -2 then
-        SharpFlat A B
-
-    else if off == -1 then
-        Nat B
-
-    else if off == 0 then
-        Nat C
-
-    else if off == 1 then
-        SharpFlat C D
-
-    else if off == 2 then
-        Nat D
-
-    else if off == 3 then
-        SharpFlat D E
-
-    else if off == 4 then
-        Nat E
-
-    else if off == 5 then
-        Nat F
-
-    else if off == 6 then
-        SharpFlat F G
-
-    else if off == 7 then
-        Nat G
-
-    else if off == 8 then
-        SharpFlat G A
-
-    else if off == 9 then
-        Nat A
-
-    else if off == 10 then
-        SharpFlat A B
-
-    else if off == 11 then
-        Nat B
-
-    else if off == 12 then
-        Nat C
-
-    else if off == 13 then
-        SharpFlat C D
-
-    else if off == 14 then
-        Nat D
-
-    else if off > 14 then
-        semitonesToNaturalOrAccidental (off - 12)
-
-    else
-        semitonesToNaturalOrAccidental (off + 12)
-
-
-letterToString : Letter -> String
-letterToString letterName =
-    case letterName of
-        C ->
-            "C"
-
-        D ->
-            "D"
-
-        E ->
-            "E"
-
-        F ->
-            "F"
-
-        G ->
-            "G"
-
-        A ->
-            "A"
-
-        B ->
-            "B"
-
-
-accidentalToString : Accidental -> String
-accidentalToString acc =
-    case acc of
-        TripleFlat ->
-            "♭𝄫"
-
-        DoubleFlat ->
-            "𝄫"
-
-        Flat ->
-            "♭"
-
-        Natural ->
-            ""
-
-        Sharp ->
-            "♯"
-
-        DoubleSharp ->
-            "𝄪"
-
-        TripleSharp ->
-            "♯𝄪"
 
 
 letterIndex : Letter -> Int

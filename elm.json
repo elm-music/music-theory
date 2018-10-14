@@ -5,8 +5,12 @@
     "license": "BSD-3-Clause",
     "version": "1.0.0",
     "exposed-modules": [
+        "MusicTheory.Accidental",
+        "MusicTheory.Interval",
+        "MusicTheory.Letter",
         "MusicTheory.PitchClass",
-        "MusicTheory.Interval"
+        "MusicTheory.PitchClass.Enharmonic",
+        "MusicTheory.Scale"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
