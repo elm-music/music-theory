@@ -68,8 +68,8 @@ type alias PitchClass =
 
 -}
 pitchClass : Letter -> Accidental -> PitchClass
-pitchClass l acc =
-    Internal.PitchClass l (accidentalToOffset acc)
+pitchClass letter accidental =
+    Internal.PitchClass letter (accidentalToOffset accidental)
 
 
 {-| Create a pitch class from a tuple of a letter and an accidental.
@@ -78,8 +78,8 @@ pitchClass l acc =
 
 -}
 fromTuple : ( Letter, Accidental ) -> PitchClass
-fromTuple ( l, acc ) =
-    pitchClass l acc
+fromTuple ( letter, accidental ) =
+    pitchClass letter accidental
 
 
 
@@ -92,16 +92,6 @@ all : List PitchClass
 all =
     letters
         |> List.concatMap (\l -> accidentals |> List.map (pitchClass l))
-
-
-letter : PitchClass -> Letter
-letter (Internal.PitchClass l _) =
-    l
-
-
-offset : PitchClass -> Int
-offset (Internal.PitchClass _ (Internal.Offset n)) =
-    n
 
 
 
@@ -137,9 +127,9 @@ transposeUp : Interval -> PitchClass -> PitchClass
 transposeUp interval pc =
     let
         ( targetLetter, letterToLetterDistance ) =
-            targetLetterWithSemitoneDistance (letterIndex (letter pc)) (intervalNumberIndex (Interval.number interval)) ( letter pc, 0 )
+            targetLetterWithSemitoneDistance (letterIndex (Internal.letter pc)) (intervalNumberIndex (Interval.number interval)) ( Internal.letter pc, 0 )
     in
-    Internal.PitchClass targetLetter (Internal.Offset (Interval.semitones interval - letterToLetterDistance + offset pc))
+    Internal.PitchClass targetLetter (Internal.Offset (Interval.semitones interval - letterToLetterDistance + Internal.offset pc))
 
 
 {-| Moves a pitch class down by a given interval while taking the correct number off staff positions between root and target pitch class into account.
@@ -162,8 +152,8 @@ transposeDown interval pc =
 
 -}
 transposeBySemitones : Int -> PitchClass -> PitchClass
-transposeBySemitones n (Internal.PitchClass l (Internal.Offset off)) =
-    Internal.PitchClass l (Internal.Offset (off + n))
+transposeBySemitones n (Internal.PitchClass letter (Internal.Offset offset)) =
+    Internal.PitchClass letter (Internal.Offset (offset + n))
 
 
 
@@ -182,13 +172,13 @@ areEnharmonicEqual lhs rhs =
 
 
 exactSemitones : PitchClass -> Int
-exactSemitones (Internal.PitchClass l (Internal.Offset n)) =
-    letterSemitones l + n
+exactSemitones (Internal.PitchClass letter (Internal.Offset offset)) =
+    letterSemitones letter + offset
 
 
 accidentalToOffset : Accidental -> Offset
-accidentalToOffset acc =
-    case acc of
+accidentalToOffset accidental =
+    case accidental of
         TripleFlat ->
             Internal.Offset -3
 
@@ -222,8 +212,8 @@ accidentals =
 
 
 letterSemitones : Letter -> Int
-letterSemitones l =
-    case l of
+letterSemitones letter =
+    case letter of
         C ->
             0
 
@@ -247,8 +237,8 @@ letterSemitones l =
 
 
 letterIndex : Letter -> Int
-letterIndex l =
-    case l of
+letterIndex letter =
+    case letter of
         C ->
             0
 
