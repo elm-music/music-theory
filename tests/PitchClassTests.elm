@@ -8,7 +8,7 @@ import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Interval as Interval
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass exposing (..)
-import MusicTheory.PitchClass.Spelling as Enharmonic
+import MusicTheory.PitchClass.Spelling as Spelling
 import Test exposing (..)
 
 
@@ -114,7 +114,7 @@ all =
                     |> Expect.all [ Expect.atLeast -3, Expect.atMost 14 ]
         , fuzz pitchClassFuzzer "asNaturalOrLoweredOnce has same number of semitones" <|
             \pc ->
-                Enharmonic.naturalOrSingleFlat pc
+                Spelling.naturalOrSingleFlat pc
                     |> Expect.all
                         [ fromTuple
                             >> semitones
@@ -123,7 +123,7 @@ all =
                         ]
         , fuzz pitchClassFuzzer "asNaturalOrRaisedOnce has same number of semitones" <|
             \pc ->
-                Enharmonic.naturalOrSingleSharp pc
+                Spelling.naturalOrSingleSharp pc
                     |> Expect.all
                         [ fromTuple
                             >> semitones
@@ -134,7 +134,7 @@ all =
             \pc n ->
                 pc
                     |> transposeBySemitones n
-                    |> Enharmonic.naturalOrSingleSharp
+                    |> Spelling.naturalOrSingleSharp
                     |> Expect.all
                         [ fromTuple
                             >> semitones
@@ -145,7 +145,7 @@ all =
             \pc n ->
                 pc
                     |> transposeBySemitones n
-                    |> Enharmonic.naturalOrSingleFlat
+                    |> Spelling.naturalOrSingleFlat
                     |> Expect.all
                         [ fromTuple
                             >> semitones
@@ -166,7 +166,7 @@ all =
                     |> transposeDown interval
                     |> Expect.equal pc
         , fuzz pitchClassFuzzer "exact on pitch classes that can be represented with a valid accidental should result in a Just" <|
-            Enharmonic.exactSpelling
+            Spelling.exactSpelling
                 >> Maybe.Extra.isJust
                 >> Expect.true "should be a Just"
         , fuzz pitchClassFuzzer "transpose pitch class up an octave should result in the original pitch class" <|
@@ -198,7 +198,7 @@ all =
                     |> transposeDown i2
                     |> Expect.all
                         [ Expect.equal pc
-                        , \result -> Expect.true "there should be an exact representation" (result |> Enharmonic.exactSpelling |> Maybe.Extra.isJust)
+                        , \result -> Expect.true "there should be an exact representation" (result |> Spelling.exactSpelling |> Maybe.Extra.isJust)
                         ]
         , fuzz2 pitchClassFuzzer intervalFuzzer "transpose up by interval and by semitones should yield enharmonic equivalent results" <|
             \pc interval ->

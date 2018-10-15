@@ -1,10 +1,10 @@
-module PitchClass.EnharmonicTests exposing (all)
+module PitchClass.SpellingTests exposing (all)
 
 import Expect
 import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass
-import MusicTheory.PitchClass.Spelling as Enharmonic
+import MusicTheory.PitchClass.Spelling as Spelling
 import Test exposing (..)
 
 
@@ -14,7 +14,7 @@ all =
         [ test "C flat exact spelling" <|
             \_ ->
                 PitchClass.pitchClass C PitchClass.flat
-                    |> Enharmonic.exactSpelling
+                    |> Spelling.exactSpelling
                     |> Expect.equal (Just ( C, Flat ))
         , test "simplified" <|
             \_ ->
@@ -78,6 +78,6 @@ all =
                         testCases |> List.map Tuple.second
                 in
                 input
-                    |> List.map Enharmonic.simplified
+                    |> List.map Spelling.simplified
                     |> Expect.equal expected
         ]
