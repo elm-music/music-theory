@@ -1,12 +1,15 @@
 {
     "type": "package",
-    "name": "battermann/elm-music-theory",
+    "name": "elm-music/music-theory",
     "summary": "Music theory in Elm.",
     "license": "BSD-3-Clause",
     "version": "1.0.0",
     "exposed-modules": [
+        "MusicTheory.Interval",
+        "MusicTheory.Key",
         "MusicTheory.PitchClass",
-        "MusicTheory.Interval"
+        "MusicTheory.Scale",
+        "MusicTheory.ScaleClass"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
