@@ -116,7 +116,7 @@ all =
             \pc ->
                 Spelling.naturalOrSingleFlat pc
                     |> Expect.all
-                        [ fromTuple
+                        [ Spelling.toPitchClass
                             >> semitones
                             >> Expect.equal (semitones pc |> modBy 12)
                         , isNaturalOrFlat >> Expect.true "accidental is natural or flat"
@@ -125,7 +125,7 @@ all =
             \pc ->
                 Spelling.naturalOrSingleSharp pc
                     |> Expect.all
-                        [ fromTuple
+                        [ Spelling.toPitchClass
                             >> semitones
                             >> Expect.equal (semitones pc |> modBy 12)
                         , isNaturalOrSharp >> Expect.true "accidental is natural or sharp"
@@ -136,7 +136,7 @@ all =
                     |> transposeBySemitones n
                     |> Spelling.naturalOrSingleSharp
                     |> Expect.all
-                        [ fromTuple
+                        [ Spelling.toPitchClass
                             >> semitones
                             >> Expect.equal ((semitones pc + n) |> modBy 12)
                         , isNaturalOrSharp >> Expect.true "accidental is natural or sharp"
@@ -147,7 +147,7 @@ all =
                     |> transposeBySemitones n
                     |> Spelling.naturalOrSingleFlat
                     |> Expect.all
-                        [ fromTuple
+                        [ Spelling.toPitchClass
                             >> semitones
                             >> Expect.equal ((semitones pc + n) |> modBy 12)
                         , isNaturalOrFlat >> Expect.true "accidental is natural or flat"

@@ -2,7 +2,7 @@ module MusicTheory.PitchClass exposing
     ( PitchClass
     , all
     , areEnharmonicEqual
-    , doubleFlat, doubleSharp, flat, fromTuple, natural, pitchClass, semitones, sharp, transposeBySemitones, transposeDown, transposeUp, tripleFlat, tripleSharp
+    , doubleFlat, doubleSharp, flat, natural, pitchClass, semitones, sharp, transposeBySemitones, transposeDown, transposeUp, tripleFlat, tripleSharp
     )
 
 {-| A pitch class is a set of all pitches that are a whole number of octaves apart. A pitch class is represented as a letter together with an accidental.
@@ -107,16 +107,6 @@ pitchClass letter offset =
     Internal.PitchClass letter offset
 
 
-{-| Create a pitch class from a tuple of a letter and an accidental.
-
-    fromTuple ( G, Flat ) -- creates the pitch class G♭
-
--}
-fromTuple : ( Letter, Accidental ) -> PitchClass
-fromTuple ( letter, accidental ) =
-    pitchClass letter (accidentalToOffset accidental)
-
-
 
 -- ACCESSORS
 
@@ -209,31 +199,6 @@ areEnharmonicEqual lhs rhs =
 exactSemitones : PitchClass -> Int
 exactSemitones (Internal.PitchClass letter (Internal.Offset offset)) =
     letterSemitones letter + offset
-
-
-accidentalToOffset : Accidental -> Offset
-accidentalToOffset accidental =
-    case accidental of
-        TripleFlat ->
-            Internal.Offset -3
-
-        DoubleFlat ->
-            Internal.Offset -2
-
-        Flat ->
-            Internal.Offset -1
-
-        Natural ->
-            Internal.Offset 0
-
-        Sharp ->
-            Internal.Offset 1
-
-        DoubleSharp ->
-            Internal.Offset 2
-
-        TripleSharp ->
-            Internal.Offset 3
 
 
 letters : List Letter

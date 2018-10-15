@@ -5,6 +5,7 @@ module MusicTheory.PitchClass.Spelling exposing
     , naturalOrSingleSharp
     , simplified
     , simplifiedToString
+    , toPitchClass
     , toString
     )
 
@@ -90,8 +91,43 @@ toString ( letter, accidental ) =
     accidentalToString accidental ++ letterToString letter
 
 
+{-| Create a pitch class from a tuple of a letter and an accidental.
+
+    toPitchClass ( G, Flat ) -- creates the pitch class G♭
+
+-}
+toPitchClass : PitchClassSpelling -> PitchClass
+toPitchClass ( letter, accidental ) =
+    PitchClass.pitchClass letter (accidentalToOffset accidental)
+
+
 
 -- INTERNALS
+
+
+accidentalToOffset : Accidental -> Internal.Offset
+accidentalToOffset accidental =
+    case accidental of
+        TripleFlat ->
+            Internal.Offset -3
+
+        DoubleFlat ->
+            Internal.Offset -2
+
+        Flat ->
+            Internal.Offset -1
+
+        Natural ->
+            Internal.Offset 0
+
+        Sharp ->
+            Internal.Offset 1
+
+        DoubleSharp ->
+            Internal.Offset 2
+
+        TripleSharp ->
+            Internal.Offset 3
 
 
 letterToString : Letter -> String
