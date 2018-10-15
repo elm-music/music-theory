@@ -9,7 +9,7 @@
         "MusicTheory.Interval",
         "MusicTheory.Letter",
         "MusicTheory.PitchClass",
-        "MusicTheory.PitchClass.Enharmonic",
+        "MusicTheory.PitchClass.Spelling",
         "MusicTheory.Scale"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",

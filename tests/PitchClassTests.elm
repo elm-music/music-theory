@@ -8,7 +8,7 @@ import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Interval as Interval
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass exposing (..)
-import MusicTheory.PitchClass.Enharmonic as Enharmonic
+import MusicTheory.PitchClass.Spelling as Enharmonic
 import Test exposing (..)
 
 

@@ -1,5 +1,5 @@
-module MusicTheory.PitchClass.Enharmonic exposing
-    ( atMostOneAccidental
+module MusicTheory.PitchClass.Spelling exposing
+    ( PitchClassSpelling
     , exactSpelling
     , naturalOrSingleFlat
     , naturalOrSingleSharp
@@ -14,28 +14,22 @@ import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 
 
+type alias PitchClassSpelling =
+    ( Letter, Accidental )
+
+
 {-| Returns the letter and accidental of a pitch class if the letter is raised or lowered such that it can be expressed in terms of a valid accidental.
 
     (PitchClass.pitchClass F Sharp |> exactSpelling) == Just ( F, Sharp )
 
 -}
-exactSpelling : PitchClass -> Maybe ( Letter, Accidental )
+exactSpelling : PitchClass -> Maybe PitchClassSpelling
 exactSpelling (Internal.PitchClass letter offset) =
     offsetToAccidental offset
         |> Maybe.map (Tuple.pair letter)
 
 
-atMostOneAccidental : PitchClass -> Maybe ( Letter, Accidental )
-atMostOneAccidental (Internal.PitchClass letter (Internal.Offset offset)) =
-    if abs offset <= 1 then
-        offsetToAccidental (Internal.Offset offset)
-            |> Maybe.map (Tuple.pair letter)
-
-    else
-        Nothing
-
-
-simplified : PitchClass -> ( Letter, Accidental )
+simplified : PitchClass -> PitchClassSpelling
 simplified pitchClass =
     if Internal.offset pitchClass == 0 then
         ( Internal.letter pitchClass, Natural )
@@ -59,7 +53,7 @@ simplifiedToString pitchClass =
     naturalOrSingleFlat (pitchClass C TripleSharp) == ( E, Flat )
 
 -}
-naturalOrSingleFlat : PitchClass -> ( Letter, Accidental )
+naturalOrSingleFlat : PitchClass -> PitchClassSpelling
 naturalOrSingleFlat pitchClass =
     case pitchClass |> PitchClass.semitones |> semitonesToNaturalOrAccidental of
         Nat letter ->
@@ -76,7 +70,7 @@ naturalOrSingleFlat pitchClass =
     naturalOrSingleSharp (pitchClass C TripleSharp) == ( D, Sharp )
 
 -}
-naturalOrSingleSharp : PitchClass -> ( Letter, Accidental )
+naturalOrSingleSharp : PitchClass -> PitchClassSpelling
 naturalOrSingleSharp pitchClass =
     case pitchClass |> PitchClass.semitones |> semitonesToNaturalOrAccidental of
         Nat letter ->
@@ -91,7 +85,7 @@ naturalOrSingleSharp pitchClass =
     toString ( D, Sharp ) == "D♯"
 
 -}
-toString : ( Letter, Accidental ) -> String
+toString : PitchClassSpelling -> String
 toString ( letter, accidental ) =
     accidentalToString accidental ++ letterToString letter
 

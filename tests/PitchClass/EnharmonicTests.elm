@@ -4,33 +4,18 @@ import Expect
 import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass
-import MusicTheory.PitchClass.Enharmonic as Enharmonic
+import MusicTheory.PitchClass.Spelling as Enharmonic
 import Test exposing (..)
 
 
 all : Test
 all =
     describe "Pitch class enharmonic spelling test"
-        [ test "C natural exact spelling" <|
+        [ test "C flat exact spelling" <|
             \_ ->
-                PitchClass.pitchClass C Natural
+                PitchClass.pitchClass C Flat
                     |> Enharmonic.exactSpelling
-                    |> Expect.equal (Just ( C, Natural ))
-        , test "C# at most one accidental should be defined" <|
-            \_ ->
-                PitchClass.pitchClass C Sharp
-                    |> Enharmonic.atMostOneAccidental
-                    |> Expect.equal (Just ( C, Sharp ))
-        , test "C with double sharp at most one accidental should not be defined" <|
-            \_ ->
-                PitchClass.pitchClass C DoubleSharp
-                    |> Enharmonic.atMostOneAccidental
-                    |> Expect.equal Nothing
-        , test "C with double flat at most one accidental should not be defined" <|
-            \_ ->
-                PitchClass.pitchClass C DoubleFlat
-                    |> Enharmonic.atMostOneAccidental
-                    |> Expect.equal Nothing
+                    |> Expect.equal (Just ( C, Flat ))
         , test "simplified" <|
             \_ ->
                 let
