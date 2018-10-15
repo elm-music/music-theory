@@ -2,7 +2,7 @@ module MusicTheory.PitchClass exposing
     ( PitchClass
     , all
     , areEnharmonicEqual
-    , fromTuple, pitchClass, semitones, transposeBySemitones, transposeDown, transposeUp
+    , doubleFlat, doubleSharp, flat, fromTuple, natural, pitchClass, semitones, sharp, transposeBySemitones, transposeDown, transposeUp, tripleFlat, tripleSharp
     )
 
 {-| A pitch class is a set of all pitches that are a whole number of octaves apart. A pitch class is represented as a letter together with an accidental.
@@ -62,14 +62,49 @@ type alias PitchClass =
 -- CONSTRUCTORS
 
 
+tripleFlat : Offset
+tripleFlat =
+    Internal.Offset -3
+
+
+doubleFlat : Offset
+doubleFlat =
+    Internal.Offset -2
+
+
+flat : Offset
+flat =
+    Internal.Offset -1
+
+
+natural : Offset
+natural =
+    Internal.Offset 0
+
+
+sharp : Offset
+sharp =
+    Internal.Offset 1
+
+
+doubleSharp : Offset
+doubleSharp =
+    Internal.Offset 2
+
+
+tripleSharp : Offset
+tripleSharp =
+    Internal.Offset 3
+
+
 {-| Create a pitch class from a letter and an accidental.
 
     pitchClass C Sharp -- creates the pitch class C♯
 
 -}
-pitchClass : Letter -> Accidental -> PitchClass
-pitchClass letter accidental =
-    Internal.PitchClass letter (accidentalToOffset accidental)
+pitchClass : Letter -> Offset -> PitchClass
+pitchClass letter offset =
+    Internal.PitchClass letter offset
 
 
 {-| Create a pitch class from a tuple of a letter and an accidental.
@@ -79,7 +114,7 @@ pitchClass letter accidental =
 -}
 fromTuple : ( Letter, Accidental ) -> PitchClass
 fromTuple ( letter, accidental ) =
-    pitchClass letter accidental
+    pitchClass letter (accidentalToOffset accidental)
 
 
 
@@ -91,7 +126,7 @@ fromTuple ( letter, accidental ) =
 all : List PitchClass
 all =
     letters
-        |> List.concatMap (\l -> accidentals |> List.map (pitchClass l))
+        |> List.concatMap (\l -> [ tripleFlat, doubleFlat, flat, natural, sharp, doubleSharp, tripleSharp ] |> List.map (pitchClass l))
 
 
 
@@ -204,11 +239,6 @@ accidentalToOffset accidental =
 letters : List Letter
 letters =
     [ C, D, E, F, G, A, B, C ]
-
-
-accidentals : List Accidental
-accidentals =
-    [ TripleFlat, DoubleFlat, Flat, Natural, Sharp, DoubleSharp, TripleSharp ]
 
 
 letterSemitones : Letter -> Int

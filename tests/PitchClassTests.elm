@@ -45,25 +45,25 @@ numberToLetter n =
 
 numberToAccidental n =
     if n == -3 then
-        TripleFlat
+        tripleFlat
 
     else if n == -2 then
-        DoubleFlat
+        doubleFlat
 
     else if n == -1 then
-        Flat
+        flat
 
     else if n == 0 then
-        Natural
+        natural
 
     else if n == 1 then
-        Sharp
+        sharp
 
     else if n == 2 then
-        DoubleSharp
+        doubleSharp
 
     else if n == 3 then
-        TripleSharp
+        tripleSharp
 
     else if n < -3 then
         numberToAccidental (n + 7)
