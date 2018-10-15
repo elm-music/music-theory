@@ -36,7 +36,6 @@ The internals of `PitchClass` are opaque. By using accessor functions the caller
 
 -}
 
-import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Internals.PitchClass as Internal
 import MusicTheory.Interval as Interval exposing (Interval, IntervalNumber(..), IntervalQuality(..))
 import MusicTheory.Letter exposing (Letter(..))
