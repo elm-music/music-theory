@@ -78,32 +78,6 @@ pitchClassFuzzer =
         (Fuzz.intRange -3 3 |> Fuzz.map numberToAccidental)
 
 
-isNaturalOrFlat : ( Letter, Accidental ) -> Bool
-isNaturalOrFlat ( letter, accidental ) =
-    case accidental of
-        Natural ->
-            True
-
-        Flat ->
-            True
-
-        _ ->
-            False
-
-
-isNaturalOrSharp : ( Letter, Accidental ) -> Bool
-isNaturalOrSharp ( letter, accidental ) =
-    case accidental of
-        Natural ->
-            True
-
-        Sharp ->
-            True
-
-        _ ->
-            False
-
-
 all : Test
 all =
     describe "Pitch Class Tests"
@@ -113,43 +87,39 @@ all =
                     |> Expect.all [ Expect.atLeast -3, Expect.atMost 14 ]
         , fuzz pitchClassFuzzer "asNaturalOrLoweredOnce has same number of semitones" <|
             \pc ->
-                Spelling.naturalOrSingleFlat pc
+                Spelling.simple pc
                     |> Expect.all
                         [ Spelling.toPitchClass
                             >> semitones
                             >> Expect.equal (semitones pc |> modBy 12)
-                        , isNaturalOrFlat >> Expect.true "accidental is natural or flat"
                         ]
         , fuzz pitchClassFuzzer "asNaturalOrRaisedOnce has same number of semitones" <|
             \pc ->
-                Spelling.naturalOrSingleSharp pc
+                Spelling.simple pc
                     |> Expect.all
                         [ Spelling.toPitchClass
                             >> semitones
                             >> Expect.equal (semitones pc |> modBy 12)
-                        , isNaturalOrSharp >> Expect.true "accidental is natural or sharp"
                         ]
         , fuzz2 pitchClassFuzzer (Fuzz.intRange -100 100) "transposeBySemitones and asNaturalOrRaisedOnce semitones is sum of pitch class' semitones and interval semitones" <|
             \pc n ->
                 pc
                     |> transposeBySemitones n
-                    |> Spelling.naturalOrSingleSharp
+                    |> Spelling.simple
                     |> Expect.all
                         [ Spelling.toPitchClass
                             >> semitones
                             >> Expect.equal ((semitones pc + n) |> modBy 12)
-                        , isNaturalOrSharp >> Expect.true "accidental is natural or sharp"
                         ]
         , fuzz2 pitchClassFuzzer (Fuzz.intRange -100 100) "transposeBySemitones and asNaturalOrLoweredOnce semitones is sum of pitch class' semitones and interval semitones" <|
             \pc n ->
                 pc
                     |> transposeBySemitones n
-                    |> Spelling.naturalOrSingleFlat
+                    |> Spelling.simple
                     |> Expect.all
                         [ Spelling.toPitchClass
                             >> semitones
                             >> Expect.equal ((semitones pc + n) |> modBy 12)
-                        , isNaturalOrFlat >> Expect.true "accidental is natural or flat"
                         ]
         , fuzz2 pitchClassFuzzer intervalFuzzer "transpose pitch class by interval, result should have correct number of semitones" <|
             \pc interval ->
@@ -164,10 +134,6 @@ all =
                     |> transposeUp interval
                     |> transposeDown interval
                     |> Expect.equal pc
-        , fuzz pitchClassFuzzer "exact on pitch classes that can be represented with a valid accidental should result in a Just" <|
-            Spelling.exactSpelling
-                >> Maybe.Extra.isJust
-                >> Expect.true "should be a Just"
         , fuzz pitchClassFuzzer "transpose pitch class up an octave should result in the original pitch class" <|
             \pc ->
                 pc
@@ -195,10 +161,7 @@ all =
                     |> transposeUp i2
                     |> transposeDown i1
                     |> transposeDown i2
-                    |> Expect.all
-                        [ Expect.equal pc
-                        , \result -> Expect.true "there should be an exact representation" (result |> Spelling.exactSpelling |> Maybe.Extra.isJust)
-                        ]
+                    |> Expect.equal pc
         , fuzz2 pitchClassFuzzer intervalFuzzer "transpose up by interval and by semitones should yield enharmonic equivalent results" <|
             \pc interval ->
                 pc

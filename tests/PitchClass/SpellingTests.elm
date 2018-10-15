@@ -10,12 +10,7 @@ import Test exposing (..)
 all : Test
 all =
     describe "Pitch class enharmonic spelling test"
-        [ test "C flat exact spelling" <|
-            \_ ->
-                PitchClass.pitchClass C PitchClass.flat
-                    |> Spelling.exactSpelling
-                    |> Expect.equal (Just ( C, Flat ))
-        , test "simplified" <|
+        [ test "simple spelling" <|
             \_ ->
                 let
                     testCases =
@@ -74,9 +69,9 @@ all =
                         testCases |> List.map Tuple.first
 
                     expected =
-                        testCases |> List.map Tuple.second
+                        testCases |> List.map (Tuple.second >> (\( l, a ) -> { letter = l, accidental = a }))
                 in
                 input
-                    |> List.map Spelling.simplified
+                    |> List.map Spelling.simple
                     |> Expect.equal expected
         ]

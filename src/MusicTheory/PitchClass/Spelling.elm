@@ -1,11 +1,7 @@
 module MusicTheory.PitchClass.Spelling exposing
     ( Accidental(..)
     , PitchClassSpelling
-    , exactSpelling
-    , naturalOrSingleFlat
-    , naturalOrSingleSharp
-    , simplified
-    , simplifiedToString
+    , simple
     , toPitchClass
     , toString
     )
@@ -28,24 +24,15 @@ type Accidental
 
 
 type alias PitchClassSpelling =
-    ( Letter, Accidental )
+    { letter : Letter
+    , accidental : Accidental
+    }
 
 
-{-| Returns the letter and accidental of a pitch class if the letter is raised or lowered such that it can be expressed in terms of a valid accidental.
-
-    (PitchClass.pitchClass F Sharp |> exactSpelling) == Just ( F, Sharp )
-
--}
-exactSpelling : PitchClass -> Maybe PitchClassSpelling
-exactSpelling (Internal.PitchClass letter offset) =
-    offsetToAccidental offset
-        |> Maybe.map (Tuple.pair letter)
-
-
-simplified : PitchClass -> PitchClassSpelling
-simplified pitchClass =
+simple : PitchClass -> PitchClassSpelling
+simple pitchClass =
     if Internal.offset pitchClass == 0 then
-        ( Internal.letter pitchClass, Natural )
+        { letter = Internal.letter pitchClass, accidental = Natural }
 
     else if Internal.offset pitchClass < 0 then
         naturalOrSingleFlat pitchClass
@@ -54,9 +41,28 @@ simplified pitchClass =
         naturalOrSingleSharp pitchClass
 
 
-simplifiedToString : PitchClass -> String
-simplifiedToString pitchClass =
-    simplified pitchClass |> toString
+{-| String representation of a letter and an accidental.
+
+    toString ( D, Sharp ) == "D♯"
+
+-}
+toString : PitchClassSpelling -> String
+toString { letter, accidental } =
+    accidentalToString accidental ++ letterToString letter
+
+
+{-| Create a pitch class from a tuple of a letter and an accidental.
+
+    toPitchClass ( G, Flat ) -- creates the pitch class G♭
+
+-}
+toPitchClass : PitchClassSpelling -> PitchClass
+toPitchClass { letter, accidental } =
+    PitchClass.pitchClass letter (accidentalToOffset accidental)
+
+
+
+-- INTERNALS
 
 
 {-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or lowered once.
@@ -70,10 +76,10 @@ naturalOrSingleFlat : PitchClass -> PitchClassSpelling
 naturalOrSingleFlat pitchClass =
     case pitchClass |> PitchClass.semitones |> semitonesToNaturalOrAccidental of
         Nat letter ->
-            ( letter, Natural )
+            { letter = letter, accidental = Natural }
 
         SharpFlat _ letter ->
-            ( letter, Flat )
+            { letter = letter, accidental = Flat }
 
 
 {-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or raised once
@@ -87,34 +93,10 @@ naturalOrSingleSharp : PitchClass -> PitchClassSpelling
 naturalOrSingleSharp pitchClass =
     case pitchClass |> PitchClass.semitones |> semitonesToNaturalOrAccidental of
         Nat letter ->
-            ( letter, Natural )
+            { letter = letter, accidental = Natural }
 
         SharpFlat letter _ ->
-            ( letter, Sharp )
-
-
-{-| String representation of a letter and an accidental.
-
-    toString ( D, Sharp ) == "D♯"
-
--}
-toString : PitchClassSpelling -> String
-toString ( letter, accidental ) =
-    accidentalToString accidental ++ letterToString letter
-
-
-{-| Create a pitch class from a tuple of a letter and an accidental.
-
-    toPitchClass ( G, Flat ) -- creates the pitch class G♭
-
--}
-toPitchClass : PitchClassSpelling -> PitchClass
-toPitchClass ( letter, accidental ) =
-    PitchClass.pitchClass letter (accidentalToOffset accidental)
-
-
-
--- INTERNALS
+            { letter = letter, accidental = Sharp }
 
 
 accidentalToOffset : Accidental -> Internal.Offset
