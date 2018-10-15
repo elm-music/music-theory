@@ -1,10 +1,9 @@
 module PitchClass.SpellingTests exposing (all)
 
 import Expect
-import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass
-import MusicTheory.PitchClass.Spelling as Spelling
+import MusicTheory.PitchClass.Spelling as Spelling exposing (Accidental(..))
 import Test exposing (..)
 
 

@@ -1,6 +1,5 @@
 module MusicTheory.Internals.PitchClass exposing (Offset(..), PitchClass(..), letter, offset)
 
-import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Letter exposing (Letter(..))
 
 

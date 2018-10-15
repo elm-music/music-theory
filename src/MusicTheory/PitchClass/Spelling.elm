@@ -1,5 +1,6 @@
 module MusicTheory.PitchClass.Spelling exposing
-    ( PitchClassSpelling
+    ( Accidental(..)
+    , PitchClassSpelling
     , exactSpelling
     , naturalOrSingleFlat
     , naturalOrSingleSharp
@@ -9,10 +10,21 @@ module MusicTheory.PitchClass.Spelling exposing
     , toString
     )
 
-import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Internals.PitchClass as Internal
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
+
+
+{-| An accidental describes by how many semitones a letter is raised or lowered.
+-}
+type Accidental
+    = TripleFlat
+    | DoubleFlat
+    | Flat
+    | Natural
+    | Sharp
+    | DoubleSharp
+    | TripleSharp
 
 
 type alias PitchClassSpelling =

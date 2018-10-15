@@ -4,11 +4,10 @@ import Expect
 import Fuzz
 import IntervalFuzzer exposing (intervalFuzzer)
 import Maybe.Extra
-import MusicTheory.Accidental exposing (Accidental(..))
 import MusicTheory.Interval as Interval
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass exposing (..)
-import MusicTheory.PitchClass.Spelling as Spelling
+import MusicTheory.PitchClass.Spelling as Spelling exposing (Accidental(..))
 import Test exposing (..)
 
 
