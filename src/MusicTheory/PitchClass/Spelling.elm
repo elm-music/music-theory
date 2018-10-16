@@ -16,13 +16,9 @@ import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 {-| An accidental describes by how many semitones a letter is raised or lowered.
 -}
 type Accidental
-    = TripleFlat
-    | DoubleFlat
-    | Flat
+    = Flat
     | Natural
     | Sharp
-    | DoubleSharp
-    | TripleSharp
 
 
 type alias PitchClassSpelling =
@@ -104,12 +100,6 @@ naturalOrElseSharp pitchClass =
 accidentalToOffset : Accidental -> Internal.Offset
 accidentalToOffset accidental =
     case accidental of
-        TripleFlat ->
-            Internal.Offset -3
-
-        DoubleFlat ->
-            Internal.Offset -2
-
         Flat ->
             Internal.Offset -1
 
@@ -118,12 +108,6 @@ accidentalToOffset accidental =
 
         Sharp ->
             Internal.Offset 1
-
-        DoubleSharp ->
-            Internal.Offset 2
-
-        TripleSharp ->
-            Internal.Offset 3
 
 
 letterToString : Letter -> String
@@ -154,12 +138,6 @@ letterToString letter =
 accidentalToString : Accidental -> String
 accidentalToString accidental =
     case accidental of
-        TripleFlat ->
-            "♭𝄫"
-
-        DoubleFlat ->
-            "𝄫"
-
         Flat ->
             "♭"
 
@@ -169,22 +147,10 @@ accidentalToString accidental =
         Sharp ->
             "♯"
 
-        DoubleSharp ->
-            "𝄪"
-
-        TripleSharp ->
-            "♯𝄪"
-
 
 offsetToAccidental : Internal.Offset -> Maybe Accidental
 offsetToAccidental (Internal.Offset offset) =
-    if offset == -3 then
-        Just TripleFlat
-
-    else if offset == -2 then
-        Just DoubleFlat
-
-    else if offset == -1 then
+    if offset == -1 then
         Just Flat
 
     else if offset == 0 then
@@ -192,12 +158,6 @@ offsetToAccidental (Internal.Offset offset) =
 
     else if offset == 1 then
         Just Sharp
-
-    else if offset == 2 then
-        Just DoubleSharp
-
-    else if offset == 3 then
-        Just TripleSharp
 
     else
         Nothing
