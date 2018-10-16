@@ -65,9 +65,9 @@ toPitchClass { letter, accidental } =
 
 {-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or lowered once.
 
-    naturalOrSingleFlat (pitchClass F DoubleSharp) == ( G, Natural )
+    naturalOrElseFlat (pitchClass F DoubleSharp) == ( G, Natural )
 
-    naturalOrSingleFlat (pitchClass C TripleSharp) == ( E, Flat )
+    naturalOrElseFlat (pitchClass C TripleSharp) == ( E, Flat )
 
 -}
 naturalOrElseFlat : PitchClass -> PitchClassSpelling
@@ -82,9 +82,9 @@ naturalOrElseFlat pitchClass =
 
 {-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or raised once
 
-    naturalOrSingleSharp (pitchClass F DoubleSharp) == ( G, Natural )
+    naturalOrElseSharp (pitchClass F DoubleSharp) == ( G, Natural )
 
-    naturalOrSingleSharp (pitchClass C TripleSharp) == ( D, Sharp )
+    naturalOrElseSharp (pitchClass C TripleSharp) == ( D, Sharp )
 
 -}
 naturalOrElseSharp : PitchClass -> PitchClassSpelling
