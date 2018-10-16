@@ -50,7 +50,7 @@ simple pitchClass =
 -}
 toString : PitchClassSpelling -> String
 toString { letter, accidental } =
-    accidentalToString accidental ++ letterToString letter
+    letterToString letter ++ accidentalToString accidental
 
 
 {-| Create a pitch class from a tuple of a letter and an accidental.
