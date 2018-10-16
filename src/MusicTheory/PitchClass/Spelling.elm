@@ -1,13 +1,15 @@
 module MusicTheory.PitchClass.Spelling exposing
     ( Accidental(..)
     , PitchClassSpelling
+    , naturalOrElseFlat
+    , naturalOrElseSharp
     , simple
     , toPitchClass
     , toString
     )
 
 import MusicTheory.Internals.PitchClass as Internal
-import MusicTheory.Letter exposing (Letter(..))
+import MusicTheory.Letter as Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 
 
@@ -35,10 +37,10 @@ simple pitchClass =
         { letter = Internal.letter pitchClass, accidental = Natural }
 
     else if Internal.offset pitchClass < 0 then
-        naturalOrSingleFlat pitchClass
+        naturalOrElseFlat pitchClass
 
     else
-        naturalOrSingleSharp pitchClass
+        naturalOrElseSharp pitchClass
 
 
 {-| String representation of a letter and an accidental.
@@ -61,10 +63,6 @@ toPitchClass { letter, accidental } =
     PitchClass.pitchClass letter (accidentalToOffset accidental)
 
 
-
--- INTERNALS
-
-
 {-| Returns the enharmonic equivalent pitch class expressed as a note from the diatonic C major scale that is natural or lowered once.
 
     naturalOrSingleFlat (pitchClass F DoubleSharp) == ( G, Natural )
@@ -72,8 +70,8 @@ toPitchClass { letter, accidental } =
     naturalOrSingleFlat (pitchClass C TripleSharp) == ( E, Flat )
 
 -}
-naturalOrSingleFlat : PitchClass -> PitchClassSpelling
-naturalOrSingleFlat pitchClass =
+naturalOrElseFlat : PitchClass -> PitchClassSpelling
+naturalOrElseFlat pitchClass =
     case pitchClass |> PitchClass.semitones |> semitonesToNaturalOrAccidental of
         Nat letter ->
             { letter = letter, accidental = Natural }
@@ -89,14 +87,18 @@ naturalOrSingleFlat pitchClass =
     naturalOrSingleSharp (pitchClass C TripleSharp) == ( D, Sharp )
 
 -}
-naturalOrSingleSharp : PitchClass -> PitchClassSpelling
-naturalOrSingleSharp pitchClass =
+naturalOrElseSharp : PitchClass -> PitchClassSpelling
+naturalOrElseSharp pitchClass =
     case pitchClass |> PitchClass.semitones |> semitonesToNaturalOrAccidental of
         Nat letter ->
             { letter = letter, accidental = Natural }
 
         SharpFlat letter _ ->
             { letter = letter, accidental = Sharp }
+
+
+
+-- INTERNALS
 
 
 accidentalToOffset : Accidental -> Internal.Offset

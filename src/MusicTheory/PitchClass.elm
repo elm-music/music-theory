@@ -2,7 +2,7 @@ module MusicTheory.PitchClass exposing
     ( PitchClass
     , all
     , areEnharmonicEqual
-    , doubleFlat, doubleSharp, flat, natural, pitchClass, semitones, sharp, transposeBySemitones, transposeDown, transposeUp, tripleFlat, tripleSharp
+    , doubleFlat, doubleSharp, flat, natural, pitchClass, semitones, sharp, transposeDown, transposeUp, tripleFlat, tripleSharp
     )
 
 {-| A pitch class is a set of all pitches that are a whole number of octaves apart. A pitch class is represented as a letter together with an accidental.
@@ -38,7 +38,7 @@ The internals of `PitchClass` are opaque. By using accessor functions the caller
 
 import MusicTheory.Internals.PitchClass as Internal
 import MusicTheory.Interval as Interval exposing (Interval, IntervalNumber(..), IntervalQuality(..))
-import MusicTheory.Letter exposing (Letter(..))
+import MusicTheory.Letter as Letter exposing (Letter(..))
 
 
 
@@ -110,11 +110,11 @@ pitchClass letter offset =
 -- ACCESSORS
 
 
-{-| A list of all pitch classes that can be represented in terms of `Letter` and an `Accidental`.
+{-| A list of all pitch classes that with at most 3 accidentals. `Cbbb, Cbb, Cb, C, C#, C##, C###, Dbbb, Dbb, ...`.
 -}
 all : List PitchClass
 all =
-    letters
+    Letter.letters
         |> List.concatMap (\l -> [ tripleFlat, doubleFlat, flat, natural, sharp, doubleSharp, tripleSharp ] |> List.map (pitchClass l))
 
 
@@ -151,7 +151,7 @@ transposeUp : Interval -> PitchClass -> PitchClass
 transposeUp interval pc =
     let
         ( targetLetter, letterToLetterDistance ) =
-            targetLetterWithSemitoneDistance (letterIndex (Internal.letter pc)) (intervalNumberIndex (Interval.number interval)) ( Internal.letter pc, 0 )
+            targetLetterWithSemitoneDistance (Letter.index (Internal.letter pc)) (Interval.intervalNumberIndex (Interval.number interval)) ( Internal.letter pc, 0 )
     in
     Internal.PitchClass targetLetter (Internal.Offset (Interval.semitones interval - letterToLetterDistance + Internal.offset pc))
 
@@ -166,18 +166,6 @@ transposeDown interval pc =
     interval
         |> Interval.complementary
         |> (\i -> transposeUp i pc)
-
-
-{-| Moves a pitch class by a given number of semitones. The result will be ambiguous because while transposing by semitones alone it cannot be determined which enharmonic equivalent pitch class to choose as the result. An enharmonic equivalent representation can be retrieved by applying `asNaturalOrLoweredOnce` or `asNaturalOrRaisedOnce`.
-
-    (pitchClass C Natural |> transposeBySemitones 10 |> asNaturalOrLoweredOnce) == ( B, Flat )
-
-    (pitchClass C Natural |> transposeBySemitones 10 |> asNaturalOrRaisedOnce) == ( A, Sharp )
-
--}
-transposeBySemitones : Int -> PitchClass -> PitchClass
-transposeBySemitones n (Internal.PitchClass letter (Internal.Offset offset)) =
-    Internal.PitchClass letter (Internal.Offset (offset + n))
 
 
 
@@ -197,122 +185,7 @@ areEnharmonicEqual lhs rhs =
 
 exactSemitones : PitchClass -> Int
 exactSemitones (Internal.PitchClass letter (Internal.Offset offset)) =
-    letterSemitones letter + offset
-
-
-letters : List Letter
-letters =
-    [ C, D, E, F, G, A, B, C ]
-
-
-letterSemitones : Letter -> Int
-letterSemitones letter =
-    case letter of
-        C ->
-            0
-
-        D ->
-            2
-
-        E ->
-            4
-
-        F ->
-            5
-
-        G ->
-            7
-
-        A ->
-            9
-
-        B ->
-            11
-
-
-letterIndex : Letter -> Int
-letterIndex letter =
-    case letter of
-        C ->
-            0
-
-        D ->
-            1
-
-        E ->
-            2
-
-        F ->
-            3
-
-        G ->
-            4
-
-        A ->
-            5
-
-        B ->
-            6
-
-
-intervalNumberIndex : IntervalNumber -> Int
-intervalNumberIndex intervalNumber =
-    case intervalNumber of
-        Unison ->
-            0
-
-        Second ->
-            1
-
-        Third ->
-            2
-
-        Fourth ->
-            3
-
-        Fifth ->
-            4
-
-        Sixth ->
-            5
-
-        Seventh ->
-            6
-
-        Octave ->
-            7
-
-
-letterAndSemitoneStepsByIndex : Int -> ( Letter, Int )
-letterAndSemitoneStepsByIndex n =
-    case n of
-        0 ->
-            ( C, 1 )
-
-        1 ->
-            ( D, 2 )
-
-        2 ->
-            ( E, 2 )
-
-        3 ->
-            ( F, 1 )
-
-        4 ->
-            ( G, 2 )
-
-        5 ->
-            ( A, 2 )
-
-        6 ->
-            ( B, 2 )
-
-        other ->
-            if other < 0 then
-                letterAndSemitoneStepsByIndex (other + 7)
-
-            else
-                letterAndSemitoneStepsByIndex (other - 7)
+    Letter.semitones letter + offset
 
 
 targetLetterWithSemitoneDistance : Int -> Int -> ( Letter, Int ) -> ( Letter, Int )
@@ -323,6 +196,6 @@ targetLetterWithSemitoneDistance currentIndex steps ( currentLetter, totalSemito
     else
         let
             ( currentTargetLetter, stepSemitones ) =
-                letterAndSemitoneStepsByIndex (currentIndex + 1)
+                Letter.indexToLetterAndSteps (currentIndex + 1)
         in
         targetLetterWithSemitoneDistance (currentIndex + 1) (steps - 1) ( currentTargetLetter, totalSemitones + stepSemitones )

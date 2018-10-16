@@ -101,26 +101,6 @@ all =
                             >> semitones
                             >> Expect.equal (semitones pc |> modBy 12)
                         ]
-        , fuzz2 pitchClassFuzzer (Fuzz.intRange -100 100) "transposeBySemitones and asNaturalOrRaisedOnce semitones is sum of pitch class' semitones and interval semitones" <|
-            \pc n ->
-                pc
-                    |> transposeBySemitones n
-                    |> Spelling.simple
-                    |> Expect.all
-                        [ Spelling.toPitchClass
-                            >> semitones
-                            >> Expect.equal ((semitones pc + n) |> modBy 12)
-                        ]
-        , fuzz2 pitchClassFuzzer (Fuzz.intRange -100 100) "transposeBySemitones and asNaturalOrLoweredOnce semitones is sum of pitch class' semitones and interval semitones" <|
-            \pc n ->
-                pc
-                    |> transposeBySemitones n
-                    |> Spelling.simple
-                    |> Expect.all
-                        [ Spelling.toPitchClass
-                            >> semitones
-                            >> Expect.equal ((semitones pc + n) |> modBy 12)
-                        ]
         , fuzz2 pitchClassFuzzer intervalFuzzer "transpose pitch class by interval, result should have correct number of semitones" <|
             \pc interval ->
                 pc
@@ -162,16 +142,4 @@ all =
                     |> transposeDown i1
                     |> transposeDown i2
                     |> Expect.equal pc
-        , fuzz2 pitchClassFuzzer intervalFuzzer "transpose up by interval and by semitones should yield enharmonic equivalent results" <|
-            \pc interval ->
-                pc
-                    |> transposeUp interval
-                    |> areEnharmonicEqual (pc |> transposeBySemitones (Interval.semitones interval))
-                    |> Expect.true "should be enharmonic equivalent"
-        , fuzz2 pitchClassFuzzer intervalFuzzer "transpose down by interval and by semitones should yield enharmonic equivalent results" <|
-            \pc interval ->
-                pc
-                    |> transposeDown interval
-                    |> areEnharmonicEqual (pc |> transposeBySemitones (Interval.semitones interval * -1))
-                    |> Expect.true "should be enharmonic equivalent"
         ]
