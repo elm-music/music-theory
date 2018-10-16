@@ -46,7 +46,7 @@ simple pitchClass =
 -}
 toString : PitchClassSpelling -> String
 toString { letter, accidental } =
-    letterToString letter ++ accidentalToString accidental
+    Letter.toString letter ++ accidentalToString accidental
 
 
 {-| Create a pitch class from a tuple of a letter and an accidental.
@@ -108,31 +108,6 @@ accidentalToOffset accidental =
 
         Sharp ->
             Internal.Offset 1
-
-
-letterToString : Letter -> String
-letterToString letter =
-    case letter of
-        C ->
-            "C"
-
-        D ->
-            "D"
-
-        E ->
-            "E"
-
-        F ->
-            "F"
-
-        G ->
-            "G"
-
-        A ->
-            "A"
-
-        B ->
-            "B"
 
 
 accidentalToString : Accidental -> String

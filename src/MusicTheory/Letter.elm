@@ -1,4 +1,4 @@
-module MusicTheory.Letter exposing (Letter(..), index, indexToLetterAndSteps, letters, semitones)
+module MusicTheory.Letter exposing (Letter(..), index, indexToLetterAndSteps, letters, semitones, toString)
 
 {-| A letter represents a note from the diatonic C major scale.
 -}
@@ -12,6 +12,31 @@ type Letter
     | G
     | A
     | B
+
+
+toString : Letter -> String
+toString letter =
+    case letter of
+        C ->
+            "C"
+
+        D ->
+            "D"
+
+        E ->
+            "E"
+
+        F ->
+            "F"
+
+        G ->
+            "G"
+
+        A ->
+            "A"
+
+        B ->
+            "B"
 
 
 letters : List Letter
