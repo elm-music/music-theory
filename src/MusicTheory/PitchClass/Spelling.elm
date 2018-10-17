@@ -9,6 +9,7 @@ module MusicTheory.PitchClass.Spelling exposing
     )
 
 import MusicTheory.Internals.PitchClass as Internal
+import MusicTheory.Internals.PitchClass.Enharmonic as InternalEnharmonic exposing (NaturalOrSingleAccidental(..))
 import MusicTheory.Letter as Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 
@@ -68,7 +69,7 @@ toPitchClass { letter, accidental } =
 -}
 naturalOrElseFlat : PitchClass -> PitchClassSpelling
 naturalOrElseFlat pitchClass =
-    case pitchClass |> PitchClass.semitones |> semitonesToNaturalOrAccidental of
+    case pitchClass |> PitchClass.semitones |> InternalEnharmonic.semitonesToNaturalOrAccidental of
         Nat letter ->
             { letter = letter, accidental = Natural }
 
@@ -85,7 +86,7 @@ naturalOrElseFlat pitchClass =
 -}
 naturalOrElseSharp : PitchClass -> PitchClassSpelling
 naturalOrElseSharp pitchClass =
-    case pitchClass |> PitchClass.semitones |> semitonesToNaturalOrAccidental of
+    case pitchClass |> PitchClass.semitones |> InternalEnharmonic.semitonesToNaturalOrAccidental of
         Nat letter ->
             { letter = letter, accidental = Natural }
 
@@ -121,86 +122,3 @@ accidentalToString accidental =
 
         Sharp ->
             "♯"
-
-
-offsetToAccidental : Internal.Offset -> Maybe Accidental
-offsetToAccidental (Internal.Offset offset) =
-    if offset == -1 then
-        Just Flat
-
-    else if offset == 0 then
-        Just Natural
-
-    else if offset == 1 then
-        Just Sharp
-
-    else
-        Nothing
-
-
-type NaturalOrAccidental
-    = Nat Letter
-    | SharpFlat Letter Letter
-
-
-semitonesToNaturalOrAccidental : Int -> NaturalOrAccidental
-semitonesToNaturalOrAccidental offset =
-    if offset == -3 then
-        Nat A
-
-    else if offset == -2 then
-        SharpFlat A B
-
-    else if offset == -1 then
-        Nat B
-
-    else if offset == 0 then
-        Nat C
-
-    else if offset == 1 then
-        SharpFlat C D
-
-    else if offset == 2 then
-        Nat D
-
-    else if offset == 3 then
-        SharpFlat D E
-
-    else if offset == 4 then
-        Nat E
-
-    else if offset == 5 then
-        Nat F
-
-    else if offset == 6 then
-        SharpFlat F G
-
-    else if offset == 7 then
-        Nat G
-
-    else if offset == 8 then
-        SharpFlat G A
-
-    else if offset == 9 then
-        Nat A
-
-    else if offset == 10 then
-        SharpFlat A B
-
-    else if offset == 11 then
-        Nat B
-
-    else if offset == 12 then
-        Nat C
-
-    else if offset == 13 then
-        SharpFlat C D
-
-    else if offset == 14 then
-        Nat D
-
-    else if offset > 14 then
-        semitonesToNaturalOrAccidental (offset - 12)
-
-    else
-        semitonesToNaturalOrAccidental (offset + 12)

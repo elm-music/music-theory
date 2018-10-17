@@ -8,74 +8,8 @@ import MusicTheory.Interval as Interval
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass exposing (..)
 import MusicTheory.PitchClass.Spelling as Spelling exposing (Accidental(..))
+import PitchClassFuzzer exposing (pitchClassFuzzer)
 import Test exposing (..)
-
-
-numberToLetter n =
-    case n of
-        0 ->
-            C
-
-        1 ->
-            D
-
-        2 ->
-            E
-
-        3 ->
-            F
-
-        4 ->
-            G
-
-        5 ->
-            A
-
-        6 ->
-            B
-
-        other ->
-            if other > 0 then
-                numberToLetter (other - 7)
-
-            else
-                numberToLetter (other + 7)
-
-
-numberToAccidental n =
-    if n == -3 then
-        tripleFlat
-
-    else if n == -2 then
-        doubleFlat
-
-    else if n == -1 then
-        flat
-
-    else if n == 0 then
-        natural
-
-    else if n == 1 then
-        sharp
-
-    else if n == 2 then
-        doubleSharp
-
-    else if n == 3 then
-        tripleSharp
-
-    else if n < -3 then
-        numberToAccidental (n + 7)
-
-    else
-        numberToAccidental (n - 7)
-
-
-pitchClassFuzzer =
-    Fuzz.map2
-        pitchClass
-        (Fuzz.intRange 0 6 |> Fuzz.map numberToLetter)
-        (Fuzz.intRange -3 3 |> Fuzz.map numberToAccidental)
 
 
 all : Test
@@ -142,4 +76,29 @@ all =
                     |> transposeDown i1
                     |> transposeDown i2
                     |> Expect.equal pc
+        , fuzz PitchClassFuzzer.pitchClassFuzzer "all enharmonic equivalents should have same number of semitones" <|
+            \pc ->
+                enharmonicEquivalents pc
+                    |> List.all (semitones >> (==) (semitones pc))
+                    |> Expect.true "semitones should be equal"
+        , test "toString" <|
+            \_ ->
+                let
+                    testCases =
+                        [ ( pitchClass C tripleSharp, "D♯" )
+                        , ( pitchClass C flat, "B" )
+                        , ( pitchClass C flat, "B" )
+                        , ( pitchClass E sharp, "F" )
+                        , ( pitchClass A tripleFlat, "G♭" )
+                        ]
+
+                    input =
+                        testCases |> List.map Tuple.first
+
+                    expected =
+                        testCases |> List.map Tuple.second
+                in
+                input
+                    |> List.map toString
+                    |> Expect.equal expected
         ]
