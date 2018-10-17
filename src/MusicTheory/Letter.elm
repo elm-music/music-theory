@@ -41,7 +41,7 @@ toString letter =
 
 letters : List Letter
 letters =
-    [ C, D, E, F, G, A, B, C ]
+    [ C, D, E, F, G, A, B ]
 
 
 semitones : Letter -> Int
