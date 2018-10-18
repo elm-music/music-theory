@@ -18,6 +18,7 @@ module MusicTheory.Interval exposing
     , diminishedSeventh
     , diminishedSixth
     , diminishedThird
+    , intervalNumberIndex
     , majorSecond
     , majorSeventh
     , majorSixth
@@ -369,3 +370,31 @@ complementaryIntervalQuality intervalQuality =
 
         Augmented ->
             Diminished
+
+
+intervalNumberIndex : IntervalNumber -> Int
+intervalNumberIndex intervalNumber =
+    case intervalNumber of
+        Unison ->
+            0
+
+        Second ->
+            1
+
+        Third ->
+            2
+
+        Fourth ->
+            3
+
+        Fifth ->
+            4
+
+        Sixth ->
+            5
+
+        Seventh ->
+            6
+
+        Octave ->
+            7

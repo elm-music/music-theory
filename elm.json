@@ -7,7 +7,9 @@
     "exposed-modules": [
         "MusicTheory.Interval",
         "MusicTheory.Key",
+        "MusicTheory.Letter",
         "MusicTheory.PitchClass",
+        "MusicTheory.PitchClass.Spelling",
         "MusicTheory.Scale",
         "MusicTheory.ScaleClass"
     ],
