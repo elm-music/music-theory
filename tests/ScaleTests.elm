@@ -66,7 +66,7 @@ all =
         , test "A minor pentatonic" <|
             \_ ->
                 let
-                    pitchClassesInCMinorPentatonic =
+                    pitchClassesInAMinorPentatonic =
                         [ pitchClass A natural
                         , pitchClass C natural
                         , pitchClass D natural
@@ -76,7 +76,7 @@ all =
                 in
                 Scale.scale (pitchClass A natural) ScaleClass.minorPentatonic
                     |> Scale.toList
-                    |> Expect.equal pitchClassesInCMinorPentatonic
+                    |> Expect.equal pitchClassesInAMinorPentatonic
         , test "C whole tone" <|
             \_ ->
                 let
