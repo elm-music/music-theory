@@ -66,7 +66,7 @@ all =
         , test "A minor pentatonic" <|
             \_ ->
                 let
-                    pitchClassesInCMinorPentatonic =
+                    pitchClassesInAMinorPentatonic =
                         [ pitchClass A natural
                         , pitchClass C natural
                         , pitchClass D natural
@@ -76,7 +76,7 @@ all =
                 in
                 Scale.scale (pitchClass A natural) ScaleClass.minorPentatonic
                     |> Scale.toList
-                    |> Expect.equal pitchClassesInCMinorPentatonic
+                    |> Expect.equal pitchClassesInAMinorPentatonic
         , test "C whole tone" <|
             \_ ->
                 let
@@ -126,4 +126,60 @@ all =
                 Scale.scale (pitchClass C natural) ScaleClass.diminishedWholeToneHalfTone
                     |> Scale.toList
                     |> Expect.equal pitchClassesInCDiminishedWholeHalf
+        , test "C minor major sixth pentatonic" <|
+            \_ ->
+                let
+                    expected =
+                        [ pitchClass C natural
+                        , pitchClass E flat
+                        , pitchClass F natural
+                        , pitchClass G natural
+                        , pitchClass A natural
+                        ]
+                in
+                Scale.scale (pitchClass C natural) ScaleClass.minor6Pentatonic
+                    |> Scale.toList
+                    |> Expect.equal expected
+        , test "C major minor sixth pentatonic" <|
+            \_ ->
+                let
+                    expected =
+                        [ pitchClass C natural
+                        , pitchClass D natural
+                        , pitchClass E natural
+                        , pitchClass G natural
+                        , pitchClass A flat
+                        ]
+                in
+                Scale.scale (pitchClass C natural) ScaleClass.majorFlat6Pentatonic
+                    |> Scale.toList
+                    |> Expect.equal expected
+        , test "C minor 7 diminished fifth pentatonic" <|
+            \_ ->
+                let
+                    expected =
+                        [ pitchClass C natural
+                        , pitchClass E flat
+                        , pitchClass F natural
+                        , pitchClass G flat
+                        , pitchClass B flat
+                        ]
+                in
+                Scale.scale (pitchClass C natural) ScaleClass.minorFlat5Pentatonic
+                    |> Scale.toList
+                    |> Expect.equal expected
+        , test "C major minor 2 pentatonic" <|
+            \_ ->
+                let
+                    expected =
+                        [ pitchClass C natural
+                        , pitchClass D flat
+                        , pitchClass E natural
+                        , pitchClass G natural
+                        , pitchClass A natural
+                        ]
+                in
+                Scale.scale (pitchClass C natural) ScaleClass.majorFlat2Pentatonic
+                    |> Scale.toList
+                    |> Expect.equal expected
         ]
