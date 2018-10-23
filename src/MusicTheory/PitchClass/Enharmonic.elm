@@ -1,6 +1,6 @@
 module MusicTheory.PitchClass.Enharmonic exposing (asNaturalOrElseFlat, asNaturalOrElseSharp, equivalents, simple)
 
-import MusicTheory.Internal.PitchClass as PitchClass exposing (Offset(..), PitchClass(..))
+import MusicTheory.Internal.PitchClass as PitchClass exposing (Offset, PitchClass(..))
 import MusicTheory.Internal.PitchClass.Enharmonic as Enharmonic exposing (NaturalOrSingleAccidental(..))
 
 
@@ -20,20 +20,20 @@ asNaturalOrElseFlat : PitchClass -> PitchClass
 asNaturalOrElseFlat pc =
     case pc |> PitchClass.semitones |> Enharmonic.semitonesToNaturalOrAccidental of
         Nat letter ->
-            PitchClass.pitchClass letter (Offset 0)
+            PitchClass.pitchClass letter PitchClass.natural
 
         SharpFlat _ letter ->
-            PitchClass.pitchClass letter (Offset -1)
+            PitchClass.pitchClass letter PitchClass.flat
 
 
 asNaturalOrElseSharp : PitchClass -> PitchClass
 asNaturalOrElseSharp pc =
     case pc |> PitchClass.semitones |> Enharmonic.semitonesToNaturalOrAccidental of
         Nat letter ->
-            PitchClass.pitchClass letter (Offset 0)
+            PitchClass.pitchClass letter PitchClass.natural
 
         SharpFlat letter _ ->
-            PitchClass.pitchClass letter (Offset 1)
+            PitchClass.pitchClass letter PitchClass.sharp
 
 
 equivalents : PitchClass -> List PitchClass

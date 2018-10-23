@@ -1,6 +1,6 @@
 module MusicTheory.Internal.PitchClass exposing
-    ( Offset(..)
-    , PitchClass(..)
+    ( Offset
+    , PitchClass
     , all
     , areEnharmonicEqual
     , doubleFlat
