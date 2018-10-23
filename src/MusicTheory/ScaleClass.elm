@@ -57,7 +57,7 @@ module MusicTheory.ScaleClass exposing
     , wholeTone
     )
 
-import MusicTheory.Internals.ScaleClass as Internal
+import MusicTheory.Internal.ScaleClass as Internal
 import MusicTheory.Interval as Interval exposing (Interval)
 import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 

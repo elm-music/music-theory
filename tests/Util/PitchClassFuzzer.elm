@@ -1,4 +1,4 @@
-module PitchClassFuzzer exposing (pitchClassFuzzer)
+module Util.PitchClassFuzzer exposing (pitchClassFuzzer)
 
 import Fuzz exposing (Fuzzer)
 import MusicTheory.Letter exposing (Letter(..))

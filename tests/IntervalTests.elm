@@ -2,10 +2,10 @@ module IntervalTests exposing (all)
 
 import Expect
 import Fuzz exposing (Fuzzer)
-import IntervalFuzzer exposing (intervalFuzzer)
 import List.Extra
 import MusicTheory.Interval as Interval
 import Test exposing (..)
+import Util.IntervalFuzzer exposing (intervalFuzzer)
 
 
 all : Test

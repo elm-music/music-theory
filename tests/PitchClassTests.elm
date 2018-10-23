@@ -2,15 +2,15 @@ module PitchClassTests exposing (all)
 
 import Expect
 import Fuzz
-import IntervalFuzzer exposing (intervalFuzzer)
 import Maybe.Extra
 import MusicTheory.Interval as Interval
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass exposing (..)
 import MusicTheory.PitchClass.Enharmonic as Enharmonic
 import MusicTheory.PitchClass.Spelling as Spelling exposing (Accidental(..))
-import PitchClassFuzzer exposing (pitchClassFuzzer)
 import Test exposing (..)
+import Util.IntervalFuzzer as IntervalFuzzer exposing (intervalFuzzer)
+import Util.PitchClassFuzzer as PitchClassFuzzer exposing (pitchClassFuzzer)
 
 
 all : Test

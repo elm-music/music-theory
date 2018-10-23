@@ -8,8 +8,8 @@ module MusicTheory.PitchClass.Spelling exposing
     , toString
     )
 
-import MusicTheory.Internals.PitchClass as Internal
-import MusicTheory.Internals.PitchClass.Enharmonic as InternalEnharmonic exposing (NaturalOrSingleAccidental(..))
+import MusicTheory.Internal.PitchClass as Internal
+import MusicTheory.Internal.PitchClass.Enharmonic as InternalEnharmonic exposing (NaturalOrSingleAccidental(..))
 import MusicTheory.Letter as Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 

@@ -1,4 +1,4 @@
-module IntervalFuzzer exposing (intervalFuzzer)
+module Util.IntervalFuzzer exposing (intervalFuzzer)
 
 import Fuzz exposing (Fuzzer)
 import List.Extra

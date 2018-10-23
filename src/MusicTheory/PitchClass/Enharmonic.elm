@@ -1,7 +1,7 @@
 module MusicTheory.PitchClass.Enharmonic exposing (asNaturalOrElseFlat, asNaturalOrElseSharp, equivalents, simple)
 
-import MusicTheory.Internals.PitchClass as PitchClassInternal exposing (Offset(..), PitchClass(..))
-import MusicTheory.Internals.PitchClass.Enharmonic as EnharmonicInternal exposing (NaturalOrSingleAccidental(..))
+import MusicTheory.Internal.PitchClass as PitchClassInternal exposing (Offset(..), PitchClass(..))
+import MusicTheory.Internal.PitchClass.Enharmonic as EnharmonicInternal exposing (NaturalOrSingleAccidental(..))
 
 
 simple : PitchClass -> PitchClass
