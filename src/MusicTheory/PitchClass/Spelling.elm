@@ -102,13 +102,13 @@ accidentalToOffset : Accidental -> Internal.Offset
 accidentalToOffset accidental =
     case accidental of
         Flat ->
-            Internal.Offset -1
+            Internal.flat
 
         Natural ->
-            Internal.Offset 0
+            Internal.natural
 
         Sharp ->
-            Internal.Offset 1
+            Internal.sharp
 
 
 accidentalToString : Accidental -> String
