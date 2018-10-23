@@ -5,12 +5,37 @@ import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass
 import MusicTheory.PitchClass.Spelling as Spelling exposing (Accidental(..))
 import Test exposing (..)
+import Util.PitchClassFuzzer as Fuzzer
 
 
 all : Test
 all =
-    describe "Pitch class enharmonic spelling test"
-        [ test "simple spelling" <|
+    describe "Spelling Tests"
+        [ fuzz Fuzzer.pitchClass "simple spelling has same number of semitones" <|
+            \pc ->
+                Spelling.simple pc
+                    |> Expect.all
+                        [ Spelling.toPitchClass
+                            >> PitchClass.semitones
+                            >> Expect.equal (PitchClass.semitones pc |> modBy 12)
+                        ]
+        , fuzz Fuzzer.pitchClass "naturalOrElseSharp has same number of semitones" <|
+            \pc ->
+                Spelling.naturalOrElseSharp pc
+                    |> Expect.all
+                        [ Spelling.toPitchClass
+                            >> PitchClass.semitones
+                            >> Expect.equal (PitchClass.semitones pc |> modBy 12)
+                        ]
+        , fuzz Fuzzer.pitchClass "naturalOrElseFlat has same number of semitones" <|
+            \pc ->
+                Spelling.naturalOrElseFlat pc
+                    |> Expect.all
+                        [ Spelling.toPitchClass
+                            >> PitchClass.semitones
+                            >> Expect.equal (PitchClass.semitones pc |> modBy 12)
+                        ]
+        , test "simple spelling" <|
             \_ ->
                 let
                     testCases =

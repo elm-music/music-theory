@@ -10,6 +10,7 @@
         "MusicTheory.Letter",
         "MusicTheory.PitchClass",
         "MusicTheory.PitchClass.Spelling",
+        "MusicTheory.PitchClass.Enharmonic",
         "MusicTheory.Scale",
         "MusicTheory.ScaleClass"
     ],

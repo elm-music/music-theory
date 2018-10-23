@@ -8,8 +8,8 @@ module MusicTheory.PitchClass.Spelling exposing
     , toString
     )
 
-import MusicTheory.Internals.PitchClass as Internal
-import MusicTheory.Internals.PitchClass.Enharmonic as InternalEnharmonic exposing (NaturalOrSingleAccidental(..))
+import MusicTheory.Internal.PitchClass as Internal
+import MusicTheory.Internal.PitchClass.Enharmonic as InternalEnharmonic exposing (NaturalOrSingleAccidental(..))
 import MusicTheory.Letter as Letter exposing (Letter(..))
 import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 
@@ -102,13 +102,13 @@ accidentalToOffset : Accidental -> Internal.Offset
 accidentalToOffset accidental =
     case accidental of
         Flat ->
-            Internal.Offset -1
+            Internal.flat
 
         Natural ->
-            Internal.Offset 0
+            Internal.natural
 
         Sharp ->
-            Internal.Offset 1
+            Internal.sharp
 
 
 accidentalToString : Accidental -> String

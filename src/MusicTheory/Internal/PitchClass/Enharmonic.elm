@@ -1,6 +1,6 @@
-module MusicTheory.Internals.PitchClass.Enharmonic exposing (NaturalOrSingleAccidental(..), semitonesToNaturalOrAccidental)
+module MusicTheory.Internal.PitchClass.Enharmonic exposing (NaturalOrSingleAccidental(..), semitonesToNaturalOrAccidental)
 
-import MusicTheory.Internals.PitchClass as Internal
+import MusicTheory.Internal.PitchClass as Internal
 import MusicTheory.Letter as Letter exposing (Letter(..))
 
 
