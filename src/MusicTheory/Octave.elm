@@ -1,101 +1,113 @@
 module MusicTheory.Octave exposing
     ( Octave
-    , add
     , all
-    , down
     , eight
     , five
     , four
     , number
-    , octave
     , one
+    , semitones
     , seven
     , six
     , three
     , two
-    , up
     , zero
     )
 
 
 type Octave
-    = Octave Int
+    = Zero
+    | One
+    | Two
+    | Three
+    | Four
+    | Five
+    | Six
+    | Seven
+    | Eight
 
 
-octave : Int -> Maybe Octave
-octave n =
-    if n >= 0 && n <= 8 then
-        Octave n |> Just
-
-    else
-        Nothing
-
-
-up : Octave -> Maybe Octave
-up (Octave n) =
-    octave (n + 1)
-
-
-down : Octave -> Maybe Octave
-down (Octave n) =
-    octave (n - 1)
+semitones : Octave -> Int
+semitones octave =
+    number octave * 12
 
 
 number : Octave -> Int
-number (Octave n) =
-    n
+number octave =
+    case octave of
+        Zero ->
+            0
 
+        One ->
+            1
 
-add : Int -> Octave -> Maybe Octave
-add n (Octave num) =
-    octave (n + num)
+        Two ->
+            2
+
+        Three ->
+            3
+
+        Four ->
+            4
+
+        Five ->
+            5
+
+        Six ->
+            6
+
+        Seven ->
+            7
+
+        Eight ->
+            8
 
 
 all : List Octave
 all =
-    List.range 0 8 |> List.map Octave
+    [ Zero, One, Two, Three, Four, Five, Six, Seven, Eight ]
 
 
 zero : Octave
 zero =
-    Octave 0
+    Zero
 
 
 one : Octave
 one =
-    Octave 1
+    One
 
 
 two : Octave
 two =
-    Octave 2
+    Two
 
 
 three : Octave
 three =
-    Octave 3
+    Three
 
 
 four : Octave
 four =
-    Octave 4
+    Four
 
 
 five : Octave
 five =
-    Octave 5
+    Five
 
 
 six : Octave
 six =
-    Octave 6
+    Six
 
 
 seven : Octave
 seven =
-    Octave 7
+    Seven
 
 
 eight : Octave
 eight =
-    Octave 8
+    Eight

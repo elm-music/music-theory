@@ -5,13 +5,13 @@ module MusicTheory.Internal.PitchClass exposing
     , areEnharmonicEqual
     , doubleFlat
     , doubleSharp
-    , exactSemitones
     , flat
     , letter
     , natural
     , offset
     , pitchClass
     , semitones
+    , semitonesNotOctaveBound
     , sharp
     , toString
     , transposeDown
@@ -47,14 +47,14 @@ letter (PitchClass l _) =
     l
 
 
-exactSemitones : PitchClass -> Int
-exactSemitones (PitchClass l (Offset o)) =
+semitonesNotOctaveBound : PitchClass -> Int
+semitonesNotOctaveBound (PitchClass l (Offset o)) =
     Letter.semitones l + o
 
 
 semitones : PitchClass -> Int
 semitones pc =
-    exactSemitones pc |> modBy 12
+    semitonesNotOctaveBound pc |> modBy 12
 
 
 all : List PitchClass
