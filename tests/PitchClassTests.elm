@@ -7,6 +7,7 @@ import Maybe.Extra
 import MusicTheory.Interval as Interval
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.PitchClass exposing (..)
+import MusicTheory.PitchClass.Enharmonic as Enharmonic
 import MusicTheory.PitchClass.Spelling as Spelling exposing (Accidental(..))
 import PitchClassFuzzer exposing (pitchClassFuzzer)
 import Test exposing (..)
@@ -78,7 +79,7 @@ all =
                     |> Expect.equal pc
         , fuzz PitchClassFuzzer.pitchClassFuzzer "all enharmonic equivalents should have same number of semitones" <|
             \pc ->
-                enharmonicEquivalents pc
+                Enharmonic.equivalents pc
                     |> List.all (semitones >> (==) (semitones pc))
                     |> Expect.true "semitones should be equal"
         , test "toString" <|

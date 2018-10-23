@@ -2,7 +2,7 @@ module MusicTheory.PitchClass exposing
     ( PitchClass
     , all
     , areEnharmonicEqual
-    , asNaturalOrElseFlat, asNaturalOrElseSharp, doubleFlat, doubleSharp, enharmonicEquivalents, flat, natural, pitchClass, semitones, sharp, simple, toString, transposeDown, transposeUp, tripleFlat, tripleSharp
+    , doubleFlat, doubleSharp, flat, natural, pitchClass, semitones, sharp, toString, transposeDown, transposeUp, tripleFlat, tripleSharp
     )
 
 {-| A pitch class is a set of all pitches that are a whole number of octaves apart. A pitch class is represented as a letter together with an accidental.
@@ -37,9 +37,9 @@ The internals of `PitchClass` are opaque. By using accessor functions the caller
 -}
 
 import MusicTheory.Internals.PitchClass as Internal
-import MusicTheory.Internals.PitchClass.Enharmonic as EnharmonicInternal exposing (NaturalOrSingleAccidental(..))
 import MusicTheory.Interval as Interval exposing (Interval, IntervalNumber(..), IntervalQuality(..))
 import MusicTheory.Letter as Letter exposing (Letter(..))
+import MusicTheory.PitchClass.Enharmonic as Enharmonic
 
 
 
@@ -104,7 +104,7 @@ tripleSharp =
 -}
 pitchClass : Letter -> Offset -> PitchClass
 pitchClass letter offset =
-    Internal.PitchClass letter offset
+    Internal.pitchClass letter offset
 
 
 
@@ -115,8 +115,7 @@ pitchClass letter offset =
 -}
 all : List PitchClass
 all =
-    Letter.letters
-        |> List.concatMap (\l -> [ tripleFlat, doubleFlat, flat, natural, sharp, doubleSharp, tripleSharp ] |> List.map (pitchClass l))
+    Internal.all
 
 
 
@@ -130,12 +129,12 @@ all =
 -}
 semitones : PitchClass -> Int
 semitones pc =
-    exactSemitones pc |> modBy 12
+    Internal.semitones pc
 
 
 toString : PitchClass -> String
 toString pc =
-    internalToString (simple pc)
+    internalToString (Enharmonic.simple pc)
 
 
 
@@ -186,47 +185,6 @@ areEnharmonicEqual lhs rhs =
 
 
 
--- ENHARMONIC
-
-
-enharmonicEquivalents : PitchClass -> List PitchClass
-enharmonicEquivalents pc =
-    all |> List.filter (semitones >> (==) (semitones pc))
-
-
-simple : PitchClass -> PitchClass
-simple pc =
-    if Internal.offset pc == 0 then
-        pc
-
-    else if Internal.offset pc < 0 then
-        asNaturalOrElseFlat pc
-
-    else
-        asNaturalOrElseSharp pc
-
-
-asNaturalOrElseFlat : PitchClass -> PitchClass
-asNaturalOrElseFlat pc =
-    case pc |> semitones |> EnharmonicInternal.semitonesToNaturalOrAccidental of
-        Nat letter ->
-            pitchClass letter natural
-
-        SharpFlat _ letter ->
-            pitchClass letter flat
-
-
-asNaturalOrElseSharp : PitchClass -> PitchClass
-asNaturalOrElseSharp pc =
-    case pc |> semitones |> EnharmonicInternal.semitonesToNaturalOrAccidental of
-        Nat letter ->
-            pitchClass letter natural
-
-        SharpFlat letter _ ->
-            pitchClass letter sharp
-
-
-
 -- INTERNALS
 
 
@@ -242,11 +200,6 @@ internalToString pc =
 
             else
                 Letter.toString letter ++ (List.repeat (abs offset) "♯" |> String.join "")
-
-
-exactSemitones : PitchClass -> Int
-exactSemitones (Internal.PitchClass letter (Internal.Offset offset)) =
-    Letter.semitones letter + offset
 
 
 targetLetterWithSemitoneDistance : Int -> Int -> ( Letter, Int ) -> ( Letter, Int )
