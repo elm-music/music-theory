@@ -11,7 +11,7 @@ import Test exposing (..)
 
 all : Test
 all =
-    describe "Key Tests"
+    describe "Scale Tests"
         [ test "C major scale should have C root" <|
             \_ ->
                 Scale.scale (pitchClass C natural) ScaleClass.major

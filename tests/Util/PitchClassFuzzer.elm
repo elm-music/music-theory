@@ -1,10 +1,12 @@
-module Util.PitchClassFuzzer exposing (pitchClassFuzzer)
+module Util.PitchClassFuzzer exposing (pitchClass)
 
 import Fuzz exposing (Fuzzer)
+import MusicTheory.Internal.PitchClass as Internal
 import MusicTheory.Letter exposing (Letter(..))
-import MusicTheory.PitchClass exposing (..)
+import MusicTheory.PitchClass as PitchClass exposing (PitchClass)
 
 
+numberToLetter : Int -> Letter
 numberToLetter n =
     case n of
         0 ->
@@ -36,27 +38,28 @@ numberToLetter n =
                 numberToLetter (other + 7)
 
 
+numberToAccidental : Int -> Internal.Offset
 numberToAccidental n =
     if n == -3 then
-        tripleFlat
+        PitchClass.tripleFlat
 
     else if n == -2 then
-        doubleFlat
+        PitchClass.doubleFlat
 
     else if n == -1 then
-        flat
+        PitchClass.flat
 
     else if n == 0 then
-        natural
+        PitchClass.natural
 
     else if n == 1 then
-        sharp
+        PitchClass.sharp
 
     else if n == 2 then
-        doubleSharp
+        PitchClass.doubleSharp
 
     else if n == 3 then
-        tripleSharp
+        PitchClass.tripleSharp
 
     else if n < -3 then
         numberToAccidental (n + 7)
@@ -65,8 +68,9 @@ numberToAccidental n =
         numberToAccidental (n - 7)
 
 
-pitchClassFuzzer =
+pitchClass : Fuzzer PitchClass
+pitchClass =
     Fuzz.map2
-        pitchClass
+        PitchClass.pitchClass
         (Fuzz.intRange 0 6 |> Fuzz.map numberToLetter)
         (Fuzz.intRange -3 3 |> Fuzz.map numberToAccidental)
