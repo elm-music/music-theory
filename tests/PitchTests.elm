@@ -7,7 +7,6 @@ import MusicTheory.Internal.PitchClass as PitchClass
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.Octave as Octave exposing (OctaveError(..))
 import MusicTheory.Pitch as Pitch
-import MusicTheory.Pitch.Enharmonic as PitchEnharmonic
 import MusicTheory.PitchClass.Enharmonic as PitchClassEnharmonic
 import Test exposing (..)
 import Util.OctaveFuzzer
@@ -17,30 +16,7 @@ import Util.PitchClassFuzzer
 all : Test
 all =
     describe "Pitch Tests"
-        [ fuzz2 Util.PitchClassFuzzer.pitchClass Util.OctaveFuzzer.octave "simple enharmonic should have same number of semitones" <|
-            \pitchClass octave ->
-                let
-                    pitch =
-                        pitchClass |> Internal.fromPitchClass octave
-
-                    expectedSemitones =
-                        pitch |> Internal.semitones
-
-                    expectedResult =
-                        if expectedSemitones < 0 then
-                            Err <| InvalidEnharmonicEquivalent (pitch |> Internal.pitchClass |> PitchClassEnharmonic.simple) (BelowValidRange -1)
-
-                        else if expectedSemitones >= 108 then
-                            Err <| InvalidEnharmonicEquivalent (pitch |> Internal.pitchClass |> PitchClassEnharmonic.simple) (AboveValidRange 9)
-
-                        else
-                            Ok expectedSemitones
-                in
-                pitch
-                    |> PitchEnharmonic.simple
-                    |> Result.map Internal.semitones
-                    |> Expect.equal expectedResult
-        , test "semitones of B##4 should be 61 (4*12 (octave) + 11 (letter B) + 2 (double sharp))" <|
+        [ test "semitones of B##4 should be 61 (4*12 (octave) + 11 (letter B) + 2 (double sharp))" <|
             \_ ->
                 Internal.fromPitchClass Octave.four (PitchClass.pitchClass B PitchClass.doubleSharp)
                     |> Internal.semitones

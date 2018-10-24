@@ -1,4 +1,12 @@
-module MusicTheory.PitchClass.Enharmonic exposing (asNaturalOrElseFlat, asNaturalOrElseSharp, equivalents, simple, simpleWithOctaveOffset)
+module MusicTheory.PitchClass.Enharmonic exposing
+    ( asNaturalOrElseFlat
+    , asNaturalOrElseFlatWithOctaveOffset
+    , asNaturalOrElseSharp
+    , asNaturalOrElseSharpWithOctaveOffset
+    , equivalents
+    , simple
+    , simpleWithOctaveOffset
+    )
 
 import MusicTheory.Internal.PitchClass as PitchClass exposing (Offset, PitchClass(..))
 import MusicTheory.Internal.PitchClass.Enharmonic as Enharmonic exposing (NaturalOrSingleAccidental(..))
