@@ -28,10 +28,10 @@ errorToString : OctaveError -> String
 errorToString error =
     case error of
         AboveValidRange n ->
-            "Octave number " ++ String.fromInt n ++ " is above the valid octave range of [0,9]"
+            "Octave number " ++ String.fromInt n ++ " is above the valid octave range of [0,8]."
 
         BelowValidRange n ->
-            "Octave number " ++ String.fromInt n ++ " is below the valid octave range of [0,9]"
+            "Octave number " ++ String.fromInt n ++ " is below the valid octave range of [0,8]."
 
 
 type Octave
