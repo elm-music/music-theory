@@ -1,10 +1,12 @@
 module MusicTheory.Octave exposing
     ( Octave
+    , add
     , all
     , eight
     , five
     , four
     , number
+    , octave
     , one
     , semitones
     , seven
@@ -27,14 +29,53 @@ type Octave
     | Eight
 
 
+octave : Int -> Maybe Octave
+octave n =
+    case n of
+        0 ->
+            Just Zero
+
+        1 ->
+            Just One
+
+        2 ->
+            Just Two
+
+        3 ->
+            Just Three
+
+        4 ->
+            Just Four
+
+        5 ->
+            Just Five
+
+        6 ->
+            Just Six
+
+        7 ->
+            Just Seven
+
+        8 ->
+            Just Eight
+
+        _ ->
+            Nothing
+
+
+add : Int -> Octave -> Maybe Octave
+add n o =
+    octave (number o + n)
+
+
 semitones : Octave -> Int
-semitones octave =
-    number octave * 12
+semitones o =
+    number o * 12
 
 
 number : Octave -> Int
-number octave =
-    case octave of
+number o =
+    case o of
         Zero ->
             0
 

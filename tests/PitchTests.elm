@@ -16,30 +16,29 @@ import Util.PitchClassFuzzer
 all : Test
 all =
     describe "Pitch Tests"
-        [ fuzz2 Util.PitchClassFuzzer.pitchClass Util.OctaveFuzzer.octave "apply the same enharmonic transformation to pitch and to a pitch's inner pitch class should yield the same result" <|
-            \pitchClass octave ->
-                let
-                    enharmonicAppliedToPitch =
-                        pitchClass
-                            |> Pitch.fromPitchClass octave
-                            |> PitchEnharmonic.simple
-
-                    enharmonicAppliedToPitchClass =
-                        pitchClass
-                            |> PitchClassEnharmonic.simple
-                            |> Pitch.fromPitchClass octave
-                in
-                Expect.equal enharmonicAppliedToPitch enharmonicAppliedToPitchClass
-        , fuzz2 Util.PitchClassFuzzer.pitchClass Util.OctaveFuzzer.octave "simple enharmonic should have same number of semitones" <|
+        [ fuzz2 Util.PitchClassFuzzer.pitchClass Util.OctaveFuzzer.octave "simple enharmonic should have same number of semitones" <|
             \pitchClass octave ->
                 let
                     pitch =
                         pitchClass |> Pitch.fromPitchClass octave
+
+                    expectedSemitones =
+                        pitch |> Pitch.semitones
+
+                    expectedResult =
+                        if expectedSemitones < 0 then
+                            Nothing
+
+                        else if expectedSemitones >= 108 then
+                            Nothing
+
+                        else
+                            Just expectedSemitones
                 in
                 pitch
                     |> PitchEnharmonic.simple
-                    |> Pitch.semitones
-                    |> Expect.equal (pitch |> Pitch.semitones)
+                    |> Maybe.map Pitch.semitones
+                    |> Expect.equal expectedResult
         , test "semitones of B##4 should be 61 (4*12 (octave) + 11 (letter B) + 2 (double sharp))" <|
             \_ ->
                 Pitch.fromPitchClass Octave.four (PitchClass.pitchClass B PitchClass.doubleSharp)

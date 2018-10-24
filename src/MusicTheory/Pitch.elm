@@ -1,4 +1,11 @@
-module MusicTheory.Pitch exposing (Pitch, areEnharmonicEqual, fromPitchClass, map, semitones)
+module MusicTheory.Pitch exposing
+    ( Pitch
+    , areEnharmonicEqual
+    , fromPitchClass
+    , octave
+    , pitchClass
+    , semitones
+    )
 
 import MusicTheory.Internal.PitchClass as PitchClass exposing (Offset, PitchClass)
 import MusicTheory.Octave as Octave exposing (Octave)
@@ -12,16 +19,19 @@ type Pitch
 -- todo: pitch ctor (pitch : Letter -> Accidental -> Octave -> Pitch)
 
 
+pitchClass : Pitch -> PitchClass
+pitchClass (Pitch pc _) =
+    pc
+
+
+octave : Pitch -> Octave
+octave (Pitch _ o) =
+    o
+
+
 fromPitchClass : Octave -> PitchClass -> Pitch
 fromPitchClass o p =
     Pitch p o
-
-
-{-| better name this mapPitchClass?
--}
-map : (PitchClass -> PitchClass) -> Pitch -> Pitch
-map f (Pitch pc o) =
-    fromPitchClass o (f pc)
 
 
 semitones : Pitch -> Int
