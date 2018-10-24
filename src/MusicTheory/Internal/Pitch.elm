@@ -1,6 +1,7 @@
 module MusicTheory.Internal.Pitch exposing
     ( Pitch
     , PitchError(..)
+    , all
     , areEnharmonicEqual
     , doubleFlat
     , doubleSharp
@@ -117,3 +118,9 @@ semitones (Pitch pc o) =
 areEnharmonicEqual : Pitch -> Pitch -> Bool
 areEnharmonicEqual lhs rhs =
     semitones lhs == semitones rhs
+
+
+all : List Pitch
+all =
+    Octave.all
+        |> List.concatMap (\o -> PitchClass.all |> List.map (\pc -> Pitch pc o))
