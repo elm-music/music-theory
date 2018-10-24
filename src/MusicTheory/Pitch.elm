@@ -1,44 +1,105 @@
 module MusicTheory.Pitch exposing
     ( Pitch
     , areEnharmonicEqual
+    , doubleFlat
+    , doubleSharp
+    , flat
     , fromPitchClass
+    , natural
     , octave
+    , pitch
     , pitchClass
     , semitones
+    , sharp
+    , toString
+    , tripleFlat
+    , tripleSharp
     )
 
+import MusicTheory.Internal.Pitch as Pitch exposing (PitchError(..))
 import MusicTheory.Internal.PitchClass as PitchClass exposing (Offset, PitchClass)
-import MusicTheory.Octave as Octave exposing (Octave)
+import MusicTheory.Letter exposing (Letter)
+import MusicTheory.Octave as Octave exposing (Octave, OctaveError(..))
+import MusicTheory.Pitch.Enharmonic as Enharmonic
 
 
-type Pitch
-    = Pitch PitchClass Octave
+type alias Pitch =
+    Pitch.Pitch
 
 
+pitch : Letter -> Offset -> Octave -> Pitch
+pitch =
+    Pitch.pitch
 
--- todo: pitch ctor (pitch : Letter -> Accidental -> Octave -> Pitch)
+
+tripleFlat : Offset
+tripleFlat =
+    PitchClass.tripleFlat
+
+
+doubleFlat : Offset
+doubleFlat =
+    PitchClass.doubleFlat
+
+
+flat : Offset
+flat =
+    PitchClass.flat
+
+
+natural : Offset
+natural =
+    PitchClass.natural
+
+
+sharp : Offset
+sharp =
+    PitchClass.sharp
+
+
+doubleSharp : Offset
+doubleSharp =
+    PitchClass.doubleSharp
+
+
+tripleSharp : Offset
+tripleSharp =
+    PitchClass.tripleSharp
 
 
 pitchClass : Pitch -> PitchClass
-pitchClass (Pitch pc _) =
-    pc
+pitchClass =
+    Pitch.pitchClass
 
 
 octave : Pitch -> Octave
-octave (Pitch _ o) =
-    o
+octave =
+    Pitch.octave
 
 
 fromPitchClass : Octave -> PitchClass -> Pitch
-fromPitchClass o p =
-    Pitch p o
+fromPitchClass =
+    Pitch.fromPitchClass
 
 
 semitones : Pitch -> Int
-semitones (Pitch pc o) =
-    Octave.semitones o + PitchClass.semitonesNotOctaveBound pc
+semitones =
+    Pitch.semitones
 
 
 areEnharmonicEqual : Pitch -> Pitch -> Bool
-areEnharmonicEqual lhs rhs =
-    semitones lhs == semitones rhs
+areEnharmonicEqual =
+    Pitch.areEnharmonicEqual
+
+
+toString : Pitch -> String
+toString pc =
+    case pc |> Enharmonic.simple of
+        Ok enharmonic ->
+            (pitchClass enharmonic |> PitchClass.toString) ++ String.fromInt (octave enharmonic |> Octave.number)
+
+        Err (InvalidEnharmonicEquivalent thePitchClass (AboveValidRange o)) ->
+            PitchClass.toString thePitchClass ++ String.fromInt o
+
+        Err (InvalidEnharmonicEquivalent thePitchClass (BelowValidRange o)) ->
+            PitchClass.toString thePitchClass ++ String.fromInt o

@@ -1,8 +1,10 @@
 module MusicTheory.Octave exposing
     ( Octave
+    , OctaveError(..)
     , add
     , all
     , eight
+    , errorToString
     , five
     , four
     , number
@@ -17,6 +19,21 @@ module MusicTheory.Octave exposing
     )
 
 
+type OctaveError
+    = AboveValidRange Int
+    | BelowValidRange Int
+
+
+errorToString : OctaveError -> String
+errorToString error =
+    case error of
+        AboveValidRange n ->
+            "Octave number " ++ String.fromInt n ++ " is above the valid octave range of [0,9]"
+
+        BelowValidRange n ->
+            "Octave number " ++ String.fromInt n ++ " is below the valid octave range of [0,9]"
+
+
 type Octave
     = Zero
     | One
@@ -29,41 +46,45 @@ type Octave
     | Eight
 
 
-octave : Int -> Maybe Octave
+octave : Int -> Result OctaveError Octave
 octave n =
     case n of
         0 ->
-            Just Zero
+            Ok Zero
 
         1 ->
-            Just One
+            Ok One
 
         2 ->
-            Just Two
+            Ok Two
 
         3 ->
-            Just Three
+            Ok Three
 
         4 ->
-            Just Four
+            Ok Four
 
         5 ->
-            Just Five
+            Ok Five
 
         6 ->
-            Just Six
+            Ok Six
 
         7 ->
-            Just Seven
+            Ok Seven
 
         8 ->
-            Just Eight
+            Ok Eight
 
-        _ ->
-            Nothing
+        other ->
+            if other > 8 then
+                Err <| AboveValidRange other
+
+            else
+                Err <| BelowValidRange other
 
 
-add : Int -> Octave -> Maybe Octave
+add : Int -> Octave -> Result OctaveError Octave
 add n o =
     octave (number o + n)
 
