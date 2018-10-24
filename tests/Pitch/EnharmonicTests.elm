@@ -2,36 +2,32 @@ module EnharmonicTests exposing (all)
 
 import Expect
 import Fuzz exposing (Fuzzer)
-import MusicTheory.Internal.Pitch as Internal exposing (PitchError(..))
+import MusicTheory.Internal.Pitch as Internal
 import MusicTheory.Internal.PitchClass as PitchClass
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.Octave as Octave exposing (OctaveError(..))
 import MusicTheory.Pitch as Pitch
-import MusicTheory.Pitch.Enharmonic as PitchEnharmonic
+import MusicTheory.Pitch.Enharmonic as PitchEnharmonic exposing (EnharmonicTransformationError(..))
 import MusicTheory.PitchClass.Enharmonic as PitchClassEnharmonic
 import Test exposing (..)
-import Util.OctaveFuzzer
-import Util.PitchClassFuzzer
+import Util.PitchFuzzer
 
 
 all : Test
 all =
-    describe "Pitch Tests"
-        [ fuzz2 Util.PitchClassFuzzer.pitchClass Util.OctaveFuzzer.octave "simple enharmonic equivalent should have same number of semitones" <|
-            \pitchClass octave ->
+    describe "Enharmonic Tests"
+        [ fuzz Util.PitchFuzzer.pitch "simple enharmonic equivalent should have same number of semitones" <|
+            \pitch ->
                 let
-                    pitch =
-                        pitchClass |> Internal.fromPitchClass octave
-
                     expectedSemitones =
                         pitch |> Internal.semitones
 
                     expectedResult =
                         if expectedSemitones < 0 then
-                            Err <| InvalidEnharmonicEquivalent (pitch |> Internal.pitchClass |> PitchClassEnharmonic.simple) (BelowValidRange -1)
+                            Err <| Invalid (pitch |> Internal.pitchClass |> PitchClassEnharmonic.simple) (BelowValidRange -1)
 
                         else if expectedSemitones >= 108 then
-                            Err <| InvalidEnharmonicEquivalent (pitch |> Internal.pitchClass |> PitchClassEnharmonic.simple) (AboveValidRange 9)
+                            Err <| Invalid (pitch |> Internal.pitchClass |> PitchClassEnharmonic.simple) (AboveValidRange 9)
 
                         else
                             Ok expectedSemitones

@@ -1,7 +1,6 @@
 module Util.IntervalFuzzer exposing (interval)
 
 import Fuzz exposing (Fuzzer)
-import List.Extra
 import MusicTheory.Interval as Interval
 import Util.Fuzzer
 

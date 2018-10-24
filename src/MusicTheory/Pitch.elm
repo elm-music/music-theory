@@ -1,5 +1,6 @@
 module MusicTheory.Pitch exposing
     ( Pitch
+    , TransposeError
     , areEnharmonicEqual
     , doubleFlat
     , doubleSharp
@@ -12,19 +13,26 @@ module MusicTheory.Pitch exposing
     , semitones
     , sharp
     , toString
+    , transposeDown
+    , transposeUp
     , tripleFlat
     , tripleSharp
     )
 
-import MusicTheory.Internal.Pitch as Pitch exposing (PitchError(..))
+import MusicTheory.Internal.Pitch as Pitch
 import MusicTheory.Internal.PitchClass as PitchClass exposing (Offset, PitchClass)
+import MusicTheory.Interval exposing (Interval)
 import MusicTheory.Letter exposing (Letter)
 import MusicTheory.Octave as Octave exposing (Octave, OctaveError(..))
-import MusicTheory.Pitch.Enharmonic as Enharmonic
+import MusicTheory.Pitch.Enharmonic as Enharmonic exposing (EnharmonicTransformationError(..))
 
 
 type alias Pitch =
     Pitch.Pitch
+
+
+type alias TransposeError =
+    Pitch.TransposeError
 
 
 pitch : Letter -> Offset -> Octave -> Pitch
@@ -92,14 +100,24 @@ areEnharmonicEqual =
     Pitch.areEnharmonicEqual
 
 
+transposeUp : Interval -> Pitch -> Result TransposeError Pitch
+transposeUp =
+    Pitch.transposeUp
+
+
+transposeDown : Interval -> Pitch -> Result TransposeError Pitch
+transposeDown =
+    Pitch.transposeDown
+
+
 toString : Pitch -> String
 toString pc =
     case pc |> Enharmonic.simple of
         Ok enharmonic ->
             (pitchClass enharmonic |> PitchClass.toString) ++ String.fromInt (octave enharmonic |> Octave.number)
 
-        Err (InvalidEnharmonicEquivalent thePitchClass (AboveValidRange o)) ->
+        Err (Invalid thePitchClass (AboveValidRange o)) ->
             PitchClass.toString thePitchClass ++ String.fromInt o
 
-        Err (InvalidEnharmonicEquivalent thePitchClass (BelowValidRange o)) ->
+        Err (Invalid thePitchClass (BelowValidRange o)) ->
             PitchClass.toString thePitchClass ++ String.fromInt o

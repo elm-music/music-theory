@@ -1,6 +1,6 @@
 module MusicTheory.Internal.Pitch exposing
     ( Pitch
-    , PitchError(..)
+    , TransposeError(..)
     , all
     , areEnharmonicEqual
     , doubleFlat
@@ -14,45 +14,25 @@ module MusicTheory.Internal.Pitch exposing
     , pitchClass
     , semitones
     , sharp
+    , transposeDown
+    , transposeUp
     , tripleFlat
     , tripleSharp
     )
 
 import MusicTheory.Internal.PitchClass as PitchClass exposing (Offset, PitchClass)
+import MusicTheory.Interval as Interval exposing (Interval)
 import MusicTheory.Letter as Letter exposing (Letter)
 import MusicTheory.Octave as Octave exposing (Octave, OctaveError(..))
 
 
-type PitchError
-    = InvalidEnharmonicEquivalent PitchClass OctaveError
-
-
-errorToString : PitchError -> String
-errorToString error =
-    case error of
-        InvalidEnharmonicEquivalent pc octaveError ->
-            let
-                letter =
-                    PitchClass.letter pc
-
-                offset =
-                    PitchClass.offset pc
-
-                accidental =
-                    if offset == 0 then
-                        " natural"
-
-                    else if offset < 0 then
-                        " with " ++ String.fromInt (abs offset) ++ " flats"
-
-                    else
-                        " with " ++ String.fromInt (abs offset) ++ " sharps"
-            in
-            "Pitch class " ++ Letter.toString letter ++ accidental ++ " has an invalid octave. " ++ Octave.errorToString octaveError
-
-
 type Pitch
     = Pitch PitchClass Octave
+
+
+type TransposeError
+    = InvalidOctave OctaveError
+    | InternalError
 
 
 pitch : Letter -> Offset -> Octave -> Pitch
@@ -124,3 +104,48 @@ all : List Pitch
 all =
     Octave.all
         |> List.concatMap (\o -> PitchClass.all |> List.map (\pc -> Pitch pc o))
+
+
+errorToString : TransposeError -> String
+errorToString error =
+    case error of
+        InvalidOctave err ->
+            "Could not transpose pitch. " ++ Octave.errorToString err
+
+        InternalError ->
+            "Could not transpose pitch. Something went wrong internally."
+
+
+transposeUp : Interval -> Pitch -> Result TransposeError Pitch
+transposeUp =
+    transpose PitchClass.transposeUp (+)
+
+
+transposeDown : Interval -> Pitch -> Result TransposeError Pitch
+transposeDown =
+    transpose PitchClass.transposeDown (-)
+
+
+transpose : (Interval -> PitchClass -> PitchClass) -> (Int -> Int -> Int) -> Interval -> Pitch -> Result TransposeError Pitch
+transpose trans addIntervalSemitones interval p =
+    let
+        transposedPitchClass =
+            pitchClass p
+                |> trans interval
+
+        targetOctaveSemitones =
+            addIntervalSemitones (semitones p) (Interval.semitones interval) - PitchClass.semitonesNotOctaveBound transposedPitchClass
+
+        numberOfOctaves =
+            targetOctaveSemitones // 12
+
+        remainder =
+            targetOctaveSemitones |> remainderBy 12
+    in
+    if remainder == 0 then
+        Octave.octave numberOfOctaves
+            |> Result.map (\o -> Pitch transposedPitchClass o)
+            |> Result.mapError InvalidOctave
+
+    else
+        Err InternalError
