@@ -2,7 +2,7 @@ module MusicTheory.Internal.Pitch exposing
     ( Pitch
     , TransposeError(..)
     , all
-    , areEnharmonicEqual
+    , areEnharmonicEquivalents
     , doubleFlat
     , doubleSharp
     , errorToString
@@ -95,8 +95,8 @@ semitones (Pitch pc o) =
     Octave.semitones o + PitchClass.semitonesNotOctaveBound pc
 
 
-areEnharmonicEqual : Pitch -> Pitch -> Bool
-areEnharmonicEqual lhs rhs =
+areEnharmonicEquivalents : Pitch -> Pitch -> Bool
+areEnharmonicEquivalents lhs rhs =
     semitones lhs == semitones rhs
 
 

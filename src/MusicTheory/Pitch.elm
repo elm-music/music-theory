@@ -1,7 +1,7 @@
 module MusicTheory.Pitch exposing
     ( Pitch
     , TransposeError
-    , areEnharmonicEqual
+    , areEnharmonicEquivalents
     , doubleFlat
     , doubleSharp
     , flat
@@ -95,9 +95,9 @@ semitones =
     Pitch.semitones
 
 
-areEnharmonicEqual : Pitch -> Pitch -> Bool
-areEnharmonicEqual =
-    Pitch.areEnharmonicEqual
+areEnharmonicEquivalents : Pitch -> Pitch -> Bool
+areEnharmonicEquivalents =
+    Pitch.areEnharmonicEquivalents
 
 
 transposeUp : Interval -> Pitch -> Result TransposeError Pitch
