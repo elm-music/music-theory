@@ -1,4 +1,4 @@
-module EnharmonicTests exposing (all)
+module Pitch.EnharmonicTests exposing (all)
 
 import Expect
 import Fuzz exposing (Fuzzer)
@@ -39,17 +39,21 @@ all =
         , test "enharmonic equivalent of Ebbb4 as natural or sharp should be C#4" <|
             \_ ->
                 Pitch.pitch E Pitch.tripleFlat Octave.four
-                    |> Expect.equal (Pitch.pitch C Pitch.sharp Octave.four)
-        , test "enharmonic equivalent of Cbb4 as natural or sharp should be B3" <|
+                    |> PitchEnharmonic.asNaturalOrElseSharp
+                    |> Expect.equal (Ok <| Pitch.pitch C Pitch.sharp Octave.four)
+        , test "enharmonic equivalent of Cbb4 as natural or sharp should be A#3" <|
             \_ ->
                 Pitch.pitch C Pitch.doubleFlat Octave.four
-                    |> Expect.equal (Pitch.pitch B Pitch.natural Octave.three)
+                    |> PitchEnharmonic.asNaturalOrElseSharp
+                    |> Expect.equal (Ok <| Pitch.pitch A Pitch.sharp Octave.three)
         , test "enharmonic equivalent of F###2 as natural or flat should be Ab2" <|
             \_ ->
                 Pitch.pitch F Pitch.tripleSharp Octave.two
-                    |> Expect.equal (Pitch.pitch A Pitch.flat Octave.two)
+                    |> PitchEnharmonic.asNaturalOrElseFlat
+                    |> Expect.equal (Ok <| Pitch.pitch A Pitch.flat Octave.two)
         , test "enharmonic equivalent of B#7 as natural or flat should be C8" <|
             \_ ->
                 Pitch.pitch B Pitch.sharp Octave.seven
-                    |> Expect.equal (Pitch.pitch C Pitch.natural Octave.eight)
+                    |> PitchEnharmonic.asNaturalOrElseFlat
+                    |> Expect.equal (Ok <| Pitch.pitch C Pitch.natural Octave.eight)
         ]

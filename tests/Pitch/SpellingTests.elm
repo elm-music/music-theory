@@ -1,4 +1,4 @@
-module SpellingTests exposing (all)
+module Pitch.SpellingTests exposing (all)
 
 import Expect
 import Fuzz exposing (Fuzzer)
@@ -28,4 +28,29 @@ all =
                 Pitch.pitch B Pitch.sharp Octave.five
                     |> Spelling.simple
                     |> Expect.equal (Ok <| { letter = C, accidental = Natural, octave = Octave.six })
+        , test "C5 as natural or sharp should be C5" <|
+            \_ ->
+                Pitch.pitch C Pitch.natural Octave.five
+                    |> Spelling.naturalOrElseSharp
+                    |> Expect.equal (Ok <| { letter = C, accidental = Natural, octave = Octave.five })
+        , test "Db5 as natural or sharp should be C#5" <|
+            \_ ->
+                Pitch.pitch D Pitch.flat Octave.five
+                    |> Spelling.naturalOrElseSharp
+                    |> Expect.equal (Ok <| { letter = C, accidental = Sharp, octave = Octave.five })
+        , test "C5 as natural or flat should be C5" <|
+            \_ ->
+                Pitch.pitch C Pitch.natural Octave.five
+                    |> Spelling.naturalOrElseFlat
+                    |> Expect.equal (Ok <| { letter = C, accidental = Natural, octave = Octave.five })
+        , test "C#5 as natural or sharp should be Db5" <|
+            \_ ->
+                Pitch.pitch C Pitch.sharp Octave.five
+                    |> Spelling.naturalOrElseFlat
+                    |> Expect.equal (Ok <| { letter = D, accidental = Flat, octave = Octave.five })
+        , test "B#3 as natural or sharp should be C4" <|
+            \_ ->
+                Pitch.pitch B Pitch.sharp Octave.three
+                    |> Spelling.naturalOrElseSharp
+                    |> Expect.equal (Ok <| { letter = C, accidental = Natural, octave = Octave.four })
         ]
