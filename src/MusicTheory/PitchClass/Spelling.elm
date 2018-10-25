@@ -69,11 +69,11 @@ toPitchClass { letter, accidental } =
 -}
 naturalOrElseFlat : PitchClass -> PitchClassSpelling
 naturalOrElseFlat pitchClass =
-    case pitchClass |> PitchClass.semitones |> InternalEnharmonic.semitonesToNaturalOrAccidental of
-        Nat letter ->
+    case pitchClass |> PitchClass.semitones |> InternalEnharmonic.semitonesToNaturalOrAccidental 0 of
+        Nat letter _ ->
             { letter = letter, accidental = Natural }
 
-        SharpFlat _ letter ->
+        SharpFlat _ letter _ ->
             { letter = letter, accidental = Flat }
 
 
@@ -86,11 +86,11 @@ naturalOrElseFlat pitchClass =
 -}
 naturalOrElseSharp : PitchClass -> PitchClassSpelling
 naturalOrElseSharp pitchClass =
-    case pitchClass |> PitchClass.semitones |> InternalEnharmonic.semitonesToNaturalOrAccidental of
-        Nat letter ->
+    case pitchClass |> PitchClass.semitones |> InternalEnharmonic.semitonesToNaturalOrAccidental 0 of
+        Nat letter _ ->
             { letter = letter, accidental = Natural }
 
-        SharpFlat letter _ ->
+        SharpFlat letter _ _ ->
             { letter = letter, accidental = Sharp }
 
 
