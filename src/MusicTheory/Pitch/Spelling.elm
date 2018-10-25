@@ -55,7 +55,7 @@ naturalOrElseFlat pitch =
         pitchClass =
             Pitch.pitchClass pitch
     in
-    case pitchClass |> PitchClass.semitones |> PitchClassEnharmonic.semitonesToNaturalOrAccidental 0 of
+    case pitchClass |> PitchClass.semitonesNotOctaveBound |> PitchClassEnharmonic.semitonesToNaturalOrAccidental 0 of
         Nat letter octaveOffset ->
             Octave.octave (Octave.number (Pitch.octave pitch) + octaveOffset)
                 |> Result.map (\octave -> { letter = letter, accidental = Natural, octave = octave })
@@ -73,7 +73,7 @@ naturalOrElseSharp pitch =
         pitchClass =
             Pitch.pitchClass pitch
     in
-    case pitchClass |> PitchClass.semitones |> PitchClassEnharmonic.semitonesToNaturalOrAccidental 0 of
+    case pitchClass |> PitchClass.semitonesNotOctaveBound |> PitchClassEnharmonic.semitonesToNaturalOrAccidental 0 of
         Nat letter octaveOffset ->
             Octave.octave (Octave.number (Pitch.octave pitch) + octaveOffset)
                 |> Result.map (\octave -> { letter = letter, accidental = Natural, octave = octave })
