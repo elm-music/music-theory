@@ -1,39 +1,62 @@
-module MusicTheory.PitchClass.Enharmonic exposing (asNaturalOrElseFlat, asNaturalOrElseSharp, equivalents, simple)
+module MusicTheory.PitchClass.Enharmonic exposing
+    ( asNaturalOrElseFlat
+    , asNaturalOrElseFlatWithOctaveOffset
+    , asNaturalOrElseSharp
+    , asNaturalOrElseSharpWithOctaveOffset
+    , equivalents
+    , simple
+    , simpleWithOctaveOffset
+    )
 
 import MusicTheory.Internal.PitchClass as PitchClass exposing (Offset, PitchClass(..))
 import MusicTheory.Internal.PitchClass.Enharmonic as Enharmonic exposing (NaturalOrSingleAccidental(..))
 
 
-simple : PitchClass -> PitchClass
-simple pc =
+simpleWithOctaveOffset : PitchClass -> ( PitchClass, Int )
+simpleWithOctaveOffset pc =
     if PitchClass.offset pc == 0 then
-        pc
+        ( pc, 0 )
 
     else if PitchClass.offset pc < 0 then
-        asNaturalOrElseFlat pc
+        asNaturalOrElseFlatWithOctaveOffset pc
 
     else
-        asNaturalOrElseSharp pc
+        asNaturalOrElseSharpWithOctaveOffset pc
+
+
+simple : PitchClass -> PitchClass
+simple =
+    simpleWithOctaveOffset >> Tuple.first
+
+
+asNaturalOrElseFlatWithOctaveOffset : PitchClass -> ( PitchClass, Int )
+asNaturalOrElseFlatWithOctaveOffset pc =
+    case pc |> PitchClass.semitonesNotOctaveBound |> Enharmonic.semitonesToNaturalOrAccidental 0 of
+        Nat letter octaveOffset ->
+            ( PitchClass.pitchClass letter PitchClass.natural, octaveOffset )
+
+        SharpFlat _ letter octaveOffset ->
+            ( PitchClass.pitchClass letter PitchClass.flat, octaveOffset )
 
 
 asNaturalOrElseFlat : PitchClass -> PitchClass
-asNaturalOrElseFlat pc =
-    case pc |> PitchClass.semitones |> Enharmonic.semitonesToNaturalOrAccidental of
-        Nat letter ->
-            PitchClass.pitchClass letter PitchClass.natural
+asNaturalOrElseFlat =
+    asNaturalOrElseFlatWithOctaveOffset >> Tuple.first
 
-        SharpFlat _ letter ->
-            PitchClass.pitchClass letter PitchClass.flat
+
+asNaturalOrElseSharpWithOctaveOffset : PitchClass -> ( PitchClass, Int )
+asNaturalOrElseSharpWithOctaveOffset pc =
+    case pc |> PitchClass.semitonesNotOctaveBound |> Enharmonic.semitonesToNaturalOrAccidental 0 of
+        Nat letter octaveOffset ->
+            ( PitchClass.pitchClass letter PitchClass.natural, octaveOffset )
+
+        SharpFlat letter _ octaveOffset ->
+            ( PitchClass.pitchClass letter PitchClass.sharp, octaveOffset )
 
 
 asNaturalOrElseSharp : PitchClass -> PitchClass
-asNaturalOrElseSharp pc =
-    case pc |> PitchClass.semitones |> Enharmonic.semitonesToNaturalOrAccidental of
-        Nat letter ->
-            PitchClass.pitchClass letter PitchClass.natural
-
-        SharpFlat letter _ ->
-            PitchClass.pitchClass letter PitchClass.sharp
+asNaturalOrElseSharp =
+    asNaturalOrElseSharpWithOctaveOffset >> Tuple.first
 
 
 equivalents : PitchClass -> List PitchClass

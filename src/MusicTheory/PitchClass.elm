@@ -1,7 +1,7 @@
 module MusicTheory.PitchClass exposing
     ( PitchClass
     , all
-    , areEnharmonicEqual
+    , areEnharmonicEquivalents
     , doubleFlat
     , doubleSharp
     , flat
@@ -147,6 +147,6 @@ transposeDown =
 
 {-| Returns true if two pitch classes are enharmonic equivalent.
 -}
-areEnharmonicEqual : PitchClass -> PitchClass -> Bool
-areEnharmonicEqual lhs rhs =
+areEnharmonicEquivalents : PitchClass -> PitchClass -> Bool
+areEnharmonicEquivalents lhs rhs =
     semitones lhs == semitones rhs
