@@ -3,15 +3,17 @@ module MusicTheory.Music exposing
     , Division(..)
     , Duration(..)
     , Music(..)
-    , Primitive(..)
+    , Primitive
     , PrimitiveGroup(..)
     , TiedOrUntied(..)
     , dotted
     , doubleDotted
     , eighth
     , half
+    , note
     , oneHundredTwentyEighth
     , quarter
+    , rest
     , sixteenth
     , sixtyFourth
     , thirtySecond
@@ -57,6 +59,16 @@ type TiedOrUntied
 type Primitive a
     = Note Duration a
     | Rest Duration
+
+
+note : Duration -> a -> Primitive a
+note duration a =
+    Note duration a
+
+
+rest : Duration -> Primitive a
+rest duration =
+    Rest duration
 
 
 type Control

@@ -19,19 +19,19 @@ all =
                     twoFiveOne =
                         let
                             dMinor =
-                                Par (Primitives (Single (Note quarter (pitch D natural four)))) <|
-                                    Par (Primitives (Single (Note quarter (pitch F natural four)))) <|
-                                        Primitives (Single (Note quarter (pitch A natural four)))
+                                Par (Primitives (Single (note quarter (pitch D natural four)))) <|
+                                    Par (Primitives (Single (note quarter (pitch F natural four)))) <|
+                                        Primitives (Single (note quarter (pitch A natural four)))
 
                             gMajor =
-                                Par (Primitives (Single (Note quarter (pitch D natural four)))) <|
-                                    Par (Primitives (Single (Note quarter (pitch G natural four)))) <|
-                                        Primitives (Single (Note quarter (pitch B natural four)))
+                                Par (Primitives (Single (note quarter (pitch D natural four)))) <|
+                                    Par (Primitives (Single (note quarter (pitch G natural four)))) <|
+                                        Primitives (Single (note quarter (pitch B natural four)))
 
                             cMajor =
-                                Par (Primitives (Single (Note quarter (pitch C natural four)))) <|
-                                    Par (Primitives (Single (Note quarter (pitch E natural four)))) <|
-                                        Primitives (Single (Note quarter (pitch G natural four)))
+                                Par (Primitives (Single (note quarter (pitch C natural four)))) <|
+                                    Par (Primitives (Single (note quarter (pitch E natural four)))) <|
+                                        Primitives (Single (note quarter (pitch G natural four)))
                         in
                         Seq dMinor <| Seq gMajor cMajor
                 in
