@@ -16,6 +16,8 @@ module MusicTheory.NoteOrTuplet exposing
     , setDivision
     , setDotted
     , setDoubleDotted
+    , setPitches
+    , setRest
     , setSeparate
     , setTied
     , setTripleDotted
@@ -272,6 +274,20 @@ setDivision newDivision { duration, pitches } =
     in
     { duration = updatedDuration
     , pitches = pitches
+    }
+
+
+setRest : DurationAndPitches -> DurationAndPitches
+setRest { duration, pitches } =
+    { duration = duration
+    , pitches = []
+    }
+
+
+setPitches : List Pitch -> DurationAndPitches -> DurationAndPitches
+setPitches newPitches { duration, pitches } =
+    { duration = duration
+    , pitches = newPitches
     }
 
 
