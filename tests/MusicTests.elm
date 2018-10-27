@@ -15,25 +15,28 @@ all =
         [ test "get all pitches from a music" <|
             \_ ->
                 let
+                    singleNote duration pitch =
+                        primitives (single (note duration pitch))
+
                     twoFiveOne : Music Pitch
                     twoFiveOne =
                         let
                             dMinor =
-                                Par (Primitives (Single (note quarter (pitch D natural four)))) <|
-                                    Par (Primitives (Single (note quarter (pitch F natural four)))) <|
-                                        Primitives (Single (note quarter (pitch A natural four)))
+                                par (singleNote quarter (pitch D natural four)) <|
+                                    par (singleNote quarter (pitch F natural four)) <|
+                                        singleNote quarter (pitch A natural four)
 
                             gMajor =
-                                Par (Primitives (Single (note quarter (pitch D natural four)))) <|
-                                    Par (Primitives (Single (note quarter (pitch G natural four)))) <|
-                                        Primitives (Single (note quarter (pitch B natural four)))
+                                par (singleNote quarter (pitch D natural four)) <|
+                                    par (singleNote quarter (pitch G natural four)) <|
+                                        singleNote quarter (pitch B natural four)
 
                             cMajor =
-                                Par (Primitives (Single (note quarter (pitch C natural four)))) <|
-                                    Par (Primitives (Single (note quarter (pitch E natural four)))) <|
-                                        Primitives (Single (note quarter (pitch G natural four)))
+                                par (singleNote quarter (pitch C natural four)) <|
+                                    par (singleNote quarter (pitch E natural four)) <|
+                                        singleNote quarter (pitch G natural four)
                         in
-                        Seq dMinor <| Seq gMajor cMajor
+                        seq dMinor <| seq gMajor cMajor
                 in
                 twoFiveOne
                     |> toList

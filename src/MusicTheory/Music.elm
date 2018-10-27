@@ -1,24 +1,33 @@
 module MusicTheory.Music exposing
-    ( Control(..)
-    , Division(..)
-    , Duration(..)
-    , Music(..)
+    ( Control
+    , Division
+    , Duration
+    , Music
     , Primitive
-    , PrimitiveGroup(..)
-    , TiedOrUntied(..)
+    , PrimitiveGroup
+    , TiedOrUntied
     , dotted
     , doubleDotted
+    , duplet
     , eighth
     , half
+    , modify
     , note
     , oneHundredTwentyEighth
+    , par
+    , primitives
+    , quadruplet
     , quarter
+    , quintuplet
     , rest
+    , seq
+    , single
     , sixteenth
     , sixtyFourth
     , thirtySecond
     , toList
     , tripleDotted
+    , triplet
     , untied
     , whole
     , withTie
@@ -31,6 +40,31 @@ type PrimitiveGroup a
     | Triplet (Primitive a) (Primitive a) (Primitive a)
     | Quadruplet (Primitive a) (Primitive a) (Primitive a) (Primitive a)
     | Quintuplet (Primitive a) (Primitive a) (Primitive a) (Primitive a) (Primitive a)
+
+
+single : Primitive a -> PrimitiveGroup a
+single =
+    Single
+
+
+duplet : Primitive a -> Primitive a -> PrimitiveGroup a
+duplet =
+    Duplet
+
+
+triplet : Primitive a -> Primitive a -> Primitive a -> PrimitiveGroup a
+triplet =
+    Triplet
+
+
+quadruplet : Primitive a -> Primitive a -> Primitive a -> Primitive a -> PrimitiveGroup a
+quadruplet =
+    Quadruplet
+
+
+quintuplet : Primitive a -> Primitive a -> Primitive a -> Primitive a -> Primitive a -> PrimitiveGroup a
+quintuplet =
+    Quintuplet
 
 
 type Division
@@ -80,6 +114,26 @@ type Music a
     | Seq (Music a) (Music a)
     | Par (Music a) (Music a)
     | Modify Control (Music a)
+
+
+primitives : PrimitiveGroup a -> Music a
+primitives =
+    Primitives
+
+
+seq : Music a -> Music a -> Music a
+seq =
+    Seq
+
+
+par : Music a -> Music a -> Music a
+par =
+    Par
+
+
+modify : Control -> Music a -> Music a
+modify =
+    Modify
 
 
 toList : Music a -> List a
