@@ -1,6 +1,7 @@
 module MusicTheory.Pitch exposing
     ( Pitch
     , TransposeError
+    , all
     , areEnharmonicEquivalents
     , doubleFlat
     , doubleSharp
@@ -38,6 +39,11 @@ type alias TransposeError =
 pitch : Letter -> Offset -> Octave -> Pitch
 pitch =
     Pitch.pitch
+
+
+all : List Pitch
+all =
+    Pitch.all
 
 
 tripleFlat : Offset
