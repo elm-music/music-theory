@@ -31,6 +31,43 @@ module MusicTheory.NoteOrTuplet exposing
 import MusicTheory.Pitch exposing (Pitch)
 
 
+type NoteOrTuplet
+    = Single DurationAndPitches
+    | Duplet DurationAndPitches DurationAndPitches
+    | Triplet DurationAndPitches DurationAndPitches DurationAndPitches
+    | Quadruplet DurationAndPitches DurationAndPitches DurationAndPitches DurationAndPitches
+    | Quintuplet DurationAndPitches DurationAndPitches DurationAndPitches DurationAndPitches DurationAndPitches
+
+
+type alias DurationAndPitches =
+    { duration : Duration
+    , pitches : List Pitch
+    }
+
+
+type Division
+    = Whole
+    | Half
+    | Quarter
+    | Eighth
+    | Sixteenth
+    | ThirtySecond
+    | SixtyFourth
+    | OneHundredTwentyEighth
+
+
+type Duration
+    = Normal Division TiedOrSeparate
+    | Dotted Division TiedOrSeparate
+    | DoubleDotted Division TiedOrSeparate
+    | TripleDotted Division TiedOrSeparate
+
+
+type TiedOrSeparate
+    = Tied
+    | Separate
+
+
 note : Division -> List Pitch -> NoteOrTuplet
 note division pitchList =
     Single
@@ -399,40 +436,3 @@ setSeparate { duration, pitches } =
     { duration = updatedDuration
     , pitches = pitches
     }
-
-
-type NoteOrTuplet
-    = Single DurationAndPitches
-    | Duplet DurationAndPitches DurationAndPitches
-    | Triplet DurationAndPitches DurationAndPitches DurationAndPitches
-    | Quadruplet DurationAndPitches DurationAndPitches DurationAndPitches DurationAndPitches
-    | Quintuplet DurationAndPitches DurationAndPitches DurationAndPitches DurationAndPitches DurationAndPitches
-
-
-type alias DurationAndPitches =
-    { duration : Duration
-    , pitches : List Pitch
-    }
-
-
-type Division
-    = Whole
-    | Half
-    | Quarter
-    | Eighth
-    | Sixteenth
-    | ThirtySecond
-    | SixtyFourth
-    | OneHundredTwentyEighth
-
-
-type Duration
-    = Normal Division TiedOrSeparate
-    | Dotted Division TiedOrSeparate
-    | DoubleDotted Division TiedOrSeparate
-    | TripleDotted Division TiedOrSeparate
-
-
-type TiedOrSeparate
-    = Tied
-    | Separate
