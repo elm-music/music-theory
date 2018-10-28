@@ -11,6 +11,7 @@ module MusicTheory.Music exposing
     , duplet
     , eighth
     , half
+    , map
     , modify
     , note
     , oneHundredTwentyEighth
@@ -40,6 +41,44 @@ type PrimitiveGroup a
     | Triplet (Primitive a) (Primitive a) (Primitive a)
     | Quadruplet (Primitive a) (Primitive a) (Primitive a) (Primitive a)
     | Quintuplet (Primitive a) (Primitive a) (Primitive a) (Primitive a) (Primitive a)
+
+
+primitiveGroupToList : PrimitiveGroup a -> List a
+primitiveGroupToList primitiveGroup =
+    case primitiveGroup of
+        Single prim ->
+            primitiveToList prim
+
+        Duplet prim1 prim2 ->
+            primitiveToList prim1 ++ primitiveToList prim1
+
+        Triplet prim1 prim2 prim3 ->
+            primitiveToList prim1 ++ primitiveToList prim2 ++ primitiveToList prim3
+
+        Quadruplet prim1 prim2 prim3 prim4 ->
+            primitiveToList prim1 ++ primitiveToList prim2 ++ primitiveToList prim3 ++ primitiveToList prim4
+
+        Quintuplet prim1 prim2 prim3 prim4 prim5 ->
+            primitiveToList prim1 ++ primitiveToList prim2 ++ primitiveToList prim3 ++ primitiveToList prim4 ++ primitiveToList prim5
+
+
+mapPrimitiveGroup : (a -> b) -> PrimitiveGroup a -> PrimitiveGroup b
+mapPrimitiveGroup f primitiveGroup =
+    case primitiveGroup of
+        Single prim ->
+            Single (mapPrimitive f prim)
+
+        Duplet prim1 prim2 ->
+            Duplet (mapPrimitive f prim1) (mapPrimitive f prim1)
+
+        Triplet prim1 prim2 prim3 ->
+            Triplet (mapPrimitive f prim1) (mapPrimitive f prim2) (mapPrimitive f prim3)
+
+        Quadruplet prim1 prim2 prim3 prim4 ->
+            Quadruplet (mapPrimitive f prim1) (mapPrimitive f prim2) (mapPrimitive f prim3) (mapPrimitive f prim4)
+
+        Quintuplet prim1 prim2 prim3 prim4 prim5 ->
+            Quintuplet (mapPrimitive f prim1) (mapPrimitive f prim2) (mapPrimitive f prim3) (mapPrimitive f prim4) (mapPrimitive f prim5)
 
 
 single : Primitive a -> PrimitiveGroup a
@@ -95,6 +134,26 @@ type Primitive a
     | Rest Duration
 
 
+primitiveToList : Primitive a -> List a
+primitiveToList primitive =
+    case primitive of
+        Note _ a ->
+            [ a ]
+
+        Rest _ ->
+            []
+
+
+mapPrimitive : (a -> b) -> Primitive a -> Primitive b
+mapPrimitive f primitive =
+    case primitive of
+        Note duration a ->
+            Note duration (f a)
+
+        Rest duration ->
+            Rest duration
+
+
 note : Duration -> a -> Primitive a
 note duration a =
     Note duration a
@@ -136,26 +195,27 @@ modify =
     Modify
 
 
+map : (a -> b) -> Music a -> Music b
+map f music =
+    case music of
+        Primitives group ->
+            Primitives (mapPrimitiveGroup f group)
+
+        Seq m1 m2 ->
+            Seq (map f m1) (map f m2)
+
+        Par m1 m2 ->
+            Par (map f m1) (map f m2)
+
+        Modify control m ->
+            Modify control (map f m)
+
+
 toList : Music a -> List a
 toList music =
     case music of
-        Primitives (Single (Note _ a)) ->
-            [ a ]
-
-        Primitives (Duplet (Note _ a1) (Note _ a2)) ->
-            [ a1, a2 ]
-
-        Primitives (Triplet (Note _ a1) (Note _ a2) (Note _ a3)) ->
-            [ a1, a2, a3 ]
-
-        Primitives (Quadruplet (Note _ a1) (Note _ a2) (Note _ a3) (Note _ a4)) ->
-            [ a1, a2, a3, a4 ]
-
-        Primitives (Quintuplet (Note _ a1) (Note _ a2) (Note _ a3) (Note _ a4) (Note _ a5)) ->
-            [ a1, a2, a3, a4, a5 ]
-
-        Primitives _ ->
-            []
+        Primitives primitiveGroup ->
+            primitiveGroupToList primitiveGroup
 
         Seq m1 m2 ->
             toList m1 ++ toList m2
