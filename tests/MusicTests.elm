@@ -3,11 +3,13 @@ module MusicTests exposing (all)
 import Expect
 import Fuzz exposing (Fuzzer)
 import MusicTheory.Duration as Duration exposing (..)
+import MusicTheory.Key as Key
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.Music exposing (..)
 import MusicTheory.Octave exposing (..)
 import MusicTheory.Pitch as Pitch exposing (Pitch, flat, natural, pitch, sharp)
 import MusicTheory.Pitch.Spelling as Spelling
+import MusicTheory.PitchClass as PitchClass
 import MusicTheory.PitchClass.Spelling exposing (Accidental(..))
 import Test exposing (..)
 
@@ -156,7 +158,10 @@ childrenSongNumber6 =
         mainVoice =
             seq (times 3 v1) v2
     in
-    par bassLine mainVoice
+    tempo (dotted halfNote) 69 <|
+        key
+            (PitchClass.pitchClass E natural |> Key.major)
+            (timeSignature 3 4 (par bassLine mainVoice))
 
 
 all : Test

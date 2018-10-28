@@ -26,6 +26,7 @@ module MusicTheory.Music exposing
     , gFlat
     , gNatural
     , gSharp
+    , key
     , line
     , map
     , modify
@@ -37,12 +38,15 @@ module MusicTheory.Music exposing
     , quintuplet
     , rest
     , seq
+    , tempo
+    , timeSignature
     , times
     , toList
     , triplet
     )
 
 import MusicTheory.Duration as Duration exposing (Duration)
+import MusicTheory.Key exposing (Key)
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.Octave exposing (Octave)
 import MusicTheory.Pitch as Pitch exposing (Pitch)
@@ -62,6 +66,9 @@ type Control
     | Triplet
     | Quadruplet
     | Quintuplet
+    | KeySignature Key
+    | TimeSignature Int Int
+    | Tempo Duration Float
 
 
 type Music a
@@ -93,6 +100,21 @@ seq =
 par : Music a -> Music a -> Music a
 par =
     Par
+
+
+key : Key -> Music a -> Music a
+key k =
+    modify (KeySignature k)
+
+
+timeSignature : Int -> Int -> Music a -> Music a
+timeSignature beats duration =
+    modify (TimeSignature beats duration)
+
+
+tempo : Duration -> Float -> Music a -> Music a
+tempo d t =
+    modify <| Tempo d t
 
 
 modify : Control -> Music a -> Music a
