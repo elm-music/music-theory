@@ -18,13 +18,13 @@ twoFiveOne : Music Pitch
 twoFiveOne =
     let
         dMinor =
-            chord [ note quarterNote (pitch D natural four), note quarterNote (pitch F natural four), note quarterNote (pitch A natural four) ]
+            chord [ dNatural four, fNatural four, aNatural four ] quarterNote
 
         gMajor =
-            chord [ note quarterNote (pitch D natural four), note quarterNote (pitch G natural four), note quarterNote (pitch B natural four) ]
+            chord [ dNatural four, gNatural four, bNatural four ] quarterNote
 
         cMajor =
-            chord [ note quarterNote (pitch C natural four), note quarterNote (pitch E natural four), note quarterNote (pitch G natural four) ]
+            chord [ cNatural four, eNatural four, gNatural four ] quarterNote
     in
     line [ dMinor, gMajor, cMajor ]
 
@@ -143,7 +143,7 @@ childrenSongNumber6 =
         -- bars 24-28
         v2g =
             line
-                [ triplet (cSharp five eighthNote) (dNatural five eighthNote) (cSharp five eighthNote)
+                [ eighthNoteTriplet (cSharp five) (dNatural five) (cSharp five)
                 , line
                     [ bNatural four (halfNote |> tied)
                     , bNatural four (dotted halfNote |> tied)
@@ -189,4 +189,17 @@ all =
                     |> toList
                     |> List.length
                     |> Expect.greaterThan 20
+        , test "create tuplets" <|
+            \_ ->
+                quarterNoteTriplet (cNatural four) (chord [ cNatural four, eNatural four ]) (chord [ cNatural four, eNatural four, gNatural four ])
+                    |> map Spelling.simple
+                    |> toList
+                    |> Expect.equal
+                        [ Ok { letter = C, accidental = Natural, octave = four }
+                        , Ok { letter = C, accidental = Natural, octave = four }
+                        , Ok { letter = E, accidental = Natural, octave = four }
+                        , Ok { letter = C, accidental = Natural, octave = four }
+                        , Ok { letter = E, accidental = Natural, octave = four }
+                        , Ok { letter = G, accidental = Natural, octave = four }
+                        ]
         ]

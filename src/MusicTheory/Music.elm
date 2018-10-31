@@ -1,7 +1,6 @@
 module MusicTheory.Music exposing
     ( Control(..)
     , Music(..)
-    , Primitive(..)
     , aFlat
     , aNatural
     , aSharp
@@ -16,10 +15,10 @@ module MusicTheory.Music exposing
     , dFlat
     , dNatural
     , dSharp
-    , duplet
     , eFlat
     , eNatural
     , eSharp
+    , eighthNoteTriplet
     , fFlat
     , fNatural
     , fSharp
@@ -34,15 +33,13 @@ module MusicTheory.Music exposing
     , pMap
     , pToList
     , par
-    , quadruplet
-    , quintuplet
+    , quarterNoteTriplet
     , rest
     , seq
     , tempo
     , timeSignature
     , times
     , toList
-    , triplet
     )
 
 import MusicTheory.Duration as Duration exposing (Duration)
@@ -50,25 +47,26 @@ import MusicTheory.Key exposing (Key)
 import MusicTheory.Letter exposing (Letter(..))
 import MusicTheory.Octave exposing (Octave)
 import MusicTheory.Pitch as Pitch exposing (Pitch)
+import MusicTheory.Tuplet as Tuplet exposing (Tuplet)
 
 
 
 -- TYPES
 
 
-type Primitive a
-    = Note Duration a
-    | Rest Duration
+type alias Primitive a =
+    ( Duration, List a )
+
+
+type alias Bpm =
+    Float
 
 
 type Control
-    = Duplet
-    | Triplet
-    | Quadruplet
-    | Quintuplet
+    = Tuplet Tuplet
     | KeySignature Key
     | TimeSignature Int Int
-    | Tempo Duration Float
+    | Tempo Duration Bpm
 
 
 type Music a
@@ -84,12 +82,12 @@ type Music a
 
 note : Duration -> a -> Music a
 note duration a =
-    Prim <| Note duration a
+    Prim <| ( duration, [ a ] )
 
 
 rest : Duration -> Music a
 rest duration =
-    Prim <| Rest duration
+    Prim <| ( duration, [] )
 
 
 seq : Music a -> Music a -> Music a
@@ -122,24 +120,14 @@ modify =
     Modify
 
 
-duplet : Music a -> Music a -> Music a
-duplet m1 m2 =
-    modify Duplet <| seq m1 m2
+quarterNoteTriplet : (Duration -> Music a) -> (Duration -> Music a) -> (Duration -> Music a) -> Music a
+quarterNoteTriplet m1 m2 m3 =
+    modify (Tuplet (Tuplet.triplet Tuplet.Quarter)) (line [ m1 Duration.quarterNote, m2 Duration.quarterNote, m3 Duration.quarterNote ])
 
 
-triplet : Music a -> Music a -> Music a -> Music a
-triplet m1 m2 m3 =
-    modify Triplet <| line [ m1, m2, m3 ]
-
-
-quadruplet : Music a -> Music a -> Music a -> Music a -> Music a
-quadruplet m1 m2 m3 m4 =
-    modify Quadruplet <| line [ m1, m2, m3, m4 ]
-
-
-quintuplet : Music a -> Music a -> Music a -> Music a -> Music a -> Music a
-quintuplet m1 m2 m3 m4 m5 =
-    modify Quintuplet <| line [ m1, m2, m3, m4, m5 ]
+eighthNoteTriplet : (Duration -> Music a) -> (Duration -> Music a) -> (Duration -> Music a) -> Music a
+eighthNoteTriplet m1 m2 m3 =
+    modify (Tuplet (Tuplet.triplet Tuplet.Eighth)) (line [ m1 Duration.eighthNote, m2 Duration.eighthNote, m3 Duration.eighthNote ])
 
 
 
@@ -268,37 +256,27 @@ line ms =
             List.foldl (\m1 m2 -> seq m2 m1) h t
 
 
-chord : List (Music a) -> Music a
-chord ms =
+chord : List (Duration -> Music a) -> Duration -> Music a
+chord ms duration =
     case ms of
         [] ->
             rest Duration.zero
 
         [ m ] ->
-            m
+            m duration
 
         h :: t ->
-            List.foldl (\m1 m2 -> par m2 m1) h t
+            List.foldl (\m1 m2 -> par m2 (m1 duration)) (h duration) t
 
 
 pToList : Primitive a -> List a
-pToList primitive =
-    case primitive of
-        Note _ a ->
-            [ a ]
-
-        Rest _ ->
-            []
+pToList =
+    Tuple.second
 
 
 pMap : (a -> b) -> Primitive a -> Primitive b
-pMap f primitive =
-    case primitive of
-        Note duration a ->
-            Note duration (f a)
-
-        Rest duration ->
-            Rest duration
+pMap f p =
+    p |> Tuple.mapSecond (List.map f)
 
 
 map : (a -> b) -> Music a -> Music b
