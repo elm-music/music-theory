@@ -12,5 +12,5 @@ all =
             \_ ->
                 TimeSignature.additive Four [ Three ] Eighth
                     |> TimeSignature.numberOfBeatsInt
-                    |> Expect.equal ( 4, [ 3 ] )
+                    |> Expect.equal 7
         ]

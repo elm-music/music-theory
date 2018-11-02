@@ -41,6 +41,7 @@ type NumberOfBeats
     | Eighteen
     | Nineteen
     | Twenty
+    | Custom Int
 
 
 type TimeSignature
@@ -141,7 +142,17 @@ numberOfBeatsToInt nob =
         Twenty ->
             20
 
+        Custom n ->
+            n
 
-numberOfBeatsInt : TimeSignature -> ( Int, List Int )
+
+numberOfBeatsInt : TimeSignature -> Int
 numberOfBeatsInt ts =
-    ts |> numberOfBeats |> Tuple.mapBoth numberOfBeatsToInt (List.map numberOfBeatsToInt)
+    let
+        combine f ( a, b ) =
+            f a b
+    in
+    ts
+        |> numberOfBeats
+        |> Tuple.mapBoth numberOfBeatsToInt (List.map numberOfBeatsToInt >> List.sum)
+        |> combine (+)
