@@ -1,22 +1,26 @@
 module MusicTheory.Duration exposing
-    ( Division
-    , Duration
-    , TiedOrUntied
+    ( Division(..)
+    , Duration(..)
+    , add
+    , divisionToRational
     , dotted
     , doubleDotted
     , eighthNote
+    , fromList
     , halfNote
     , oneHundredTwentyEighthNote
     , quarterNote
     , sixteenthNote
     , sixtyFourthNote
     , thirtySecondNote
-    , tied
+    , toList
+    , toRational
     , tripleDotted
-    , untied
     , wholeNote
     , zero
     )
+
+import Libs.Ratio as Ratio exposing (Rational)
 
 
 type Division
@@ -32,137 +36,189 @@ type Division
 
 
 type Duration
-    = Normal Division TiedOrUntied
-    | Dotted Division TiedOrUntied
-    | DoubleDotted Division TiedOrUntied
-    | TripleDotted Division TiedOrUntied
-
-
-type TiedOrUntied
-    = Tied
-    | Untied
+    = Normal Division
+    | Dotted Division
+    | DoubleDotted Division
+    | TripleDotted Division
+    | Sum Duration Duration
 
 
 wholeNote : Duration
 wholeNote =
-    Normal Whole Untied
+    Normal Whole
 
 
 halfNote : Duration
 halfNote =
-    Normal Half Untied
+    Normal Half
 
 
 quarterNote : Duration
 quarterNote =
-    Normal Quarter Untied
+    Normal Quarter
 
 
 eighthNote : Duration
 eighthNote =
-    Normal Eighth Untied
+    Normal Eighth
 
 
 sixteenthNote : Duration
 sixteenthNote =
-    Normal Sixteenth Untied
+    Normal Sixteenth
 
 
 thirtySecondNote : Duration
 thirtySecondNote =
-    Normal ThirtySecond Untied
+    Normal ThirtySecond
 
 
 sixtyFourthNote : Duration
 sixtyFourthNote =
-    Normal SixtyFourth Untied
+    Normal SixtyFourth
 
 
 oneHundredTwentyEighthNote : Duration
 oneHundredTwentyEighthNote =
-    Normal OneHundredTwentyEighth Untied
+    Normal OneHundredTwentyEighth
 
 
 zero : Duration
 zero =
-    Normal Zero Untied
+    Normal Zero
 
 
-tied : Duration -> Duration
-tied duration =
+divisionToRational : Division -> Rational
+divisionToRational division =
+    case division of
+        Whole ->
+            Ratio.over 1 1
+
+        Half ->
+            Ratio.over 1 2
+
+        Quarter ->
+            Ratio.over 1 4
+
+        Eighth ->
+            Ratio.over 1 8
+
+        Sixteenth ->
+            Ratio.over 1 16
+
+        ThirtySecond ->
+            Ratio.over 1 32
+
+        SixtyFourth ->
+            Ratio.over 1 64
+
+        OneHundredTwentyEighth ->
+            Ratio.over 1 128
+
+        Zero ->
+            Ratio.over 0 1
+
+
+toRational : Duration -> Rational
+toRational duration =
     case duration of
-        Normal div _ ->
-            Normal div Tied
+        Normal d ->
+            divisionToRational d
 
-        Dotted div _ ->
-            Dotted div Tied
+        Dotted d ->
+            divisionToRational d |> Ratio.multiply (Ratio.over 3 2)
 
-        DoubleDotted div _ ->
-            DoubleDotted div Tied
+        DoubleDotted d ->
+            divisionToRational d |> Ratio.multiply (Ratio.over 7 4)
 
-        TripleDotted div _ ->
-            TripleDotted div Tied
+        TripleDotted d ->
+            divisionToRational d |> Ratio.multiply (Ratio.over 15 8)
+
+        Sum d1 d2 ->
+            toRational d1 |> Ratio.add (toRational d2)
 
 
-untied : Duration -> Duration
-untied duration =
+toList : Duration -> List Duration
+toList duration =
     case duration of
-        Normal div _ ->
-            Normal div Untied
+        Normal d ->
+            [ Normal d ]
 
-        Dotted div _ ->
-            Dotted div Untied
+        Dotted d ->
+            [ Dotted d ]
 
-        DoubleDotted div _ ->
-            DoubleDotted div Untied
+        DoubleDotted d ->
+            [ DoubleDotted d ]
 
-        TripleDotted div _ ->
-            TripleDotted div Untied
+        TripleDotted d ->
+            [ TripleDotted d ]
+
+        Sum d1 d2 ->
+            toList d1 ++ toList d2
+
+
+fromList : List Duration -> Duration
+fromList =
+    List.foldr Sum zero
 
 
 dotted : Duration -> Duration
 dotted duration =
     case duration of
-        Normal d t ->
-            Dotted d t
+        Normal d ->
+            Dotted d
 
-        Dotted d t ->
-            Dotted d t
+        Dotted d ->
+            Dotted d
 
-        DoubleDotted d t ->
-            Dotted d t
+        DoubleDotted d ->
+            Dotted d
 
-        TripleDotted d t ->
-            Dotted d t
+        TripleDotted d ->
+            Dotted d
+
+        Sum d1 d2 ->
+            Sum (dotted d1) (dotted d2)
 
 
 doubleDotted : Duration -> Duration
 doubleDotted duration =
     case duration of
-        Normal d t ->
-            DoubleDotted d t
+        Normal d ->
+            DoubleDotted d
 
-        Dotted d t ->
-            DoubleDotted d t
+        Dotted d ->
+            DoubleDotted d
 
-        DoubleDotted d t ->
-            DoubleDotted d t
+        DoubleDotted d ->
+            DoubleDotted d
 
-        TripleDotted d t ->
-            DoubleDotted d t
+        TripleDotted d ->
+            DoubleDotted d
+
+        Sum d1 d2 ->
+            Sum (doubleDotted d1) (doubleDotted d2)
 
 
 tripleDotted : Duration -> Duration
 tripleDotted duration =
     case duration of
-        Normal d t ->
-            TripleDotted d t
+        Normal d ->
+            TripleDotted d
 
-        Dotted d t ->
-            TripleDotted d t
+        Dotted d ->
+            TripleDotted d
 
-        DoubleDotted d t ->
-            TripleDotted d t
+        DoubleDotted d ->
+            TripleDotted d
 
-        TripleDotted d t ->
-            TripleDotted d t
+        TripleDotted d ->
+            TripleDotted d
+
+        Sum d1 d2 ->
+            Sum (tripleDotted d1) (tripleDotted d2)
+
+
+add : Duration -> Duration -> Duration
+add =
+    Sum

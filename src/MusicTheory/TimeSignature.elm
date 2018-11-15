@@ -4,10 +4,11 @@ module MusicTheory.TimeSignature exposing
     , TimeSignature
     , additive
     , beatValue
-    , normal
+    , beatValueInt
     , numberOfBeats
     , numberOfBeatsInt
     , numberOfBeatsToInt
+    , timeSignature
     )
 
 
@@ -41,7 +42,6 @@ type NumberOfBeats
     | Eighteen
     | Nineteen
     | Twenty
-    | Custom Int
 
 
 type TimeSignature
@@ -49,8 +49,8 @@ type TimeSignature
     | Additive NumberOfBeats (List NumberOfBeats) BeatValue
 
 
-normal : NumberOfBeats -> BeatValue -> TimeSignature
-normal =
+timeSignature : NumberOfBeats -> BeatValue -> TimeSignature
+timeSignature =
     Normal
 
 
@@ -67,6 +67,38 @@ beatValue ts =
 
         Additive _ _ bv ->
             bv
+
+
+beatValueToInt : BeatValue -> Int
+beatValueToInt bv =
+    case bv of
+        Whole ->
+            1
+
+        Half ->
+            2
+
+        Quarter ->
+            4
+
+        Eighth ->
+            8
+
+        Sixteenth ->
+            16
+
+        ThirtySecond ->
+            32
+
+
+beatValueInt : TimeSignature -> Int
+beatValueInt ts =
+    case ts of
+        Normal _ bv ->
+            beatValueToInt bv
+
+        Additive _ _ bv ->
+            beatValueToInt bv
 
 
 numberOfBeats : TimeSignature -> ( NumberOfBeats, List NumberOfBeats )
@@ -142,17 +174,10 @@ numberOfBeatsToInt nob =
         Twenty ->
             20
 
-        Custom n ->
-            n
-
 
 numberOfBeatsInt : TimeSignature -> Int
 numberOfBeatsInt ts =
-    let
-        combine f ( a, b ) =
-            f a b
-    in
     ts
         |> numberOfBeats
         |> Tuple.mapBoth numberOfBeatsToInt (List.map numberOfBeatsToInt >> List.sum)
-        |> combine (+)
+        |> (\( x, y ) -> x + y)

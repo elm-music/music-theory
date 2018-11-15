@@ -1,63 +1,69 @@
-module MusicTheory.Tuplet exposing (Tuplet, Value(..), duplet, quadruplet, quintuplet, septuplet, sextuplet, triplet)
+module MusicTheory.Tuplet exposing
+    ( Tuplet
+    , duplet
+    , quadruplet
+    , quintuplet
+    , quintupletOverFour
+    , quintupletOverThree
+    , sextuplet
+    , sextupletOverFour
+    , split
+    , toRational
+    , triplet
+    )
 
-
-type Value
-    = Half
-    | Quarter
-    | Eighth
-    | Sixteenth
-    | ThirtySecond
-    | SixtyFourth
-    | OneHundredTwentyEighth
+import Libs.Ratio as Ratio exposing (Rational)
 
 
 type Tuplet
-    = Duplet Value
-    | Triplet Value
-    | Quadruplet Value
-    | Quintuplet Value
-    | Sextuplet Value
-    | Septuplet Value
-    | Octuplet Value
-    | Nonuplet Value
-    | Decuplet Value
-    | Undecuplet Value
-    | Duodecuplet Value
-    | Tredecuplet Value
-    | Quattuordecuplet Value
-    | Quindecuplet Value
-    | Sexdecuplet Value
-    | Septendecuplet Value
-    | Octodecuplet Value
-    | Novemdecuplet Value
-    | Vigintuplet Value
+    = Tuplet Int Int
 
 
-duplet : Value -> Tuplet
+duplet : Tuplet
 duplet =
-    Duplet
+    Tuplet 2 3
 
 
-triplet : Value -> Tuplet
+triplet : Tuplet
 triplet =
-    Triplet
+    Tuplet 3 2
 
 
-quadruplet : Value -> Tuplet
+quadruplet : Tuplet
 quadruplet =
-    Quadruplet
+    Tuplet 4 3
 
 
-quintuplet : Value -> Tuplet
+quintuplet : Tuplet
 quintuplet =
-    Quintuplet
+    Tuplet 5 2
 
 
-sextuplet : Value -> Tuplet
+quintupletOverThree : Tuplet
+quintupletOverThree =
+    Tuplet 5 3
+
+
+quintupletOverFour : Tuplet
+quintupletOverFour =
+    Tuplet 5 4
+
+
+sextuplet : Tuplet
 sextuplet =
-    Sextuplet
+    Tuplet 6 2
 
 
-septuplet : Value -> Tuplet
-septuplet =
-    Septuplet
+sextupletOverFour : Tuplet
+sextupletOverFour =
+    Tuplet 6 4
+
+
+split : Tuplet -> ( Int, Int )
+split (Tuplet x y) =
+    ( x, y )
+
+
+toRational : Tuplet -> Rational
+toRational (Tuplet x y) =
+    Ratio.over x y
