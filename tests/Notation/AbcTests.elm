@@ -101,6 +101,34 @@ blockChords =
     }
 
 
+voicingsTwoFiveOne : Notation PitchSpelling
+voicingsTwoFiveOne =
+    let
+        voice1 =
+            bar [ doubleLine ]
+                [ chord [] [ aNatural four |> chordNote [], fNatural four |> chordNote [], cNatural four |> chordNote [] ] quarterNote
+                , chord [] [ bNatural four |> chordNote [], gSharp four |> chordNote [], eNatural four |> chordNote [], bNatural three |> chordNote [] ] eighthNote
+                , chord [ tie ] [ gNatural four |> chordNote [], dNatural four |> chordNote [], aNatural three |> chordNote [] ] eighthNote
+                , chord [] [ gNatural four |> chordNote [], dNatural four |> chordNote [], aNatural three |> chordNote [] ] halfNote
+                ]
+
+        voice2 =
+            bar [ doubleLine ]
+                [ chord [] [ gNatural three |> chordNote [], dNatural three |> chordNote [] ] quarterNote
+                , note [] (fNatural three) eighthNote
+                , note [ tie ] (eNatural three) eighthNote
+                , note [] (eNatural three) halfNote
+                ]
+    in
+    { title = Just "II V I Voicings"
+    , composer = Nothing
+    , key = Key.major (PitchClass.pitchClass C natural)
+    , timeSignature = TimeSignature.timeSignature TimeSignature.Four TimeSignature.Quarter
+    , tempo = Nothing
+    , staffs = [ staff treble [ voice1 ], staff bass [ voice2 ] ]
+    }
+
+
 all : Test
 all =
     describe "Abc Tests"
@@ -108,7 +136,7 @@ all =
             \_ ->
                 let
                     expected =
-                        "T: Block Chords\nK: C\nM: 4/4\n%%score (0 1)\n[V:0]_A2/1 _A2/1 _A1/1 _A2/1 _A1/1- | _A1/1_B1/1_A1/1_A1/1- _A1/1_B1/1_A1/1_A1/1-  | _A2/1 _A1/1_A1/1 z4/1 || \n[V:1][_B,2/1_D2/1=F] [_B,2/1_D2/1=F] [=B,1/1=D1/1=F] [=B,2/1=D2/1=F] [=C1/1_E1/1=F]- | [=C3/1_E3/1=F] [=B,1/1=D1/1=F]- [=B,3/1=D3/1=F] [_B,1/1_D1/1=F]- | [_B,2/1_D2/1=F] [=B,1/1=D1/1=F][=C1/1_E1/1=F] y4/1 || "
+                        "T: Block Chords\nM: 4/4\n%%score (0 1)\nV: 0 clef=treble\nV: 1 clef=treble\nK: C\n[V:0]_A2/1 _A2/1 _A1/1 _A2/1 _A1/1- | _A1/1_B1/1_A1/1_A1/1- _A1/1_B1/1_A1/1_A1/1-  | _A2/1 _A1/1_A1/1 z4/1 || \n[V:1][_B,2/1_D2/1=F] [_B,2/1_D2/1=F] [=B,1/1=D1/1=F] [=B,2/1=D2/1=F] [=C1/1_E1/1=F]- | [=C3/1_E3/1=F] [=B,1/1=D1/1=F]- [=B,3/1=D3/1=F] [_B,1/1_D1/1=F]- | [_B,2/1_D2/1=F] [=B,1/1=D1/1=F][=C1/1_E1/1=F] y4/1 || "
                 in
                 blockChords
                     |> Abc.fromNotation
@@ -117,7 +145,7 @@ all =
             \_ ->
                 let
                     expected =
-                        "K: C\nM: 4/4\n%%score (0)\n[V:0]=c1/1(3:2:3=c1/2=c1/2=c1/2"
+                        "M: 4/4\n%%score (0)\nV: 0 clef=treble\nK: C\n[V:0]=c1/1(3:2:3=c1/2=c1/2=c1/2"
                 in
                 beam
                     [ note [] (cNatural five) eighthNote
@@ -128,6 +156,15 @@ all =
                         ]
                     ]
                     |> fromVoice
+                    |> Abc.fromNotation
+                    |> Expect.equal expected
+        , test "multiple staffs to ABC notation" <|
+            \_ ->
+                let
+                    expected =
+                        "T: II V I Voicings\nM: 4/4\n%%score (0) (1)\nV: 0 clef=treble\nV: 1 clef=bass\nK: C\n[V:0][=A2/1=F2/1=C] [=B1/1^G1/1=E1/1=B,] [=G1/1=D1/1=A,]- [=G4/1=D4/1=A,] ||\n[V:1][=G,2/1=D,] =F,1/1 =E,1/1- =E,4/1 ||"
+                in
+                voicingsTwoFiveOne
                     |> Abc.fromNotation
                     |> Expect.equal expected
         ]
