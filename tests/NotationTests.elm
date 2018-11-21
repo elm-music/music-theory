@@ -14,6 +14,8 @@ import MusicTheory.PitchClass.Spelling exposing (Accidental(..))
 import MusicTheory.TimeSignature as TimeSig
 import MusicTheory.Tuplet as Tuplet
 import Test exposing (..)
+import Util.NotationFuzzer
+import Util.PitchSpellingFuzzer
 
 
 all : Test
@@ -54,4 +56,9 @@ all =
                     ]
                     |> voiceDuration
                     |> Expect.equal (wholeNote |> Duration.toRational)
+        , fuzz (Util.NotationFuzzer.notationFuzzer Util.PitchSpellingFuzzer.pitchSpelling) "nottt" <|
+            \notation ->
+                notation
+                    |> Debug.toString
+                    |> Expect.equal ""
         ]
