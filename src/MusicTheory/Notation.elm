@@ -19,7 +19,6 @@ module MusicTheory.Notation exposing
     , chord
     , chordNote
     , doubleLine
-    , elMap
     , fromVoice
     , length
     , line
