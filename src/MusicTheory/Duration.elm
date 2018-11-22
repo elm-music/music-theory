@@ -17,7 +17,6 @@ module MusicTheory.Duration exposing
     , toRational
     , tripleDotted
     , wholeNote
-    , zero
     )
 
 import Libs.Ratio as Ratio exposing (Rational)
