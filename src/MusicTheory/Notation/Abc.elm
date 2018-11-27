@@ -48,12 +48,23 @@ fromNotation notation =
                 |> String.join " "
                 |> String.append "%%score "
 
+        voicesHeader =
+            notation.staffs
+                |> List.indexedMap
+                    (\staffNum staff ->
+                        staff.voices |> List.indexedMap (\voiceNum _ -> "V: " ++ (staffNum + voiceNum |> String.fromInt) ++ " clef=" ++ fromClef staff.clef)
+                    )
+                |> List.map (String.join "\n")
+                |> String.join "\n"
+
         header =
             [ notation.title |> Maybe.map ((++) "T: ")
             , notation.composer |> Maybe.map ((++) "C: ")
-            , notation.key |> fromKey |> Just
-            , notation.timeSignature |> fromTimeSignature |> Just
             , notation.tempo |> Maybe.map (\( d, n ) -> fromTempo d n)
+            , notation.timeSignature |> fromTimeSignature |> Just
+            , Just score
+            , Just voicesHeader
+            , notation.key |> fromKey |> Just
             ]
                 |> Maybe.Extra.values
                 |> String.join "\n"
@@ -62,12 +73,13 @@ fromNotation notation =
             notation.staffs
                 |> List.indexedMap
                     (\staffNum staff ->
-                        staff.voices |> List.indexedMap (\voiceNum voice -> "[V:" ++ (staffNum + voiceNum |> String.fromInt) ++ "]" ++ fromVoice defaultContext defaultUnitNoteLength voice)
+                        staff.voices
+                            |> List.indexedMap (\voiceNum voice -> "[V:" ++ (staffNum + voiceNum |> String.fromInt) ++ "]" ++ fromVoice defaultContext defaultUnitNoteLength voice)
                     )
                 |> List.concat
     in
-    [ header, score ]
-        ++ voices
+    header
+        :: voices
         |> String.join "\n"
 
 
@@ -259,3 +271,13 @@ fromKey key =
 fromTempo : Duration -> Float -> String
 fromTempo duration bpm =
     "Q: " ++ rationalToString (Duration.toRational duration) ++ "=" ++ (bpm |> round |> String.fromInt)
+
+
+fromClef : Clef -> String
+fromClef clef =
+    case clef of
+        Treble ->
+            "treble"
+
+        Bass ->
+            "bass"
