@@ -55,6 +55,6 @@ all =
             \_ ->
                 voicingsTwoFiveOne
                     |> traverse Spelling.simple
-                    |> Result.map fromNotation
+                    |> Result.map (fromNotation 4)
                     |> Expect.equal (Ok "T: II V I Voicings\nM: 4/4\n%%score (0) (1)\nV: 0 clef=treble\nV: 1 clef=bass\nK: C\n[V:0][=A2/1=F2/1=C] [=B1/1=E1/1^G1/1=B,] [=G1/1=D1/1=A,]- [=G4/1=D4/1=A,] ||\n[V:1][=G,2/1=D,] =F,1/1 =E,1/1- =E,4/1 ||")
         ]
