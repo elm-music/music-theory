@@ -36,24 +36,28 @@ defaultUnitNoteLength =
 -}
 
 
-fromNotation : Notation PitchSpelling -> String
-fromNotation notation =
+fromNotation : Int -> Notation PitchSpelling -> String
+fromNotation barsPerLine notation =
     let
         score =
             notation.staffs
-                |> List.indexedMap
-                    (\staffNum staff ->
-                        "(" ++ (staff.voices |> List.indexedMap (\voiceNum _ -> staffNum + voiceNum |> String.fromInt) |> String.join " ") ++ ")"
+                |> List.Extra.mapAccuml
+                    (\numVoices staff ->
+                        ( numVoices + List.length staff.voices, "(" ++ (staff.voices |> List.indexedMap (\voiceNum _ -> numVoices + voiceNum |> String.fromInt) |> String.join " ") ++ ")" )
                     )
+                    0
+                |> Tuple.second
                 |> String.join " "
                 |> String.append "%%score "
 
         voicesHeader =
             notation.staffs
-                |> List.indexedMap
-                    (\staffNum staff ->
-                        staff.voices |> List.indexedMap (\voiceNum _ -> "V: " ++ (staffNum + voiceNum |> String.fromInt) ++ " clef=" ++ fromClef staff.clef)
+                |> List.Extra.mapAccuml
+                    (\numVoices staff ->
+                        ( numVoices + List.length staff.voices, staff.voices |> List.indexedMap (\voiceNum _ -> "V: " ++ (numVoices + voiceNum |> String.fromInt) ++ " clef=" ++ fromClef staff.clef) )
                     )
+                    0
+                |> Tuple.second
                 |> List.map (String.join "\n")
                 |> String.join "\n"
 
@@ -71,16 +75,49 @@ fromNotation notation =
 
         voices =
             notation.staffs
-                |> List.indexedMap
-                    (\staffNum staff ->
-                        staff.voices
-                            |> List.indexedMap (\voiceNum voice -> "[V:" ++ (staffNum + voiceNum |> String.fromInt) ++ "]" ++ fromVoice defaultContext defaultUnitNoteLength voice)
+                |> List.Extra.mapAccuml
+                    (\numVoices staff ->
+                        ( numVoices + List.length staff.voices
+                        , staff.voices
+                            |> List.indexedMap
+                                (\voiceNum voice ->
+                                    ( "[V:" ++ (numVoices + voiceNum |> String.fromInt) ++ "]"
+                                    , fromVoice defaultContext defaultUnitNoteLength voice |> splitVoiceAtBarLines
+                                    )
+                                )
+                        )
                     )
+                    0
+                |> Tuple.second
                 |> List.concat
+                |> List.map (\( voiceMarker, bars ) -> bars |> List.Extra.greedyGroupsOf barsPerLine |> List.map (String.concat >> (++) voiceMarker))
+                |> List.Extra.transpose
+                |> List.map (String.join "\n")
     in
     header
         :: voices
         |> String.join "\n"
+
+
+splitVoiceAtBarLines : String -> List String
+splitVoiceAtBarLines voice =
+    splitVoiceAtBarLinesHelper [] "" (String.toList voice)
+
+
+splitVoiceAtBarLinesHelper : List String -> String -> List Char -> List String
+splitVoiceAtBarLinesHelper acc currentBar voice =
+    case voice of
+        [] ->
+            acc ++ [ currentBar ]
+
+        '|' :: '|' :: tail ->
+            splitVoiceAtBarLinesHelper (acc ++ [ currentBar ++ "||" ]) "" tail
+
+        '|' :: tail ->
+            splitVoiceAtBarLinesHelper (acc ++ [ currentBar ++ "|" ]) "" tail
+
+        head :: tail ->
+            splitVoiceAtBarLinesHelper acc (currentBar ++ String.fromChar head) tail
 
 
 type alias Context =
@@ -118,7 +155,15 @@ fromVoice context unitNoteLength voice =
         Attribute (Tuplet t) v ->
             case Tuplet.split t of
                 ( x, y ) ->
-                    "(" ++ String.fromInt x ++ ":" ++ String.fromInt y ++ ":" ++ String.fromInt (Notation.length v) ++ fromVoice context unitNoteLength v
+                    [ "("
+                    , String.fromInt x
+                    , ":"
+                    , String.fromInt y
+                    , ":"
+                    , String.fromInt (Notation.length v)
+                    , fromVoice context unitNoteLength v
+                    ]
+                        |> String.concat
 
 
 barLine : List BarAttribute -> String
@@ -145,10 +190,7 @@ fromVoiceElement unitNoteLength voice =
 
 fromChord : Duration -> Chord PitchSpelling -> String
 fromChord unitNoteLength (ChordElement attributes duration elements) =
-    ("["
-        ++ String.join (fromDuration unitNoteLength duration) (List.map fromChordNote elements)
-        ++ "]"
-    )
+    ("[" ++ String.join (fromDuration unitNoteLength duration) (List.map fromChordNote elements) ++ "]")
         |> applyAttributes attributes
 
 
@@ -193,8 +235,8 @@ applyAttributes attrs v =
         [] ->
             v
 
-        Tie :: attrsTail ->
-            applyAttributes attrsTail v ++ "-"
+        Tie :: tail ->
+            applyAttributes tail v ++ "-"
 
         _ :: _ ->
             v

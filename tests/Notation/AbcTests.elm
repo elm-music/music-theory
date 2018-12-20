@@ -129,6 +129,31 @@ voicingsTwoFiveOne =
     }
 
 
+multipleLines : Notation PitchSpelling
+multipleLines =
+    let
+        mkVoice p =
+            List.repeat 10 (bar [] [ note [] p wholeNote ]) |> line
+    in
+    { title = Nothing
+    , composer = Nothing
+    , key = Key.major (PitchClass.pitchClass C natural)
+    , timeSignature = TimeSignature.timeSignature TimeSignature.Four TimeSignature.Quarter
+    , tempo = Nothing
+    , staffs =
+        [ staff treble
+            [ cNatural four |> mkVoice
+            , eNatural four |> mkVoice
+            ]
+        , staff bass [ aNatural two |> mkVoice ]
+        , staff treble
+            [ bNatural four |> mkVoice
+            , dNatural five |> mkVoice
+            ]
+        ]
+    }
+
+
 all : Test
 all =
     describe "Abc Tests"
@@ -139,7 +164,7 @@ all =
                         "T: Block Chords\nM: 4/4\n%%score (0 1)\nV: 0 clef=treble\nV: 1 clef=treble\nK: C\n[V:0]_A2/1 _A2/1 _A1/1 _A2/1 _A1/1- | _A1/1_B1/1_A1/1_A1/1- _A1/1_B1/1_A1/1_A1/1-  | _A2/1 _A1/1_A1/1 z4/1 || \n[V:1][_B,2/1_D2/1=F] [_B,2/1_D2/1=F] [=B,1/1=D1/1=F] [=B,2/1=D2/1=F] [=C1/1_E1/1=F]- | [=C3/1_E3/1=F] [=B,1/1=D1/1=F]- [=B,3/1=D3/1=F] [_B,1/1_D1/1=F]- | [_B,2/1_D2/1=F] [=B,1/1=D1/1=F][=C1/1_E1/1=F] y4/1 || "
                 in
                 blockChords
-                    |> Abc.fromNotation
+                    |> Abc.fromNotation 4
                     |> Expect.equal expected
         , test "tuplet notation" <|
             \_ ->
@@ -156,7 +181,7 @@ all =
                         ]
                     ]
                     |> fromVoice
-                    |> Abc.fromNotation
+                    |> Abc.fromNotation 4
                     |> Expect.equal expected
         , test "multiple staffs to ABC notation" <|
             \_ ->
@@ -165,6 +190,15 @@ all =
                         "T: II V I Voicings\nM: 4/4\n%%score (0) (1)\nV: 0 clef=treble\nV: 1 clef=bass\nK: C\n[V:0][=A2/1=F2/1=C] [=B1/1^G1/1=E1/1=B,] [=G1/1=D1/1=A,]- [=G4/1=D4/1=A,] ||\n[V:1][=G,2/1=D,] =F,1/1 =E,1/1- =E,4/1 ||"
                 in
                 voicingsTwoFiveOne
-                    |> Abc.fromNotation
+                    |> Abc.fromNotation 4
+                    |> Expect.equal expected
+        , test "line breaks" <|
+            \_ ->
+                let
+                    expected =
+                        "M: 4/4\n%%score (0 1) (2) (3 4)\nV: 0 clef=treble\nV: 1 clef=treble\nV: 2 clef=bass\nV: 3 clef=treble\nV: 4 clef=treble\nK: C\n[V:0]=C8/1 | =C8/1 | =C8/1 | =C8/1 |\n[V:1]=E8/1 | =E8/1 | =E8/1 | =E8/1 |\n[V:2]=A,,8/1 | =A,,8/1 | =A,,8/1 | =A,,8/1 |\n[V:3]=B8/1 | =B8/1 | =B8/1 | =B8/1 |\n[V:4]=d8/1 | =d8/1 | =d8/1 | =d8/1 |\n[V:0] =C8/1 | =C8/1 | =C8/1 | =C8/1 |\n[V:1] =E8/1 | =E8/1 | =E8/1 | =E8/1 |\n[V:2] =A,,8/1 | =A,,8/1 | =A,,8/1 | =A,,8/1 |\n[V:3] =B8/1 | =B8/1 | =B8/1 | =B8/1 |\n[V:4] =d8/1 | =d8/1 | =d8/1 | =d8/1 |\n[V:0] =C8/1 | =C8/1 | \n[V:1] =E8/1 | =E8/1 | \n[V:2] =A,,8/1 | =A,,8/1 | \n[V:3] =B8/1 | =B8/1 | \n[V:4] =d8/1 | =d8/1 | "
+                in
+                multipleLines
+                    |> Abc.fromNotation 4
                     |> Expect.equal expected
         ]
