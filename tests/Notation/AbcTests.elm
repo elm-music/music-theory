@@ -95,7 +95,7 @@ blockChords =
     { title = Just "Block Chords"
     , composer = Nothing
     , key = Key.major (PitchClass.pitchClass C natural)
-    , timeSignature = TimeSignature.timeSignature TimeSignature.Four TimeSignature.Quarter
+    , timeSignature = TimeSignature.four TimeSignature.quarters
     , tempo = Nothing
     , staffs = [ staff1 ]
     }
@@ -123,7 +123,7 @@ voicingsTwoFiveOne =
     { title = Just "II V I Voicings"
     , composer = Nothing
     , key = Key.major (PitchClass.pitchClass C natural)
-    , timeSignature = TimeSignature.timeSignature TimeSignature.Four TimeSignature.Quarter
+    , timeSignature = TimeSignature.four TimeSignature.quarters
     , tempo = Nothing
     , staffs = [ staff treble [ voice1 ], staff bass [ voice2 ] ]
     }
@@ -138,7 +138,7 @@ multipleLines =
     { title = Nothing
     , composer = Nothing
     , key = Key.major (PitchClass.pitchClass C natural)
-    , timeSignature = TimeSignature.timeSignature TimeSignature.Four TimeSignature.Quarter
+    , timeSignature = TimeSignature.four TimeSignature.quarters
     , tempo = Nothing
     , staffs =
         [ staff treble
