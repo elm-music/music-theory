@@ -180,7 +180,7 @@ all =
                         , note [] (cNatural five) sixteenthNote
                         ]
                     ]
-                    |> fromVoice
+                    |> fromVoice treble
                     |> Abc.fromNotation 4
                     |> Expect.equal expected
         , test "multiple staffs to ABC notation" <|
@@ -199,6 +199,51 @@ all =
                         "M: 4/4\n%%score (0 1) (2) (3 4)\nV: 0 clef=treble\nV: 1 clef=treble\nV: 2 clef=bass\nV: 3 clef=treble\nV: 4 clef=treble\nK: C\n[V:0]=C8/1 | =C8/1 | =C8/1 | =C8/1 |\n[V:1]=E8/1 | =E8/1 | =E8/1 | =E8/1 |\n[V:2]=A,,8/1 | =A,,8/1 | =A,,8/1 | =A,,8/1 |\n[V:3]=B8/1 | =B8/1 | =B8/1 | =B8/1 |\n[V:4]=d8/1 | =d8/1 | =d8/1 | =d8/1 |\n[V:0] =C8/1 | =C8/1 | =C8/1 | =C8/1 |\n[V:1] =E8/1 | =E8/1 | =E8/1 | =E8/1 |\n[V:2] =A,,8/1 | =A,,8/1 | =A,,8/1 | =A,,8/1 |\n[V:3] =B8/1 | =B8/1 | =B8/1 | =B8/1 |\n[V:4] =d8/1 | =d8/1 | =d8/1 | =d8/1 |\n[V:0] =C8/1 | =C8/1 | \n[V:1] =E8/1 | =E8/1 | \n[V:2] =A,,8/1 | =A,,8/1 | \n[V:3] =B8/1 | =B8/1 | \n[V:4] =d8/1 | =d8/1 | "
                 in
                 multipleLines
+                    |> Abc.fromNotation 4
+                    |> Expect.equal expected
+        , test "repeated accidentals" <|
+            \_ ->
+                let
+                    voice1 =
+                        [ bar []
+                            [ line
+                                [ note [] (cSharp five) quarterNote
+                                , note [] (dNatural five) quarterNote
+                                , rest [] quarterNote
+                                , note [] (eNatural five) quarterNote
+                                ]
+                            ]
+                        , bar [] [ rest [] wholeNote ]
+                        ]
+                            |> line
+
+                    voice2 =
+                        [ bar []
+                            [ line
+                                [ rest [] eighthNote
+                                , note [] (cNatural five) quarterNote
+                                , note [] (dNatural five) eighthNote
+                                , rest [] eighthNote
+                                , note [] (eFlat five) (dotted quarterNote)
+                                ]
+                            ]
+                        , bar []
+                            [ note [] (fSharp three) quarterNote
+                            , note [] (fNatural three) quarterNote
+                            , note [] (fNatural three) quarterNote
+                            , note [] (fSharp three) quarterNote
+                            ]
+                        ]
+                            |> line
+
+                    music =
+                        fromStaffs [ { clef = treble, voices = [ voice1, voice2 ] } ]
+                            |> withKey Key.gMajor
+
+                    expected =
+                        "M: 4/4\n%%score (0 1)\nV: 0 clef=treble\nV: 1 clef=treble\nK: G\n[V:0]^c2/1 d2/1 z2/1 =e2/1 | z8 |\n[V:1]z1/1 =c2/1 d1/1 z1/1 _e3/1 | F2 =F2 F2 ^F2 |"
+                in
+                music
                     |> Abc.fromNotation 4
                     |> Expect.equal expected
         ]

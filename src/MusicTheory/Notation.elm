@@ -19,6 +19,7 @@ module MusicTheory.Notation exposing
     , chord
     , chordNote
     , doubleLine
+    , fromStaffs
     , fromVoice
     , length
     , line
@@ -34,6 +35,7 @@ module MusicTheory.Notation exposing
     , voiceDuration
     , voiceElementDuration
     , voiceMap
+    , withKey
     )
 
 import Libs.Ratio as Ratio exposing (Rational)
@@ -209,15 +211,31 @@ bass =
     Bass
 
 
-fromVoice : Voice a -> Notation a
-fromVoice voice =
+fromVoice : Clef -> Voice a -> Notation a
+fromVoice clef voice =
     { title = Nothing
     , composer = Nothing
     , key = Key.cMajor
     , timeSignature = TimeSignature.four TimeSignature.quarters
     , tempo = Nothing
-    , staffs = [ staff treble [ voice ] ]
+    , staffs = [ staff clef [ voice ] ]
     }
+
+
+fromStaffs : List (Staff a) -> Notation a
+fromStaffs staffs =
+    { title = Nothing
+    , composer = Nothing
+    , key = Key.major (PitchClass.pitchClass C Pitch.natural)
+    , timeSignature = TimeSignature.timeSignature TimeSignature.Four TimeSignature.Quarter
+    , tempo = Nothing
+    , staffs = staffs
+    }
+
+
+withKey : Key -> Notation a -> Notation a
+withKey key notation =
+    { notation | key = key }
 
 
 
