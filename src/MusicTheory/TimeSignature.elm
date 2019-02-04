@@ -5,10 +5,36 @@ module MusicTheory.TimeSignature exposing
     , additive
     , beatValue
     , beatValueInt
+    , eight
+    , eighteen
+    , eighths
+    , eleven
+    , fifteen
+    , five
+    , four
+    , fourteen
+    , halfs
+    , nine
+    , nineteen
     , numberOfBeats
     , numberOfBeatsInt
     , numberOfBeatsToInt
+    , one
+    , quarters
+    , seven
+    , seventeen
+    , six
+    , sixteen
+    , sixteenths
+    , ten
+    , thirteen
+    , thirtySeconds
+    , three
     , timeSignature
+    , twelve
+    , twenty
+    , two
+    , whole
     )
 
 
@@ -181,3 +207,137 @@ numberOfBeatsInt ts =
         |> numberOfBeats
         |> Tuple.mapBoth numberOfBeatsToInt (List.map numberOfBeatsToInt >> List.sum)
         |> (\( x, y ) -> x + y)
+
+
+whole : BeatValue
+whole =
+    Whole
+
+
+halfs : BeatValue
+halfs =
+    Half
+
+
+quarters : BeatValue
+quarters =
+    Quarter
+
+
+eighths : BeatValue
+eighths =
+    Eighth
+
+
+sixteenths : BeatValue
+sixteenths =
+    Sixteenth
+
+
+thirtySeconds : BeatValue
+thirtySeconds =
+    ThirtySecond
+
+
+
+----
+
+
+one : BeatValue -> TimeSignature
+one val =
+    timeSignature One val
+
+
+two : BeatValue -> TimeSignature
+two val =
+    timeSignature Two val
+
+
+three : BeatValue -> TimeSignature
+three val =
+    timeSignature Three val
+
+
+four : BeatValue -> TimeSignature
+four val =
+    timeSignature Four val
+
+
+five : BeatValue -> TimeSignature
+five val =
+    timeSignature Five val
+
+
+six : BeatValue -> TimeSignature
+six val =
+    timeSignature Six val
+
+
+seven : BeatValue -> TimeSignature
+seven val =
+    timeSignature Seven val
+
+
+eight : BeatValue -> TimeSignature
+eight val =
+    timeSignature Eight val
+
+
+nine : BeatValue -> TimeSignature
+nine val =
+    timeSignature Nine val
+
+
+ten : BeatValue -> TimeSignature
+ten val =
+    timeSignature Ten val
+
+
+eleven : BeatValue -> TimeSignature
+eleven val =
+    timeSignature Eleven val
+
+
+twelve : BeatValue -> TimeSignature
+twelve val =
+    timeSignature Twelve val
+
+
+thirteen : BeatValue -> TimeSignature
+thirteen val =
+    timeSignature Thirteen val
+
+
+fourteen : BeatValue -> TimeSignature
+fourteen val =
+    timeSignature Fourteen val
+
+
+fifteen : BeatValue -> TimeSignature
+fifteen val =
+    timeSignature Fifteen val
+
+
+sixteen : BeatValue -> TimeSignature
+sixteen val =
+    timeSignature Sixteen val
+
+
+seventeen : BeatValue -> TimeSignature
+seventeen val =
+    timeSignature Seventeen val
+
+
+eighteen : BeatValue -> TimeSignature
+eighteen val =
+    timeSignature Eighteen val
+
+
+nineteen : BeatValue -> TimeSignature
+nineteen val =
+    timeSignature Nineteen val
+
+
+twenty : BeatValue -> TimeSignature
+twenty val =
+    timeSignature Twenty val

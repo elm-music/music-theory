@@ -213,8 +213,8 @@ fromVoice : Voice a -> Notation a
 fromVoice voice =
     { title = Nothing
     , composer = Nothing
-    , key = Key.major (PitchClass.pitchClass C Pitch.natural)
-    , timeSignature = TimeSignature.timeSignature TimeSignature.Four TimeSignature.Quarter
+    , key = Key.cMajor
+    , timeSignature = TimeSignature.four TimeSignature.quarters
     , tempo = Nothing
     , staffs = [ staff treble [ voice ] ]
     }
